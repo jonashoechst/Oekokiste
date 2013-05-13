@@ -1,5 +1,6 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.io.File;
 import java.util.LinkedList;
 
 import android.net.Uri;

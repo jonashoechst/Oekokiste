@@ -48,7 +48,7 @@ public class OrderActivity extends Activity {
 		
 		final ListView orderListView = (ListView) findViewById(R.id.orderListView);
 		 
-		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.order_item, orderList){
+		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.listview_item_order, orderList){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -58,7 +58,7 @@ public class OrderActivity extends Activity {
 		        if(row == null){
 		            LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
 		            
-		            row = inflater.inflate(R.layout.order_item, parent, false);
+		            row = inflater.inflate(R.layout.listview_item_order, parent, false);
 
 		        }
 		        

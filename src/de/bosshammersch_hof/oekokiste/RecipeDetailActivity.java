@@ -31,16 +31,6 @@ public class RecipeDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_detail);
-		
-		String name = getIntent().getStringExtra(OrderDetailActivity.ARTICLE_NAME_KEY);
-		
-		setTitle(name);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.recipe_detail, menu);
-		return true;
 	}
 
 }
