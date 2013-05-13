@@ -73,7 +73,7 @@ public class OrderDetailActivity extends Activity {
 		        
 		        nameTextView.setText(articleList.get(position).name);
 		        amountTextView.setText(articleList.get(position).amount+"");
-		        priceTextView.setText(String.format("%.2f€", articleList.get(position).price));
+		        priceTextView.setText(String.format("%.2f���", articleList.get(position).price));
 		        
 		        return row;
 		    }
@@ -91,7 +91,7 @@ public class OrderDetailActivity extends Activity {
         TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
 
         nameTextView.setText("Summe: ");
-        finalPriceTextView.setText(String.format("%.2f€",finalPrice));
+        finalPriceTextView.setText(String.format("%.2f���",finalPrice));
         
 		orderDetailArticleListView.addFooterView(sumRow);
 		
@@ -105,7 +105,7 @@ public class OrderDetailActivity extends Activity {
         	
 			@Override
 			public void onClick(View v){
-				Intent intent = new Intent(OrderDetailActivity.this, RecipeDetailActivity.class);
+				Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
 				startActivity(intent);
 			}
 			

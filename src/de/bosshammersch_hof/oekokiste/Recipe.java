@@ -15,6 +15,7 @@ public class Recipe {
 	int recipePopularity;
 	int recipeNumberOfPerson;
 	int recipeTimeInMinutes;
+	int hitRate;
 	
 	
 	
@@ -28,6 +29,14 @@ public class Recipe {
 		this.recipePopularity			= 3;
 		this.recipeNumberOfPerson       = 2;
 		this.recipeTimeInMinutes        = 100;
+		this.hitRate = 0;
+	}
+	
+	public Recipe(String name, int hitRate){
+		Recipe recipe = new Recipe();
+		recipe.setRecipeName(name);
+		recipe.setHitRate(hitRate);
+		
 	}
 	
 	public Recipe(String recipeName, String recipePictureDescription,
@@ -113,5 +122,13 @@ public class Recipe {
 
 	public void setRecipeTimeInMinutes(int recipeTimeInMinutes) {
 		this.recipeTimeInMinutes = recipeTimeInMinutes;
+	}
+	
+	public int getHitRate(){
+		return this.hitRate;
+	}
+	
+	public void setHitRate(int hitRate){
+		this.hitRate = hitRate;
 	}
 }

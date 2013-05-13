@@ -24,30 +24,31 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080019;
-        public static final int amountTextView=0x7f08000e;
+        public static final int action_settings=0x7f08001a;
+        public static final int amountTextView=0x7f08000f;
         public static final int articleDescriptionView=0x7f080002;
         public static final int articleImageView=0x7f080001;
-        public static final int boxnameTextView=0x7f080013;
+        public static final int boxnameTextView=0x7f080014;
         public static final int button1=0x7f080003;
-        public static final int finalPriceTextView=0x7f080011;
-        public static final int nameTextView=0x7f08000d;
-        public static final int orderDateTextView=0x7f080012;
+        public static final int finalPriceTextView=0x7f080012;
+        public static final int nameTextView=0x7f08000e;
+        public static final int orderDateTextView=0x7f080013;
         public static final int orderDetailArticleListView=0x7f080006;
         public static final int orderListView=0x7f080004;
-        public static final int priceTextView=0x7f08000f;
-        public static final int recipeCookingUtensils=0x7f08000b;
-        public static final int recipeDifficulty=0x7f080016;
-        public static final int recipeExampleCookingUtensils=0x7f08000c;
-        public static final int recipeExampleDifficulty=0x7f080017;
-        public static final int recipeExampleNumberOfPerson=0x7f080015;
-        public static final int recipeFindButton=0x7f080010;
-        public static final int recipeLongDescription=0x7f08000a;
-        public static final int recipeNameTextView=0x7f080007;
-        public static final int recipeNumberOfPerson=0x7f080014;
-        public static final int recipeNumberOfPersonTextView=0x7f080009;
-        public static final int recipePicture=0x7f080018;
-        public static final int recipeTimeInMinutesTextView=0x7f080008;
+        public static final int priceTextView=0x7f080010;
+        public static final int recipeCookingUtensils=0x7f08000c;
+        public static final int recipeDifficulty=0x7f080017;
+        public static final int recipeExampleCookingUtensils=0x7f08000d;
+        public static final int recipeExampleDifficulty=0x7f080018;
+        public static final int recipeExampleNumberOfPerson=0x7f080016;
+        public static final int recipeFindButton=0x7f080011;
+        public static final int recipeListView=0x7f080007;
+        public static final int recipeLongDescription=0x7f08000b;
+        public static final int recipeNameTextView=0x7f080008;
+        public static final int recipeNumberOfPerson=0x7f080015;
+        public static final int recipeNumberOfPersonTextView=0x7f08000a;
+        public static final int recipePicture=0x7f080019;
+        public static final int recipeTimeInMinutesTextView=0x7f080009;
         public static final int scrollView1=0x7f080000;
         public static final int textView1=0x7f080005;
     }
@@ -56,15 +57,16 @@ public final class R {
         public static final int activity_main=0x7f030001;
         public static final int activity_order=0x7f030002;
         public static final int activity_order_detail=0x7f030003;
-        public static final int activity_recipe_detail=0x7f030004;
-        public static final int activity_web_pdfview=0x7f030005;
-        public static final int listview_item_order_detail=0x7f030006;
-        public static final int listview_item_order_detail_recipe_button=0x7f030007;
-        public static final int listview_item_order_detail_sum=0x7f030008;
-        public static final int order_item=0x7f030009;
-        public static final int recipeview_recipe_detail_footer=0x7f03000a;
-        public static final int recipeview_recipe_detail_header=0x7f03000b;
-        public static final int recipeview_recipe_detail_mainpart=0x7f03000c;
+        public static final int activity_recipe=0x7f030004;
+        public static final int activity_recipe_detail=0x7f030005;
+        public static final int activity_web_pdfview=0x7f030006;
+        public static final int listview_item_order_detail=0x7f030007;
+        public static final int listview_item_order_detail_recipe_button=0x7f030008;
+        public static final int listview_item_order_detail_sum=0x7f030009;
+        public static final int order_item=0x7f03000a;
+        public static final int recipeview_recipe_detail_footer=0x7f03000b;
+        public static final int recipeview_recipe_detail_header=0x7f03000c;
+        public static final int recipeview_recipe_detail_mainpart=0x7f03000d;
     }
     public static final class menu {
         public static final int article_detail=0x7f070000;

@@ -14,9 +14,9 @@ import android.widget.TextView;
 
 public class RecipeActivity extends Activity {
 
-	Recipe recipeSuggestionOne = new Recipe("Nudeln mit Tomatenso§e",(int) Math.random() * 100);
+	Recipe recipeSuggestionOne = new Recipe("Nudeln mit Tomatensoï¿½e",(int) Math.random() * 100);
 	Recipe recipeSuggestionTwo = new Recipe("Spiegeleier", (int) Math.random() * 100);
-	Recipe recipeSuggestionThree = new Recipe("KŠsebrot", (int) Math.random() * 100);
+	Recipe recipeSuggestionThree = new Recipe("Kï¿½sebrot", (int) Math.random() * 100);
 	Recipe recipeSuggestionFour = new Recipe("Schnitzel und Pommes", (int) Math.random() * 100);
 	Recipe recipeSuggestionFive = new Recipe("Lasange", (int) Math.random() * 100);
 	Recipe recipeSuggestionSix = new Recipe("Hummer", (int) Math.random() * 100);
@@ -46,7 +46,7 @@ public class RecipeActivity extends Activity {
 		recipeList.add(recipeSuggestionEight);
 		recipeList.add(recipeSuggestionNine);
 		
-		final ListView recipeListView = (ListView) findViewById(R.id.orderListView);
+		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
 	
 		ListAdapter adapter = new ArrayAdapter<Recipe>(this, R.layout.order_item, recipeList){
 			
@@ -63,7 +63,7 @@ public class RecipeActivity extends Activity {
 		        }
 		        
 		        TextView orderDateTextView = (TextView) row.findViewById(R.id.orderDateTextView);
-		        orderDateTextView.setText(recipeList.get(position).getName());
+		        orderDateTextView.setText(recipeList.get(position).getRecipeName());
 		        
 		        TextView boxnameTextView = (TextView) row.findViewById(R.id.boxnameTextView);
 		        boxnameTextView.setText(recipeList.get(position).getHitRate());
