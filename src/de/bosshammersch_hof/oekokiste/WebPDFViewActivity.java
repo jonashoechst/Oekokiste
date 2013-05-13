@@ -16,8 +16,8 @@ public class WebPDFViewActivity extends Activity {
 		
 		
 		WebView mWebView=new WebView(WebPDFViewActivity.this);
-	    //mWebView.getSettings().setJavaScriptEnabled(true);
-	    //mWebView.getSettings().setPluginsEnabled(true);
+	    mWebView.getSettings().setJavaScriptEnabled(true);
+	    mWebView.getSettings().setPluginsEnabled(true);
 	    mWebView.loadUrl("https://docs.google.com/gview?embedded=true&url="+uri);
 	    setContentView(mWebView);
 		
