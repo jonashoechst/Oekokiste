@@ -4,30 +4,31 @@ import java.util.LinkedList;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class RecipeActivity extends Activity {
 
-	Recipe recipeSuggestionOne = new Recipe("Nudeln mit Tomatenso�e",(int) Math.random() * 100);
-	Recipe recipeSuggestionTwo = new Recipe("Spiegeleier", (int) Math.random() * 100);
-	Recipe recipeSuggestionThree = new Recipe("K�sebrot", (int) Math.random() * 100);
-	Recipe recipeSuggestionFour = new Recipe("Schnitzel und Pommes", (int) Math.random() * 100);
-	Recipe recipeSuggestionFive = new Recipe("Lasange", (int) Math.random() * 100);
-	Recipe recipeSuggestionSix = new Recipe("Hummer", (int) Math.random() * 100);
-	Recipe recipeSuggestionSeven = new Recipe("blah", (int) Math.random() * 100);
-	Recipe recipeSuggestionEight = new Recipe("blih", (int) Math.random() * 100);
-	Recipe recipeSuggestionNine = new Recipe("blubb", (int) Math.random() * 100);
+	Recipe recipeSuggestionOne = new Recipe("Nudeln mit Tomatensoße",(int) (Math.random() * 100));
+	Recipe recipeSuggestionTwo = new Recipe("Spiegeleier", (int) (Math.random() * 100));
+	Recipe recipeSuggestionThree = new Recipe("Käsebrot", (int) (Math.random() * 100));
+	Recipe recipeSuggestionFour = new Recipe("Schnitzel und Pommes", (int) (Math.random() * 100));
+	Recipe recipeSuggestionFive = new Recipe("Lasange", (int) (Math.random() * 100));
+	Recipe recipeSuggestionSix = new Recipe("Hummer", (int) (Math.random() * 100));
+	Recipe recipeSuggestionSeven = new Recipe("blah", (int) (Math.random() * 100));
+	Recipe recipeSuggestionEight = new Recipe("blih", (int) (Math.random() * 100));
+	Recipe recipeSuggestionNine = new Recipe("blubb", (int) (Math.random() * 100));
 	
 	TextView recipeNameTextView;
-	TextView recipePerPersonTextView;
-	TextView recipeDifficultyTextView;
-	TextView recipeTextTextView;
+	TextView hitRateTextView;
 	
 	LinkedList<Recipe> recipeList = new LinkedList<Recipe>();
 	
@@ -48,7 +49,7 @@ public class RecipeActivity extends Activity {
 		
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
 	
-		ListAdapter adapter = new ArrayAdapter<Recipe>(this, R.layout.order_item, recipeList){
+		ListAdapter adapter = new ArrayAdapter<Recipe>(this, R.layout.listview_item_recipe, recipeList){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -58,21 +59,29 @@ public class RecipeActivity extends Activity {
 		        if(row == null){
 		            LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
 		            
-		            row = inflater.inflate(R.layout.order_item, parent, false);
+		            row = inflater.inflate(R.layout.listview_item_recipe, parent, false);
 
 		        }
 		        
-		        TextView orderDateTextView = (TextView) row.findViewById(R.id.orderDateTextView);
-		        orderDateTextView.setText(recipeList.get(position).getRecipeName());
+		        TextView recipeNameTextView = (TextView) row.findViewById(R.id.recipeName);
+		        recipeNameTextView.setText(recipeList.get(position).name);
 		        
-		        TextView boxnameTextView = (TextView) row.findViewById(R.id.boxnameTextView);
-		        boxnameTextView.setText(recipeList.get(position).getHitRate());
+		        TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
+		        hitRateTextView.setText("" + recipeList.get(position).hitRate);
 		       
 		        return row;
 		    }
 		};
 		
 		recipeListView.setAdapter(adapter);
+		
+		recipeListView.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Intent intent = new Intent(RecipeActivity.this, RecipeDetailActivity.class);
+				startActivity(intent);
+			}
+		});
 		
 	}
 
