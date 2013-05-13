@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:padding="5sp"
-        android:text="1200,99€"
+        android:text="@string/sumprice"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold" />
 

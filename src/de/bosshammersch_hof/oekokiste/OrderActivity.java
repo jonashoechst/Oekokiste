@@ -4,11 +4,14 @@ import java.util.LinkedList;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class OrderActivity extends Activity {
 	
@@ -75,6 +78,17 @@ public class OrderActivity extends Activity {
 		};
 		
 		orderListView.setAdapter(adapter);
+		
+
+		
+		orderListView.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Intent intent = new Intent(OrderActivity.this,OrderDetailActivity.class);
+				startActivity(intent);
+			}
+		});
+		
 	}
 
 }
