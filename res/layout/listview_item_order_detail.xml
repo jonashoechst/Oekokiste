@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Artikel Name"
+   		android:padding="5sp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/amountTextView"
+        android:layout_width="60sp"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="12"
+   		android:padding="5sp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/priceTextView"
+        android:layout_width="80sp"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="12,95€"
+   		android:padding="5sp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>
