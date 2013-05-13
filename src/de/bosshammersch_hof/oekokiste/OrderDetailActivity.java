@@ -49,6 +49,11 @@ public class OrderDetailActivity extends Activity {
 		articleList.add(new Article("Apfel", 9, 1.10));
 		articleList.add(new Article("Schinken", 100, 30.45));
 		articleList.add(new Article("Haxe", 1, 5.40));
+		articleList.add(new Article("Käse", 3, 2.63));
+		articleList.add(new Article("Bier", 10, 9.99));
+		articleList.add(new Article("Döner", 1, 4.00));
+		articleList.add(new Article("Salat", 2, 2.50));
+		articleList.add(new Article("Champignon-Köpfe (geputzt)", 20, 5.40));
 		
 		ListView orderDetailArticleListView = (ListView) findViewById(R.id.orderDetailArticleListView);
 		
@@ -73,7 +78,7 @@ public class OrderDetailActivity extends Activity {
 		        
 		        nameTextView.setText(articleList.get(position).name);
 		        amountTextView.setText(articleList.get(position).amount+"");
-		        priceTextView.setText(String.format("%.2f���", articleList.get(position).price));
+		        priceTextView.setText(String.format("%.2f€", articleList.get(position).price));
 		        
 		        return row;
 		    }
@@ -91,7 +96,7 @@ public class OrderDetailActivity extends Activity {
         TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
 
         nameTextView.setText("Summe: ");
-        finalPriceTextView.setText(String.format("%.2f���",finalPrice));
+        finalPriceTextView.setText(String.format("%.2f€",finalPrice));
         
 		orderDetailArticleListView.addFooterView(sumRow);
 		

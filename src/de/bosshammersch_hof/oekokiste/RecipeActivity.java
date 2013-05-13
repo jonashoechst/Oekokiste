@@ -17,17 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class RecipeActivity extends Activity {
 
-<<<<<<< HEAD
-	Recipe recipeSuggestionOne = new Recipe("Nudeln mit Tomatensoße",(int) Math.random() * 100);
-	Recipe recipeSuggestionTwo = new Recipe("Spiegeleier", (int) Math.random() * 100);
-	Recipe recipeSuggestionThree = new Recipe("Käsebrot", (int) Math.random() * 100);
-	Recipe recipeSuggestionFour = new Recipe("Schnitzel und Pommes", (int) Math.random() * 100);
-	Recipe recipeSuggestionFive = new Recipe("Lasange", (int) Math.random() * 100);
-	Recipe recipeSuggestionSix = new Recipe("Hummer", (int) Math.random() * 100);
-	Recipe recipeSuggestionSeven = new Recipe("blah", (int) Math.random() * 100);
-	Recipe recipeSuggestionEight = new Recipe("blih", (int) Math.random() * 100);
-	Recipe recipeSuggestionNine = new Recipe("blubb", (int) Math.random() * 100);
-=======
+
 	Recipe recipeSuggestionOne = new Recipe("Nudeln mit Tomatensoße",(int) (Math.random() * 100));
 	Recipe recipeSuggestionTwo = new Recipe("Spiegeleier", (int) (Math.random() * 100));
 	Recipe recipeSuggestionThree = new Recipe("Käsebrot", (int) (Math.random() * 100));
@@ -37,7 +27,6 @@ public class RecipeActivity extends Activity {
 	Recipe recipeSuggestionSeven = new Recipe("blah", (int) (Math.random() * 100));
 	Recipe recipeSuggestionEight = new Recipe("blih", (int) (Math.random() * 100));
 	Recipe recipeSuggestionNine = new Recipe("blubb", (int) (Math.random() * 100));
->>>>>>> 9e04b5b5f78c538e5f910ecf838a6cbd3c7a6a68
 	
 	TextView recipeNameTextView;
 	TextView hitRateTextView;

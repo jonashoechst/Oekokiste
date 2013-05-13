@@ -18,6 +18,11 @@
         <activity
             android:name="de.bosshammersch_hof.oekokiste.MainActivity"
             android:label="@string/app_name" >
+            
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
          <activity
             android:name="de.bosshammersch_hof.oekokiste.RecipeDetailActivity"
@@ -43,11 +48,6 @@
         <activity
             android:name="de.bosshammersch_hof.oekokiste.RecipeActivity"
             android:label="gefundene Rezepte" >
-            
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
