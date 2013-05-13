@@ -1,36 +1,31 @@
 package de.bosshammersch_hof.oekokiste;
 
-//import java.util.LinkedList;
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
-//import android.widget.ImageView;
-//import android.widget.TextView;
+import android.content.Intent;
+import android.view.MenuItem;
 
 public class RecipeDetailActivity extends Activity {
-
-	/*
-	TextView recipeNameTextView;
-	TextView recipeNumberOfPersonTextView;
-	TextView recipeExampleNumberOfPerson;
-	TextView recipeTimeInMinutesTextView;
-	ImageView recipePicture;
-	TextView recipeLongDescription;
-	TextView recipeCookingUtensils;
-	TextView recipeExampleCookingUtensils;
-	TextView recipeDifficulty;
-	TextView recipeExampleDifficulty;
-	
-	
-	
-	LinkedList<Recipe> recipeList = new LinkedList<Recipe>();
-	Recipe spagetti = new Recipe("Spagetti", "Ein Spagettibild", "Einfaches Spagettigericht", "", 4.0, 4, 10, 110);
-	*/
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_detail);
+		
+		getActionBar().setHomeButtonEnabled(true);
 	}
-
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	            // app icon in action bar clicked; go home
+	            Intent intent = new Intent(this, MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 }

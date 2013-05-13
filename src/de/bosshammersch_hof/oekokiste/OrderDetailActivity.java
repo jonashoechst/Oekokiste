@@ -1,6 +1,5 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.io.File;
 import java.util.LinkedList;
 
 import android.net.Uri;
@@ -9,6 +8,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -24,6 +24,9 @@ public class OrderDetailActivity extends Activity {
 	
 	final static String ARTICLE_NAME_KEY = "ARTICLE_NAME_KEY";
 	
+	/**
+	 * An anonymous class for dummyarticles.
+	 */
 	class Article{	
 
 		public String name;
@@ -61,15 +64,11 @@ public class OrderDetailActivity extends Activity {
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
-				
 		        View row = convertView;
 		        
-		        if(row == null)
-		        {
+		        if(row == null){
 		            LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
-		            
 		            row = inflater.inflate(R.layout.listview_item_order_detail, parent, false);
-
 		        }
 
 		        TextView nameTextView = (TextView) row.findViewById(R.id.nameTextView);
@@ -82,7 +81,6 @@ public class OrderDetailActivity extends Activity {
 		        
 		        return row;
 		    }
-		
 		};
 		
 		// creating and filling the sum line
@@ -90,7 +88,9 @@ public class OrderDetailActivity extends Activity {
         View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
         double finalPrice = 0;
-        for(Article article : articleList) finalPrice += article.price; 
+        for(Article article : articleList){
+        	finalPrice += article.price; 
+        }
         
         TextView nameTextView = (TextView) sumRow.findViewById(R.id.nameTextView);
         TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
@@ -99,7 +99,6 @@ public class OrderDetailActivity extends Activity {
         finalPriceTextView.setText(String.format("%.2f€",finalPrice));
         
 		orderDetailArticleListView.addFooterView(sumRow);
-		
 
 		// creating and filling the recipe finder line
         View recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
@@ -113,11 +112,9 @@ public class OrderDetailActivity extends Activity {
 				Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
 				startActivity(intent);
 			}
-			
 		});
         
 		orderDetailArticleListView.addFooterView(recipeFindRow);
-		
 
 		orderDetailArticleListView.setAdapter(adapter);
 		
@@ -125,7 +122,9 @@ public class OrderDetailActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				
-				if (arg2 >= articleList.size()) return;
+				if (arg2 >= articleList.size()){
+					return;
+				}
 
 				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
 				intent.putExtra(ARTICLE_NAME_KEY, articleList.get(arg2).name);
@@ -133,10 +132,29 @@ public class OrderDetailActivity extends Activity {
 			}
 		});
 		
+		getActionBar().setHomeButtonEnabled(true);
 		
-	
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	            // app icon in action bar clicked; go home
+	            Intent intent = new Intent(this, MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	/**
+	 * Sends an intent to read .pdf-files. 
+	 *
+	 * @param	view	The clicked view.
+	 */
 	public void viewBillClicked(View view){
 
 		String link = "http://vcp-kurhessen.info/wordpress/wp-content/uploads/2011/08/2011-08-09_regionsordnung.pdf";
@@ -148,15 +166,10 @@ public class OrderDetailActivity extends Activity {
 
         try {
             startActivity(intent);
-        } 
-        catch (ActivityNotFoundException e) {
-           //Toast.makeText(this, "No Application Available to View PDF", Toast.LENGTH_SHORT).show();
-
-    		Intent webIntent = new Intent(this, WebPDFViewActivity.class);
+        } catch (ActivityNotFoundException e) {
+        	Intent webIntent = new Intent(this, WebPDFViewActivity.class);
     		webIntent.setDataAndType(path, "application/pdf");
     		startActivity(webIntent);
         }
-		
 	}
-
 }

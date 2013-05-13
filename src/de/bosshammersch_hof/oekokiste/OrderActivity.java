@@ -15,15 +15,15 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class OrderActivity extends Activity {
 	
-	Order one = new Order("Bestellung von 13.14.2012", "Test1", 35.95f);
-	Order two = new Order("Bestellung von 11.11.2011", "Test2", 3.95f);
-	Order three = new Order("Bestellung von 03.04.2010", "Test3", 35.90f);
-	Order four = new Order("Bestellung von 15.14.2012", "Test4", 359.95f);
-	Order five = new Order("Bestellung von 17.14.2019", "Test5", 352.95f);
-	Order six = new Order("Bestellung von 18.14.2017", "testkiste", 2.95f);
-	Order seven = new Order("Bestellung von 12.11.1900", "hallo", 35.05f);
-	Order eight = new Order("Bestellung von 02.17.2013", "wasnoch", 3643.98f);
-	Order nine = new Order("Bestellung von 01.13.2012", "Test1", 35.95f);
+	Order one = new Order("Bestellung von 13.14.2012", "Speedykiste", 18.00f);
+	Order two = new Order("Bestellung von 11.11.2011", "Obstkiste", 5.00f);
+	Order three = new Order("Bestellung von 03.04.2010", "Schonkostkiste", 21.00f);
+	Order four = new Order("Bestellung von 15.05.2012", "Regianlkiste", 15.00f);
+	Order five = new Order("Bestellung von 17.05.2010", "Fruchtjoghurt-Karussel", 1.99f);
+	Order six = new Order("Bestellung von 18.01.2012", "Käsepaket", 11.00f);
+	Order seven = new Order("Bestellung von 12.11.2013", "Single", 15.00f);
+	Order eight = new Order("Bestellung von 02.08.2013", "Vollsortiment", 21.00f);
+	Order nine = new Order("Bestellung von 01.10.2012", "Gemüsekiste", 18.00f);
 	
 	TextView orderDateTextView;
 	TextView boxnameTextView;
@@ -49,17 +49,13 @@ public class OrderActivity extends Activity {
 		final ListView orderListView = (ListView) findViewById(R.id.orderListView);
 		 
 		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.listview_item_order, orderList){
-			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
-				
 		        View row = convertView;
 		        
 		        if(row == null){
 		            LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
-		            
 		            row = inflater.inflate(R.layout.listview_item_order, parent, false);
-
 		        }
 		        
 		        TextView orderDateTextView = (TextView) row.findViewById(R.id.orderDateTextView);
@@ -69,17 +65,13 @@ public class OrderActivity extends Activity {
 		        boxnameTextView.setText(orderList.get(position).getName());
 		        
 		        TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
-		        priceTextView.setText("" + orderList.get(position).getPrice());
+		        priceTextView.setText(orderList.get(position).getPrice() + "€");
 		        
 		        return row;
 		    }
-			
-			
 		};
 		
 		orderListView.setAdapter(adapter);
-		
-
 		
 		orderListView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
@@ -89,6 +81,19 @@ public class OrderActivity extends Activity {
 			}
 		});
 		
+		getActionBar().setHomeButtonEnabled(true);
 	}
-
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	            // app icon in action bar clicked; go home
+	            Intent intent = new Intent(this, MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 }

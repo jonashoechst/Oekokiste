@@ -2,7 +2,9 @@ package de.bosshammersch_hof.oekokiste;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class ArticleDetailActivity extends Activity {
 
@@ -14,6 +16,21 @@ public class ArticleDetailActivity extends Activity {
 		String name = getIntent().getStringExtra(OrderDetailActivity.ARTICLE_NAME_KEY);
 		
 		setTitle(name);
+		
+		getActionBar().setHomeButtonEnabled(true);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	            Intent intent = new Intent(this, MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override
@@ -22,5 +39,4 @@ public class ArticleDetailActivity extends Activity {
 		getMenuInflater().inflate(R.menu.article_detail, menu);
 		return true;
 	}
-
 }

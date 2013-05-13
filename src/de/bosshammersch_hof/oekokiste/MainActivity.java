@@ -13,6 +13,17 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	}
+	
+	/**
+	 * Sends an intent if orderButton is clicked.
+	 * Starts OrderActivity which shows the orderlist  
+	 *
+	 * @param  view	The clicked View.
+	 */
+	public void orderButtonClicked(View view){
+		Intent intent = new Intent(this, OrderActivity.class);
+		startActivity(intent);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -20,12 +31,4 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	public void orderButtonClicked(View view){
-		
-		Intent intent = new Intent(this, OrderActivity.class);
-		startActivity(intent);
-		
-	}
-
 }

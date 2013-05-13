@@ -1,13 +1,17 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+>
+
+<GridLayout
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:columnCount="3"
     android:orientation="horizontal"
     android:rowCount="5" >
-
     
-    
-    <!--LINEARLAYOUT_SECTION FOR RECIPE_NAME, RECIPE_TIME AND RECIPE_NUMBOFPERSON--> 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,18 +22,17 @@
 
         <TextView
             android:id="@+id/recipeNameTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="5sp"
-            android:text="ExemplaryRecipeNameVeryLongOne"
+            android:text="Rezeptname"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/recipeTimeInMinutesTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:gravity="right"
             android:padding="5sp"
             android:text="120 Min."
@@ -39,10 +42,9 @@
             android:id="@+id/recipeNumberOfPersonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:gravity="right"
             android:padding="5sp"
-            android:text="10 Per"
+            android:text="10 Personen"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
@@ -74,6 +76,7 @@
     
     
     <!--LINEARLAYOUT_SECTION FOR RECIPE_IMAGE, RECIPE_TIME AND RECIPE_DESCRIPTION--> 
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -156,3 +159,4 @@
    
     
 </GridLayout>
+</ScrollView>
