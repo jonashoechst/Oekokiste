@@ -16,5 +16,4 @@ public class CookingArticle extends Article {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	
 }

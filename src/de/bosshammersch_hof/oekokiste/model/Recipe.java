@@ -18,12 +18,13 @@ public class Recipe {
 	private int workingTimeInMin;
 	private int cookingTimeInMin;
 	private int servings;
-	private List<cookingArticle> ingredients;
+	
+	private List<CookingArticle> ingredients;
 	
 	public Recipe(String name, String description, String instructions,
 			List<String> cookware, Bitmap image, int difficulty,
 			int workingTimeInMin, int cookingTimeInMin, int servings,
-			List<cookingArticle> ingredients) {
+			List<CookingArticle> ingredients) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -91,10 +92,10 @@ public class Recipe {
 	public void setServings(int servings) {
 		this.servings = servings;
 	}
-	public List<cookingArticle> getIngredients() {
+	public List<CookingArticle> getIngredients() {
 		return ingredients;
 	}
-	public void setIngredients(List<cookingArticle> ingredients) {
+	public void setIngredients(List<CookingArticle> ingredients) {
 		this.ingredients = ingredients;
 	}
 }

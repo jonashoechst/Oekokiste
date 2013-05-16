@@ -3,6 +3,7 @@ package de.bosshammersch_hof.oekokiste.model;
 public class OrderableArticle extends Article {
 
 	private float price;
+	
 	private int maxOrder;
 	
 	public OrderableArticle(int id, String name, String description, float price) {
@@ -26,5 +27,4 @@ public class OrderableArticle extends Article {
 	public void setMaxOrder(int maxOrder) {
 		this.maxOrder = maxOrder;
 	}
-
 }
