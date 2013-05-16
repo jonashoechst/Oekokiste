@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class RecipeActivity extends Activity {
-	
 	Recipe recipeSuggestionOne = new Recipe("Nudeln mit Tomatensoße",(int) (Math.random() * 100));
 	Recipe recipeSuggestionTwo = new Recipe("Spiegeleier", (int) (Math.random() * 100));
 	Recipe recipeSuggestionThree = new Recipe("Käsebrot", (int) (Math.random() * 100));

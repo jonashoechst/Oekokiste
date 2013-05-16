@@ -3,14 +3,22 @@ package de.bosshammersch_hof.oekokiste.model;
 import java.util.Date;
 import java.util.List;
 
-public class Order {
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+@DatabaseTable
+public class Order {
+	
+	@DatabaseField(generatedId = true)
 	private int id;
 	
+	@DatabaseField
 	private Date date;
 	
+	@DatabaseField
 	private String name;
 	
+	@DatabaseField
 	private List<OrderedArticle> articleList;
 	
 	public Order(int id, Date date, String name,

@@ -1,7 +1,9 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.util.Date;
 import java.util.LinkedList;
 
+import de.bosshammersch_hof.oekokiste.model.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -24,43 +26,16 @@ public class OrderDetailActivity extends Activity {
 	
 	final static String ARTICLE_NAME_KEY = "ARTICLE_NAME_KEY";
 	
-	/**
-	 * An anonymous class for dummyarticles.
-	 */
-	class Article{	
-
-		public String name;
-		public int amount;
-		public double price;
-		
-		public Article(String name, int amount, double price){
-			this.name = name;
-			this.amount = amount;
-			this.price = price;
-		}	
-	}
-	
-	LinkedList<Article> articleList = new LinkedList<Article>();;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_detail);
 		
-		articleList.add(new Article("Banane", 3, 0.89));
-		articleList.add(new Article("Kohlrabi", 10, 0.78));
-		articleList.add(new Article("Apfel", 9, 1.10));
-		articleList.add(new Article("Schinken", 100, 30.45));
-		articleList.add(new Article("Haxe", 1, 5.40));
-		articleList.add(new Article("Käse", 3, 2.63));
-		articleList.add(new Article("Bier", 10, 9.99));
-		articleList.add(new Article("Döner", 1, 4.00));
-		articleList.add(new Article("Salat", 2, 2.50));
-		articleList.add(new Article("Champignon-Köpfe (geputzt)", 20, 5.40));
-		
 		ListView orderDetailArticleListView = (ListView) findViewById(R.id.orderDetailArticleListView);
 		
-		ListAdapter adapter = new ArrayAdapter<Article>(this, R.layout.listview_item_order_detail, articleList){
+		final Order dummyOrder = getDummyOrder();
+		
+		ListAdapter adapter = new ArrayAdapter<OrderedArticle>(this, R.layout.listview_item_order_detail, dummyOrder.getArticleList()){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -75,9 +50,9 @@ public class OrderDetailActivity extends Activity {
 		        TextView amountTextView = (TextView) row.findViewById(R.id.amountTextView);
 		        TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
 		        
-		        nameTextView.setText(articleList.get(position).name);
-		        amountTextView.setText(articleList.get(position).amount+"");
-		        priceTextView.setText(String.format("%.2f€", articleList.get(position).price));
+		        nameTextView.setText(dummyOrder.getArticleList().get(position).getName());
+		        amountTextView.setText(dummyOrder.getArticleList().get(position).getCount()+"");
+		        priceTextView.setText(String.format("%.2f€", dummyOrder.getArticleList().get(position).getTotalPrice()));
 		        
 		        return row;
 		    }
@@ -88,8 +63,8 @@ public class OrderDetailActivity extends Activity {
         View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
         double finalPrice = 0;
-        for(Article article : articleList){
-        	finalPrice += article.price; 
+        for(OrderedArticle article : dummyOrder.getArticleList()){
+        	finalPrice += article.getTotalPrice(); 
         }
         
         TextView nameTextView = (TextView) sumRow.findViewById(R.id.nameTextView);
@@ -122,12 +97,11 @@ public class OrderDetailActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				
-				if (arg2 >= articleList.size()){
+				if (arg2 >= dummyOrder.getArticleList().size()){
 					return;
 				}
 
 				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
-				intent.putExtra(ARTICLE_NAME_KEY, articleList.get(arg2).name);
 				startActivity(intent);
 			}
 		});
@@ -171,5 +145,26 @@ public class OrderDetailActivity extends Activity {
     		webIntent.setDataAndType(path, "application/pdf");
     		startActivity(webIntent);
         }
+	}
+	
+	@SuppressWarnings("deprecation")
+	private Order getDummyOrder(){
+		
+		LinkedList<OrderedArticle> articleList = new LinkedList<OrderedArticle>();
+		
+		articleList.add(new OrderedArticle(0, "Gouda", "", 245, 2));
+		articleList.add(new OrderedArticle(0, "Kohlrabi", "", 115, 1));
+		articleList.add(new OrderedArticle(0, "Blattsalat", "", 120, 2));
+		articleList.add(new OrderedArticle(0, "Gurke", "", 70, 3));
+		articleList.add(new OrderedArticle(0, "Möhren (500g)", "", 219, 1));
+		articleList.add(new OrderedArticle(0, "Nackensteak (200g)", "", 550, 2));
+		articleList.add(new OrderedArticle(0, "Bierschinken (50g)", "", 100, 5));
+		articleList.add(new OrderedArticle(0, "Geflügelwürtchen (180g)", "", 459, 2));
+		articleList.add(new OrderedArticle(0, "Joghurt (500g)", "", 239, 1));
+		articleList.add(new OrderedArticle(0, "ROCKSTAR ENGERY DRINK (483 ml)", "", 279, 24));
+		
+		return new Order(0, new Date(Date.parse("11.12.2013")), "Beispielkiste", articleList);
+		
+		
 	}
 }

@@ -1,10 +1,18 @@
 package de.bosshammersch_hof.oekokiste.model;
 
-public abstract class Article {
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+@DatabaseTable
+public class Article {
+
+	@DatabaseField(generatedId = true)
 	private final int id;
 	
+	@DatabaseField
 	private String name;
+	
+	@DatabaseField
 	private String description;
 	
 	public Article(int id, String name, String description){

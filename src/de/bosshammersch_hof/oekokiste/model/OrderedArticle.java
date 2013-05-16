@@ -4,19 +4,23 @@ public class OrderedArticle extends Article {
 	
 	private int count;
 	
-	private float price;
+	private int price;
 
-	public OrderedArticle(int id, String name, String description, float price, int count) {
+	public OrderedArticle(int id, String name, String description, int price, int count) {
 		super(id, name, description);
 		this.price = price;
 		this.count = count;
 	}
 	
-	public float getPrice() {
+	public int getPrice() {
 		return price;
 	}
+	
+	public int getTotalPrice() {
+		return count*price;
+	}
 
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 

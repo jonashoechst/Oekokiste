@@ -1,17 +1,25 @@
 package de.bosshammersch_hof.oekokiste.model;
 
-import java.util.List;
+import java.util.LinkedList;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+@DatabaseTable
 public class User {
 
+	@DatabaseField(generatedId = true)
 	private int id;
 	
+	@DatabaseField
 	private String lastName;
+	
+	@DatabaseField
 	private String firstName;
 	
-	private List<Order> orderList;
+	@DatabaseField
+	private LinkedList<Order> orderList;
 	
-	public User(int id, String lastName, String firstName, List<Order> orderList) {
+	public User(int id, String lastName, String firstName, LinkedList<Order> orderList) {
 		super();
 		this.id = id;
 		this.lastName = lastName;
@@ -43,11 +51,11 @@ public class User {
 		this.firstName = firstName;
 	}
 
-	public List<Order> getOrderList() {
+	public LinkedList<Order> getOrderList() {
 		return orderList;
 	}
 
-	public void setOrderList(List<Order> orderList) {
+	public void setOrderList(LinkedList<Order> orderList) {
 		this.orderList = orderList;
 	}
 }

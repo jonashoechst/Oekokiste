@@ -1,7 +1,9 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.util.Date;
 import java.util.LinkedList;
 
+import de.bosshammersch_hof.oekokiste.model.*;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -15,40 +17,21 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class OrderActivity extends Activity {
 	
-	Order one = new Order("Bestellung von 13.14.2012", "Speedykiste", 18.00f);
-	Order two = new Order("Bestellung von 11.11.2011", "Obstkiste", 5.00f);
-	Order three = new Order("Bestellung von 03.04.2010", "Schonkostkiste", 21.00f);
-	Order four = new Order("Bestellung von 15.05.2012", "Regianlkiste", 15.00f);
-	Order five = new Order("Bestellung von 17.05.2010", "Fruchtjoghurt-Karussel", 1.99f);
-	Order six = new Order("Bestellung von 18.01.2012", "Käsepaket", 11.00f);
-	Order seven = new Order("Bestellung von 12.11.2013", "Single", 15.00f);
-	Order eight = new Order("Bestellung von 02.08.2013", "Vollsortiment", 21.00f);
-	Order nine = new Order("Bestellung von 01.10.2012", "Gemüsekiste", 18.00f);
 	
 	TextView orderDateTextView;
 	TextView boxnameTextView;
 	TextView priceTextView;
-	
-	LinkedList<Order> orderList = new LinkedList<Order>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order);
 		
-		orderList.add(one);
-		orderList.add(two);
-		orderList.add(three);
-		orderList.add(four);
-		orderList.add(five);
-		orderList.add(six);
-		orderList.add(seven);
-		orderList.add(eight);
-		orderList.add(nine);
+		final User user = getDummyUser();
 		
 		final ListView orderListView = (ListView) findViewById(R.id.orderListView);
 		 
-		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.listview_item_order, orderList){
+		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.listview_item_order, user.getOrderList()){
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 		        View row = convertView;
@@ -59,13 +42,13 @@ public class OrderActivity extends Activity {
 		        }
 		        
 		        TextView orderDateTextView = (TextView) row.findViewById(R.id.orderDateTextView);
-		        orderDateTextView.setText(orderList.get(position).getDate());
+		        orderDateTextView.setText(user.getOrderList().get(position).getDate().toString());
 		        
 		        TextView boxnameTextView = (TextView) row.findViewById(R.id.boxnameTextView);
-		        boxnameTextView.setText(orderList.get(position).getName());
+		        boxnameTextView.setText(user.getOrderList().get(position).getName());
 		        
 		        TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
-		        priceTextView.setText(orderList.get(position).getPrice() + "€");
+		        priceTextView.setText( ((int) (Math.random()*100)) +","+ ((int) (Math.random()*100)) + "€");
 		        
 		        return row;
 		    }
@@ -95,5 +78,22 @@ public class OrderActivity extends Activity {
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	}
+	
+	private User getDummyUser(){
+		
+		LinkedList<Order> orderList = new LinkedList<Order>();
+		orderList.add(new Order(0, new Date(), "Speedykiste", null));
+		orderList.add(new Order(0, new Date(), "Obstkiste", null));
+		orderList.add(new Order(0, new Date(), "Schonkostkiste", null));
+		orderList.add(new Order(0, new Date(), "Regianlkiste", null));
+		orderList.add(new Order(0, new Date(), "Fruchtjoghurt-Karussel", null));
+		orderList.add(new Order(0, new Date(), "Käsepaket", null));
+		orderList.add(new Order(0, new Date(), "Single", null));
+		orderList.add(new Order(0, new Date(), "Vollsortiment", null));
+		orderList.add(new Order(0, new Date(), "Gemüsekiste", null));
+		
+		return new User(0, "Sterz", "Artur", orderList);
+			
 	}
 }
