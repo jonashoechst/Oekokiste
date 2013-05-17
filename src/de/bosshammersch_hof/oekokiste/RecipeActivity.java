@@ -1,6 +1,11 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.util.Date;
 import java.util.LinkedList;
+
+import de.bosshammersch_hof.oekokiste.model.Order;
+import de.bosshammersch_hof.oekokiste.model.Recipe;
+import de.bosshammersch_hof.oekokiste.model.User;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -17,15 +22,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class RecipeActivity extends Activity {
-	Recipe recipeSuggestionOne = new Recipe("Nudeln mit Tomatensoße",(int) (Math.random() * 100));
-	Recipe recipeSuggestionTwo = new Recipe("Spiegeleier", (int) (Math.random() * 100));
-	Recipe recipeSuggestionThree = new Recipe("Käsebrot", (int) (Math.random() * 100));
-	Recipe recipeSuggestionFour = new Recipe("Schnitzel und Pommes", (int) (Math.random() * 100));
-	Recipe recipeSuggestionFive = new Recipe("Lasange", (int) (Math.random() * 100));
-	Recipe recipeSuggestionSix = new Recipe("Hummer", (int) (Math.random() * 100));
-	Recipe recipeSuggestionSeven = new Recipe("Rhabarberauflauf", (int) (Math.random() * 100));
-	Recipe recipeSuggestionEight = new Recipe("Honig-Senf-Vinaigrette", (int) (Math.random() * 100));
-	Recipe recipeSuggestionNine = new Recipe("Rosenkohlauflauf mit Speck und Hackfleisch", (int) (Math.random() * 100));
+	
 	
 	TextView recipeNameTextView;
 	TextView hitRateTextView;
@@ -96,5 +93,9 @@ public class RecipeActivity extends Activity {
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	}
+	
+	private LinkedList<Recipe> getDummyUser(){
+			
 	}
 }
