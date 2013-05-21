@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical" >
 
     <ScrollView
@@ -15,16 +16,16 @@
 
             <ImageView
                 android:id="@+id/articleImageView"
-                android:layout_width="220sp"
-                android:layout_height="220sp"
-                android:src="@drawable/ic_launcher" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gouda" />
 
             <TextView
                 android:id="@+id/articleDescriptionView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/lorem_ipsum"
-                android:padding= "20sp" />
+                android:padding= "@dimen/listitem_padding" />
 
         </LinearLayout>
         

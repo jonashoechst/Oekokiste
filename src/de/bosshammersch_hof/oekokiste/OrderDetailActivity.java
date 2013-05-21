@@ -1,7 +1,5 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -10,7 +8,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
