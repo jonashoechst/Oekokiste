@@ -1,7 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recipeListView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
     
-</ListView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dip" >
+
+        <TextView
+            android:id="@+id/recipeNameTextView"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:padding="5sp"
+            android:text="Rezeptname"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/recipeDifficulty"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|right"
+        android:text="Schwierigkeit"
+   		android:padding="5sp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/hitRate"
+        android:layout_width="80sp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|right"
+        android:text="Treffer"
+   		android:padding="5sp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
+
+    </LinearLayout>
+    
+    <View
+    	android:layout_width="fill_parent"
+    	android:layout_height="1dp"
+    	android:background="@android:color/darker_gray"/>
+
+   <ListView
+        android:id="@+id/recipeListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+    
+</LinearLayout>

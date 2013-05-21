@@ -52,8 +52,11 @@ public class RecipeActivity extends Activity {
 		        	TextView recipeNameTextView = (TextView) row.findViewById(R.id.recipeName);
 		        	recipeNameTextView.setText(recipeList.get(position).getName());
 		        
-		        	TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
-		        	hitRateTextView.setText("" + recipeList.get(position).getHitPoints());
+		        TextView recipeDifficultyTextView = (TextView) row.findViewById(R.id.recipeDifficulty);
+		        recipeDifficultyTextView.setText("" + recipeList.get(position).getDifficulty());
+		        
+		        TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
+		        hitRateTextView.setText("" + recipeList.get(position).getHitPoints());
 		       
 		        	return row;
 		    	}
@@ -100,17 +103,26 @@ public class RecipeActivity extends Activity {
 		
 		LinkedList<Recipe> recipeList = new LinkedList<Recipe>();
 
-		recipeList.add(new Recipe("Chili sin carne", "", "", null, null, 3, 10, 30, 4, null, 16));
-		recipeList.add(new Recipe("Käsebrot", "", "", null, null, 1, 2, 0, 1, null, 14));
-		recipeList.add(new Recipe("Milchreis", "", "", null, null, 3, 0, 10, 2, null, 13));
-		recipeList.add(new Recipe("Gemüse-Lasagne", "", "", null, null, 3, 20, 30, 6, null, 10));
-		recipeList.add(new Recipe("Hacksteak ala Patrick", "", "", null, null, 5, 30, 50, 4, null, 6));
-		recipeList.add(new Recipe("Death by cheese pizza", "", "", null, null, 3, 20, 50, 1, null, 6));
-		recipeList.add(new Recipe("Mitternachtssuppe", "", "", null, null, 3, 30, 20, 10, null, 6));
-		recipeList.add(new Recipe("Kandierte Orangenblüten", "", "", null, null, 4, 60, 0, 1, null, 4));
-		recipeList.add(new Recipe("Pfannkuchen mit Blattspinatfüllung", "", "", null, null, 1, 20, 15, 4, null, 4));
-		recipeList.add(new Recipe("Kartoffelnudeln mit Vanillesauce", "", "", null, null, 1, 45, 0, 4, null, 3));
-		recipeList.add(new Recipe("Warmer Speckkrautsalat", "", "", null, null, 3, 30, 0, 10, null, 2));
+		recipeList.add(new Recipe("Chili sin carne", "", "", null, null, 3, 10, 30, 4, null, 90));
+		recipeList.add(new Recipe("Käsebrot", "", "", null, null, 1, 2, 0, 1, null, 80));
+		recipeList.add(new Recipe("Milchreis", "", "", null, null, 3, 0, 10, 2, null, 77));
+		recipeList.add(new Recipe("Gemüse-Lasagne", "", "", null, null, 3, 20, 30, 6, null, 50));
+		recipeList.add(new Recipe("Hacksteak ala Patrick", "", "", null, null, 5, 30, 50, 4, null, 45));
+		recipeList.add(new Recipe("Death by cheese pizza", "", "", null, null, 3, 20, 50, 1, null, 40));
+		recipeList.add(new Recipe("Mitternachtssuppe", "", "", null, null, 3, 30, 20, 10, null, 39));
+		recipeList.add(new Recipe("Kandierte Orangenblüten", "", "", null, null, 4, 60, 0, 1, null, 33));
+		recipeList.add(new Recipe("Pfannkuchen mit Blattspinatfüllung", "", "", null, null, 1, 20, 15, 4, null,30));
+		recipeList.add(new Recipe("Kartoffelnudeln mit Vanillesauce", "", "", null, null, 1, 45, 0, 4, null, 27));
+		recipeList.add(new Recipe("Warmer Speckkrautsalat", "", "", null, null, 3, 30, 0, 10, null, 26));
+		recipeList.add(new Recipe("Rinderfiletscheiben in Kürbiskernpanier", "", "", null, null, 3, 30, 0, 4, null, 25));
+		recipeList.add(new Recipe("Milder Gewürzessig", "", "", null, null, 1, 20, 0, 2, null, 24));
+		recipeList.add(new Recipe("Purple Rain", "", "", null, null, 1, 0, 5, 1, null, 20));
+		recipeList.add(new Recipe("Sauerkrautsauce mit Speck", "", "", null, null, 1, 20, 25, 4, null, 10));
+		recipeList.add(new Recipe("Honig-Senf-Schweinesteaks mit Bourbon Whiskey", "", "", null, null, 1, 8, 10, 4, null, 9));
+		recipeList.add(new Recipe("Lisbon", "", "", null, null, 3, 30, 0, 10, null, 5));
+		recipeList.add(new Recipe("Grünes Kohlcurry", "", "", null, null, 1, 10, 30, 4, null, 3));
+		recipeList.add(new Recipe("Anislikör", "", "", null, null, 1, 0, 10, 2, null, 2));
+		recipeList.add(new Recipe("Sangria-Eis-Charlotte", "", "", null, null, 1, 30, 0, 16, null, 1));
 		
 		return recipeList;
 		
