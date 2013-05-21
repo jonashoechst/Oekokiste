@@ -23,7 +23,12 @@ public class OrderActivity extends Activity {
 	TextView orderDateTextView;
 	TextView boxnameTextView;
 	TextView priceTextView;
-
+	
+	/**
+	 *   creats the order list 
+	 *   ... and so on
+	 *   @param Bundle saved Instance State
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,11 +74,17 @@ public class OrderActivity extends Activity {
 		
 		getActionBar().setHomeButtonEnabled(true);
 	}
+	
+	/**
+	 *   if the app icon in action bar is clicked => go home
+	 *   else the super constructor of the function is called
+	 *   @param MenuItem which was selected
+	 *   @return boolean 
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:
-	            // app icon in action bar clicked; go home
 	            Intent intent = new Intent(this, MainActivity.class);
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 	            startActivity(intent);
@@ -83,6 +94,11 @@ public class OrderActivity extends Activity {
 	    }
 	}
 	
+	/**
+	 *   creats a list of orders with dummy data
+	 *   and creats a new User with this list of orders
+	 *   @return returns dummy User
+	 */
 	private User getDummyUser(){
 		
 		LinkedList<Order> orderList = new LinkedList<Order>();

@@ -7,6 +7,10 @@ import android.view.MenuItem;
 
 public class RecipeDetailActivity extends Activity {
 	
+	/** 
+	 *   creats the detail-view of recipe
+	 *   @param Bundle saved Instance State
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -15,11 +19,16 @@ public class RecipeDetailActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 	}
 	
+	/**
+	 *   if the app icon in action bar is clicked => go home
+	 *   else the super constructor of the function is called
+	 *   @param MenuItem which was selected
+	 *   @return boolean 
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:
-	            // app icon in action bar clicked; go home
 	            Intent intent = new Intent(this, MainActivity.class);
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 	            startActivity(intent);

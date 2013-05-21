@@ -28,6 +28,10 @@ public class OrderDetailActivity extends Activity {
 	
 	final static String ARTICLE_NAME_KEY = "ARTICLE_NAME_KEY";
 	
+	/** 
+	 *   creats the detail-view of order
+	 *   @param Bundle saved Instance State
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,50 +45,49 @@ public class OrderDetailActivity extends Activity {
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
-		        View row = convertView;
+		       	 	View row = convertView;
 		        
-		        if(row == null){
-		            LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
-		            row = inflater.inflate(R.layout.listview_item_order_detail, parent, false);
-		        }
+		        	if(row == null){
+		            	    LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
+		        	    row = inflater.inflate(R.layout.listview_item_order_detail, parent, false);
+		        	}
 
-		        TextView nameTextView = (TextView) row.findViewById(R.id.nameTextView);
-		        TextView amountTextView = (TextView) row.findViewById(R.id.amountTextView);
-		        TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
+		        	TextView nameTextView = (TextView) row.findViewById(R.id.nameTextView);
+		        	TextView amountTextView = (TextView) row.findViewById(R.id.amountTextView);
+		        	TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
 		        
-		        nameTextView.setText(dummyOrder.getArticleList().get(position).getName());
-		        amountTextView.setText(dummyOrder.getArticleList().get(position).getCount()+"");
-		        int price = dummyOrder.getArticleList().get(position).getTotalPrice();
-		        priceTextView.setText((price/100)+","+(price%100)+"€");
+		        	nameTextView.setText(dummyOrder.getArticleList().get(position).getName());
+		        	amountTextView.setText(dummyOrder.getArticleList().get(position).getCount()+"");
+		        	int price = dummyOrder.getArticleList().get(position).getTotalPrice();
+		        	priceTextView.setText((price/100)+","+(price%100)+"€");
 		        
-		        return row;
-		    }
+		        	return row;
+			}
 		};
 		
 		// creating and filling the sum line
 		LayoutInflater inflater = getLayoutInflater();
-        View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
+      	  	View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
-        int finalPrice = 0;
-        for(OrderedArticle article : dummyOrder.getArticleList()){
-        	finalPrice += article.getTotalPrice(); 
-        }
+        	int finalPrice = 0;
+        	for(OrderedArticle article : dummyOrder.getArticleList()){
+        		finalPrice += article.getTotalPrice(); 
+        	}
         
-        TextView nameTextView = (TextView) sumRow.findViewById(R.id.nameTextView);
-        TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
+        	TextView nameTextView = (TextView) sumRow.findViewById(R.id.nameTextView);
+        	TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
 
-        nameTextView.setText("Summe: ");
-        finalPriceTextView.setText((finalPrice/100)+","+(finalPrice%100)+"€");
+        	nameTextView.setText("Summe: ");
+        	finalPriceTextView.setText((finalPrice/100)+","+(finalPrice%100)+"€");
         
 		orderDetailArticleListView.addFooterView(sumRow);
 
 		// creating and filling the recipe finder line
-        View recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
+        	View recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
         
-        Button recipeFindButton = (Button) recipeFindRow.findViewById(R.id.recipeFindButton);
+        	Button recipeFindButton = (Button) recipeFindRow.findViewById(R.id.recipeFindButton);
         
-        recipeFindButton.setOnClickListener(new OnClickListener(){
-        	
+        	recipeFindButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
 				Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
@@ -113,6 +116,12 @@ public class OrderDetailActivity extends Activity {
 		
 	}
 	
+	/**
+	 *   if the app icon in action bar is clicked => go home
+	 *   else the super constructor of the function is called
+	 *   @param MenuItem which was selected
+	 *   @return boolean 
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
@@ -149,7 +158,10 @@ public class OrderDetailActivity extends Activity {
     		startActivity(webIntent);
         }
 	}
-	
+	/**
+	 *   supplies dummy data for testing the app
+	 *   @return Order returns a new Order
+	 */
 	@SuppressWarnings("deprecation")
 	private Order getDummyOrder(){
 		

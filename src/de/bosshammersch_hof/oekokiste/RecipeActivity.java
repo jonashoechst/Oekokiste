@@ -24,6 +24,10 @@ public class RecipeActivity extends Activity {
 	TextView recipeNameTextView;
 	TextView hitRateTextView;
 	
+	/** 
+	 *   creats the hole list of recipe
+	 *   @param Bundle saved Instance State
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,21 +42,21 @@ public class RecipeActivity extends Activity {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				
-		        View row = convertView;
+		        	View row = convertView;
 		        
-		        if(row == null){
-		        	LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
-		            row = inflater.inflate(R.layout.listview_item_recipe, parent, false);
-		        }
+		        	if(row == null){
+		        		LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
+		            		row = inflater.inflate(R.layout.listview_item_recipe, parent, false);
+		        	}
 		        
-		        TextView recipeNameTextView = (TextView) row.findViewById(R.id.recipeName);
-		        recipeNameTextView.setText(recipeList.get(position).getName());
+		        	TextView recipeNameTextView = (TextView) row.findViewById(R.id.recipeName);
+		        	recipeNameTextView.setText(recipeList.get(position).getName());
 		        
-		        TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
-		        hitRateTextView.setText("" + recipeList.get(position).getHitPoints());
+		        	TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
+		        	hitRateTextView.setText("" + recipeList.get(position).getHitPoints());
 		       
-		        return row;
-		    }
+		        	return row;
+		    	}
 		};
 		
 		recipeListView.setAdapter(adapter);
@@ -68,6 +72,12 @@ public class RecipeActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 	}
 	
+	/**
+	 *   if the app icon in action bar is clicked => go home
+	 *   else the super constructor of the function is called
+	 *   @param MenuItem which was selected
+	 *   @return boolean 
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
@@ -82,6 +92,10 @@ public class RecipeActivity extends Activity {
 	    }
 	}
 	
+	/**
+	 *   supplies dummy data for testing the app
+	 *   @return  LinkedList<Recipe>
+	 */
 	private LinkedList<Recipe> getDummyRecipeList(){
 		
 		LinkedList<Recipe> recipeList = new LinkedList<Recipe>();

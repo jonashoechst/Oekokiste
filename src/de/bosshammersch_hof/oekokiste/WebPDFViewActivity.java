@@ -9,7 +9,11 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 public class WebPDFViewActivity extends Activity {
-
+	
+	/** 
+	 *   creats a webview to show a pdf in the app
+	 *   @param Bundle saved Instance State
+	 */
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,12 @@ public class WebPDFViewActivity extends Activity {
 	    getActionBar().setHomeButtonEnabled(true);
 	}
 	
+	/**
+	 *   if the app icon in action bar is clicked => go home
+	 *   else the super constructor of the function is called
+	 *   @param MenuItem which was selected
+	 *   @return boolean 
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
