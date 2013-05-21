@@ -61,4 +61,14 @@ public class Order {
 	public void setArticleList(List<OrderedArticle> articleList) {
 		this.articleList = articleList;
 	}
+	
+	public String getTotalOrderValue(){
+		int totalValue = 0;
+		totalValue = (int) (Math.random()*10000);
+		/* For later use.
+		for(OrderedArticle article : articleList){
+			totalValue += article.getTotalPrice();
+		}*/
+		return String.format("%d,%2d€", (totalValue/100), (totalValue%100));
+	}
 }

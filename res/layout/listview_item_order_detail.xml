@@ -5,17 +5,18 @@
     <TextView
         android:id="@+id/nameTextView"
         android:layout_width="0dip"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="Artikel Name"
+        android:text="Artikel Name ghjkl fghjkl kjhg fghjkl lkjh "
+        android:gravity="center_vertical|left"
    		android:padding="5sp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/amountTextView"
-        android:layout_width="60sp"
-        android:layout_height="wrap_content"
-        android:gravity="right"
+        android:layout_width="35sp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|right"
         android:text="12"
    		android:padding="5sp"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -23,8 +24,8 @@
     <TextView
         android:id="@+id/priceTextView"
         android:layout_width="80sp"
-        android:layout_height="wrap_content"
-        android:gravity="right"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|right"
         android:text="12,95€"
    		android:padding="5sp"
         android:textAppearance="?android:attr/textAppearanceMedium" />

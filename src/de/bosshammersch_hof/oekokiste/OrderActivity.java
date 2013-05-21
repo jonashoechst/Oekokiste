@@ -1,7 +1,9 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.text.SimpleDateFormat;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import android.os.Bundle;
@@ -42,13 +44,14 @@ public class OrderActivity extends Activity {
 		        }
 		        
 		        TextView orderDateTextView = (TextView) row.findViewById(R.id.orderDateTextView);
-		        orderDateTextView.setText(user.getOrderList().get(position).getDate().toString());
+		        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		        orderDateTextView.setText(dateFormat.format(user.getOrderList().get(position).getDate()));
 		        
 		        TextView boxnameTextView = (TextView) row.findViewById(R.id.boxnameTextView);
 		        boxnameTextView.setText(user.getOrderList().get(position).getName());
 		        
 		        TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
-		        priceTextView.setText( ((int) (Math.random()*100)) +","+ ((int) (Math.random()*100)) + "€");
+		        priceTextView.setText(user.getOrderList().get(position).getTotalOrderValue());
 		        
 		        return row;
 		    }

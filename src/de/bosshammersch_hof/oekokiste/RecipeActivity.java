@@ -1,11 +1,8 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.util.Date;
 import java.util.LinkedList;
 
-import de.bosshammersch_hof.oekokiste.model.Order;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
-import de.bosshammersch_hof.oekokiste.model.User;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -27,22 +24,12 @@ public class RecipeActivity extends Activity {
 	TextView recipeNameTextView;
 	TextView hitRateTextView;
 	
-	LinkedList<Recipe> recipeList = new LinkedList<Recipe>();
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe);
 		
-		recipeList.add(recipeSuggestionOne);
-		recipeList.add(recipeSuggestionTwo);
-		recipeList.add(recipeSuggestionThree);
-		recipeList.add(recipeSuggestionFour);
-		recipeList.add(recipeSuggestionFive);
-		recipeList.add(recipeSuggestionSix);
-		recipeList.add(recipeSuggestionSeven);
-		recipeList.add(recipeSuggestionEight);
-		recipeList.add(recipeSuggestionNine);
+		final LinkedList<Recipe> recipeList = getDummyRecipeList();
 		
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
 	
@@ -59,10 +46,10 @@ public class RecipeActivity extends Activity {
 		        }
 		        
 		        TextView recipeNameTextView = (TextView) row.findViewById(R.id.recipeName);
-		        recipeNameTextView.setText(recipeList.get(position).name);
+		        recipeNameTextView.setText(recipeList.get(position).getName());
 		        
 		        TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
-		        hitRateTextView.setText("" + recipeList.get(position).hitRate);
+		        hitRateTextView.setText("" + recipeList.get(position).getHitPoints());
 		       
 		        return row;
 		    }
@@ -95,7 +82,23 @@ public class RecipeActivity extends Activity {
 	    }
 	}
 	
-	private LinkedList<Recipe> getDummyUser(){
-			
+	private LinkedList<Recipe> getDummyRecipeList(){
+		
+		LinkedList<Recipe> recipeList = new LinkedList<Recipe>();
+
+		recipeList.add(new Recipe("Chili sin carne", "", "", null, null, 3, 10, 30, 4, null, 16));
+		recipeList.add(new Recipe("Käsebrot", "", "", null, null, 1, 2, 0, 1, null, 14));
+		recipeList.add(new Recipe("Milchreis", "", "", null, null, 3, 0, 10, 2, null, 13));
+		recipeList.add(new Recipe("Gemüse-Lasagne", "", "", null, null, 3, 20, 30, 6, null, 10));
+		recipeList.add(new Recipe("Hacksteak ala Patrick", "", "", null, null, 5, 30, 50, 4, null, 6));
+		recipeList.add(new Recipe("Death by cheese pizza", "", "", null, null, 3, 20, 50, 1, null, 6));
+		recipeList.add(new Recipe("Mitternachtssuppe", "", "", null, null, 3, 30, 20, 10, null, 6));
+		recipeList.add(new Recipe("Kandierte Orangenblüten", "", "", null, null, 4, 60, 0, 1, null, 4));
+		recipeList.add(new Recipe("Pfannkuchen mit Blattspinatfüllung", "", "", null, null, 1, 20, 15, 4, null, 4));
+		recipeList.add(new Recipe("Kartoffelnudeln mit Vanillesauce", "", "", null, null, 1, 45, 0, 4, null, 3));
+		recipeList.add(new Recipe("Warmer Speckkrautsalat", "", "", null, null, 3, 30, 0, 10, null, 2));
+		
+		return recipeList;
+		
 	}
 }

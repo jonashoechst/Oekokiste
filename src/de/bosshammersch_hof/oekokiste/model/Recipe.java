@@ -21,10 +21,12 @@ public class Recipe {
 	
 	private List<CookingArticle> ingredients;
 	
+	private int hitPoints;
+	
 	public Recipe(String name, String description, String instructions,
 			List<String> cookware, Bitmap image, int difficulty,
 			int workingTimeInMin, int cookingTimeInMin, int servings,
-			List<CookingArticle> ingredients) {
+			List<CookingArticle> ingredients, int hitPoints) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -36,6 +38,7 @@ public class Recipe {
 		this.cookingTimeInMin = cookingTimeInMin;
 		this.servings = servings;
 		this.ingredients = ingredients;
+		this.hitPoints = hitPoints;
 	}
 	
 	public String getName() {
@@ -98,4 +101,11 @@ public class Recipe {
 	public void setIngredients(List<CookingArticle> ingredients) {
 		this.ingredients = ingredients;
 	}
+	public int getHitPoints() {
+		return hitPoints;
+	}
+	public void setHitPoints(int hitPoints) {
+		this.hitPoints = hitPoints;
+	}
+	
 }

@@ -1,14 +1,16 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
-
 import de.bosshammersch_hof.oekokiste.model.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,7 +54,8 @@ public class OrderDetailActivity extends Activity {
 		        
 		        nameTextView.setText(dummyOrder.getArticleList().get(position).getName());
 		        amountTextView.setText(dummyOrder.getArticleList().get(position).getCount()+"");
-		        priceTextView.setText(String.format("%.2f€", dummyOrder.getArticleList().get(position).getTotalPrice()));
+		        int price = dummyOrder.getArticleList().get(position).getTotalPrice();
+		        priceTextView.setText((price/100)+","+(price%100)+"€");
 		        
 		        return row;
 		    }
@@ -62,7 +65,7 @@ public class OrderDetailActivity extends Activity {
 		LayoutInflater inflater = getLayoutInflater();
         View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
-        double finalPrice = 0;
+        int finalPrice = 0;
         for(OrderedArticle article : dummyOrder.getArticleList()){
         	finalPrice += article.getTotalPrice(); 
         }
@@ -71,7 +74,7 @@ public class OrderDetailActivity extends Activity {
         TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
 
         nameTextView.setText("Summe: ");
-        finalPriceTextView.setText(String.format("%.2f€",finalPrice));
+        finalPriceTextView.setText((finalPrice/100)+","+(finalPrice%100)+"€");
         
 		orderDetailArticleListView.addFooterView(sumRow);
 
@@ -163,7 +166,8 @@ public class OrderDetailActivity extends Activity {
 		articleList.add(new OrderedArticle(0, "Joghurt (500g)", "", 239, 1));
 		articleList.add(new OrderedArticle(0, "ROCKSTAR ENGERY DRINK (483 ml)", "", 279, 24));
 		
-		return new Order(0, new Date(Date.parse("11.12.2013")), "Beispielkiste", articleList);
+		return new Order(0, new Date(2012, 3, 24), "Beispielkiste", articleList);
+
 		
 		
 	}

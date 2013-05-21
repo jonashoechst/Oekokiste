@@ -4,10 +4,7 @@ import java.sql.SQLException;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.util.Log;
-import de.bosshammersch_hof.oekokiste.Order;
-import de.bosshammersch_hof.oekokiste.R;
 import de.bosshammersch_hof.oekokiste.model.*;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -20,7 +17,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
 	private static final int DATABASE_VERSION = 6;
 	
 	public DatabaseHelper(Context context){
-		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+		//super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+		super(context, DATABASE_NAME, null, DATABASE_VERSION, 0);
 	}
 	
 	@Override
