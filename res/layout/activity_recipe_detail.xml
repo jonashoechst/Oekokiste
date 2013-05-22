@@ -10,7 +10,7 @@
     android:layout_height="wrap_content"
     android:columnCount="3"
     android:orientation="horizontal"
-    android:rowCount="5" >
+    android:rowCount="6" >
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="5sp"
-            android:text="Rezeptname"
+            android:text="@string/recipeFlammkuchenName"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:padding="5sp"
-            android:text="120 Min."
+            android:text="45 Min."
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:padding="5sp"
-            android:text="10 Personen"
+            android:text="5 Personen"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
@@ -89,9 +89,10 @@
             android:id="@+id/articleImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:layout_weight="1"
             android:padding="5sp"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/flammkuchen" />
 
         <TextView
             android:id="@+id/recipeLongDescription"
@@ -99,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:padding="5sp"
-            android:text="@string/lorem_ipsum"
+            android:text="@string/recipeFlammkuchenDescr"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
@@ -109,6 +110,41 @@
     
     
     <!--SEPERATOR-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_gravity="left"
+        android:layout_row="5"
+        android:orientation="horizontal" >
+        
+        <TextView 
+            android:id="@+id/recipeInstructions" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:padding="10sp" 
+            android:text="Instructions:" 
+            android:textAppearance="?android:attr/textAppearanceSmall" 
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/recipeExampleInstructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:padding="5sp"
+            android:textAppearance="?android:attr/textAppearanceSmall" 
+            android:text="@string/recipeFlammkuchenInstructions" />
+
+             
+    </LinearLayout>
+
+    
+    
+    
+    
+    
     <LinearLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -129,7 +165,7 @@
     
     
     
-    <!--LINEARLAYOUT_SECTION FOR RECIPE_COOKINGUTENSILS--> 
+   	<!--LINEARLAYOUT_SECTION FOR RECIPE_COOKINGUTENSILS--> 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -142,7 +178,7 @@
             android:id="@+id/recipeCookingUtensils"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5sp"
+            android:padding="20sp"
             android:text="Cooking Utensils:"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="bold" />
@@ -153,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
            	android:padding="5sp"
-            android:text="Ruehrbesen, Kochloeffel, Backofen, Kaffeemaschine, Fussball,.."
+            android:text="@string/cookingUtensils1"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
    
