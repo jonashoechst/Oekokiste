@@ -1,12 +1,13 @@
 package de.bosshammersch_hof.oekokiste;
 
-import de.bosshammersch_hof.oekokiste.model.Article;
+import java.util.LinkedList;
+
+import de.bosshammersch_hof.oekokiste.model.CookingArticle;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RecipeDetailActivity extends Activity {
@@ -28,21 +29,37 @@ public class RecipeDetailActivity extends Activity {
 		setTitle(recipe.getName());
 		
 		TextView recipeNameTextView             = (TextView) findViewById(R.id.recipeNameTextView);
-		TextView recipeTimeInMinutesTextView    = (TextView) findViewById(R.id.recipeTimeInMinutesTextView);
+		recipeNameTextView.setText(recipe.getName());
+		
+		TextView recipeTimeTextView    			= (TextView) findViewById(R.id.recipeTimeTextView);
+		recipeTimeTextView.setText((recipe.getCookingTimeInMin()+recipe.getWorkingTimeInMin())+" Min.");
+		
 		TextView recipeNumberOfPersonTextView   = (TextView) findViewById(R.id.recipeNumberOfPersonTextView);
+		recipeNumberOfPersonTextView.setText(recipe.getServings()+" Personen");
 		
-		ImageView articleImageView              = (ImageView) findViewById(R.id.articleImageView);
+		// not yet used.
+		// ImageView recipeImageView              	= (ImageView) findViewById(R.id.recipeImageView);
 		
-		TextView recipeLongDescriptionTextView     = (TextView) findViewById(R.id.recipeLongDescription);
-		TextView recipeInstructionsTextView        = (TextView) findViewById(R.id.recipeInstructions);
-		TextView recipeExampleInstructionsTextView = (TextView) findViewById(R.id.recipeExampleInstructions);
-		TextView recipeCookingUtensils 			   = (TextView) findViewById(R.id.recipeCookingUtensils);
-		TextView recipeExampleCookingUtensils      = (TextView) findViewById(R.id.recipeExampleCookingUtensils);
-				
+		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
 		recipeLongDescriptionTextView.setText(recipe.getDescription());
-		recipeInstructionsTextView.setText(recipe.getInstructions());
-		recipeExampleInstructionsTextView.setText(recipe.getInstructions());
+
+		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
+		String cookwareString = "";
+		for(String item : recipe.getCookware()){
+			cookwareString += item+"\n";
+		}
+		recipeCookingUtensilsTextView.setText(cookwareString);
 		
+		TextView recipeIngredientsTextView 		= (TextView) findViewById(R.id.recipeIngredientsTextView);
+		String ingredientsString = "";
+		for(CookingArticle item : recipe.getIngredients()){
+			if(item.getCount() != 1) ingredientsString += item.getCount()+" ";
+			ingredientsString += item.getName()+"\n";
+		}
+		recipeIngredientsTextView.setText(ingredientsString);
+		
+		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
+		recipeInstructionsTextView.setText(recipe.getInstructions());
 		
 	}
 	
@@ -71,19 +88,34 @@ public class RecipeDetailActivity extends Activity {
 	 */
 	private Recipe getDummyRecipe(){
 		
-		String description = "Flammkuchen, Flammenkuchen oder Flammekueche (frz. Tarte flambée) ist ein herzhafter Kuchen aus dem Elsass (frz. Alsace) in Frankreich. Ursprünglich war Flammkuchen ein bäuerliches Essen, mit dem am Backtag getestet wurde, ob der dörfliche Backofen heiß genug war, bevor die Brote für die Woche gebacken wurden. Da der Backtag im dörflichen Arbeitsrhythmus ein Gemeinschaftsereignis war und der Backofen im Backhaus auch vor Feiertagen angeheizt wurde, entwickelte sich der Flammkuchen mit der Zeit zum Festtagsessen. Als Teig benutzte man Brotteig.";
-		String instruction = "Den Brotteig in 4–5 Stücke zerteilen, mit einem Küchentuch abdecken und die Teigstücke 30 Minuten ruhen lassen. Den Quark (mit oder ohne Crème fraîche, siehe Varianten) mit Salz und Pfeffer verrühren. Zwiebel in dünne Ringe schneiden oder hobeln. Den Frühstücksspeck in Streifen schneiden. Den Teig auf einer bemehlten Arbeitsfläche so dünn wie möglich auswellen und mit dem Quark gleichmäßig dünn bestreichen. Mit Frühstücksspeck, Zwiebelringen (und Käse, siehe Varianten) belegen.";
+		String description = "Flammkuchen, Flammenkuchen oder Flammekueche (frz. Tarte flambÃ©e) ist ein herzhafter Kuchen aus dem Elsass (frz. Alsace) in Frankreich. UrsprÃ¼nglich war Flammkuchen ein bÃ¤uerliches Essen, mit dem am Backtag getestet wurde, ob der dÃ¶rfliche Backofen heiÃŸ genug war, bevor die Brote fÃ¼r die Woche gebacken wurden. Da der Backtag im dÃ¶rflichen Arbeitsrhythmus ein Gemeinschaftsereignis war und der Backofen im Backhaus auch vor Feiertagen angeheizt wurde, entwickelte sich der Flammkuchen mit der Zeit zum Festtagsessen. Als Teig benutzte man Brotteig.";
+		String instruction = "Den Brotteig in 4Â–5 StÃ¼cke zerteilen, mit einem KÃ¼chentuch abdecken und die TeigstÃ¼cke 30 Minuten ruhen lassen. Den Quark (mit oder ohne CrÃ¨me fraÃ®che, siehe Varianten) mit Salz und Pfeffer verrÃ¼hren. Zwiebel in dÃ¼nne Ringe schneiden oder hobeln. Den FrÃ¼hstÃ¼cksspeck in Streifen schneiden. Den Teig auf einer bemehlten ArbeitsflÃ¤che so dÃ¼nn wie mÃ¶glich auswellen und mit dem Quark gleichmÃ¤ÃŸig dÃ¼nn bestreichen. Mit FrÃ¼hstÃ¼cksspeck, Zwiebelringen (und KÃ¤se, siehe Varianten) belegen.";
+		
+		LinkedList<String> cookware = new LinkedList<String>();
+		cookware.add("Nudelholz");
+		cookware.add("Backblech");
+		cookware.add("2 BÃ¶gen Backpapier");
+		cookware.add("Teigschaber");
+		cookware.add("RÃ¼hrschÃ¼ssel");
+		cookware.add("Messer");
+		
+		LinkedList<CookingArticle> articleList = new LinkedList<CookingArticle>();
+		articleList.add(new CookingArticle(	0, "500g Mehl", "", 1));
+		articleList.add(new CookingArticle(	0, "1 Becher Schmand", "", 2));
+		articleList.add(new CookingArticle(	0, "250g Speck", "", 1));
+		articleList.add(new CookingArticle(	0, "1 Block Gouda", "", 1));
+		articleList.add(new CookingArticle(	0, "3 Zwiebeln", "", 2));
 		
 		Recipe recipeFlammkuchen = new Recipe("Flammkuchen", 
 											  description, 
 											  instruction,
-											  null,//Cookware
+											  cookware,//Cookware
 											  null,//Image
 											  3,//Difficulty
 											  45,//WorkingTime
 											  30,//CookingTime
-											  0,//servings
-											  null, //Incrediants
+											  5,//servings
+											  articleList, //Ingediants
 											  3);//hitrate)
 		return recipeFlammkuchen;
 		

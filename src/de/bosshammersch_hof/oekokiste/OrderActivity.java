@@ -1,9 +1,8 @@
-package de.bosshammersch_hof.oekokiste;
+ package de.bosshammersch_hof.oekokiste;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
-import java.text.SimpleDateFormat;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import android.os.Bundle;

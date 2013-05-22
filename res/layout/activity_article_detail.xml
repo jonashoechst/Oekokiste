@@ -14,6 +14,63 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/header_padding" >
+
+                    <TextView
+                        android:id="@+id/oldPriceTextViewHeader"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/detailArticleActivity_oldPrice"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <TextView
+                        android:id="@+id/oldPriceTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="0"
+                        android:layout_height="wrap_content"
+                        android:text="7,23€"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/header_padding" >
+
+                    <TextView
+                        android:id="@+id/newPriceTextViewHeader"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/detailArticleActivity_newPrice"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <TextView
+                        android:id="@+id/newPriceTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="5,35€"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+            </LinearLayout>
+            
+               
+    		<View
+    			android:layout_width="fill_parent"
+    			android:layout_height="1dp"
+    			android:background="@android:color/darker_gray"/>
+
             <ImageView
                 android:id="@+id/articleImageView"
                 android:layout_width="match_parent"
@@ -25,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/lorem_ipsum"
-                android:padding= "@dimen/listitem_padding" />
+                android:padding="@dimen/padding_small" />
 
         </LinearLayout>
         

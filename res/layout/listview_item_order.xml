@@ -3,11 +3,11 @@
     android:layout_height="fill_parent"
     android:layout_gravity="center"
     android:orientation="horizontal"
-    android:padding="@dimen/listitem_padding" >
+    android:padding="@dimen/header_padding" >
 
     <TextView
         android:id="@+id/boxnameTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_weight="1"

@@ -1,23 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
+    android:padding="@dimen/padding_small"
     android:layout_height="fill_parent" >
 
     <TextView
         android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Gesamtbetrag:"
-   		android:padding="5sp"
+        android:text="@string/detailOrderActivity_totalValue"
+        android:paddingLeft="40sp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/finalPriceTextView"
-        android:layout_width="85sp"
+        android:layout_width="70sp"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:padding="5sp"
-        android:text="@string/sumprice"
+        android:text="123,45€"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold" />
 

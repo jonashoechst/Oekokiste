@@ -4,24 +4,26 @@
     android:orientation="vertical" >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dip" >
+        android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/orderDateTextView"
+            android:layout_width="0dip"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bestellung vom XX.XX.XXXX "
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+        	android:padding="@dimen/header_padding"
+            android:text="XX.XX.XXXX"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
 
         <Button
-            android:id="@+id/button1"
-            android:layout_weight="3"
+            android:id="@+id/billButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
         	android:onClick="viewBillClicked"
-            android:text="Rechnung" />
+            android:text="@string/detailOrderActivity_bill" />
 
     </LinearLayout>
     

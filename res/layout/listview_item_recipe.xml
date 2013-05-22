@@ -9,7 +9,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical|left"
         android:padding="5sp"
-        android:text="@string/recipe_name"
+        android:text="Rezeptname"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -26,7 +26,7 @@
         android:layout_width="80sp"
         android:layout_height="match_parent"
         android:gravity="center_vertical|right"
-        android:text="@string/percent"
+        android:text="89%"
    		android:padding="5sp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

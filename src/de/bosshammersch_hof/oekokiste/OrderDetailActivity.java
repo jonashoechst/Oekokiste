@@ -1,5 +1,6 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -109,6 +110,10 @@ public class OrderDetailActivity extends Activity {
 			}
 		});
 		
+		TextView orderDateTextView = (TextView) findViewById(R.id.orderDateTextView);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		orderDateTextView.setText(dateFormat.format(dummyOrder.getDate()));
+		
 		getActionBar().setHomeButtonEnabled(true);
 		
 	}
@@ -175,7 +180,7 @@ public class OrderDetailActivity extends Activity {
 		articleList.add(new OrderedArticle(0, "Joghurt (500g)", "", 239, 1));
 		articleList.add(new OrderedArticle(0, "ROCKSTAR ENGERY DRINK (483 ml)", "", 279, 24));
 		
-		return new Order(0, new Date(2012, 3, 24), "Beispielkiste", articleList);
+		return new Order(0, new Date(112, 3, 24), "Beispielkiste", articleList);
 
 		
 		

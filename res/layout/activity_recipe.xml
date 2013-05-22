@@ -5,38 +5,36 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dip" >
+        android:padding="@dimen/header_padding"
+        android:layout_height="wrap_content" >
 
-        <TextView
+    	<TextView
             android:id="@+id/recipeNameTextView"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical|left"
-            android:padding="5sp"
             android:text="Rezeptname"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/recipeDifficulty"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|right"
-        android:text="Schwierigkeit"
-   		android:padding="5sp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold" />
+    	<TextView
+       		android:id="@+id/recipeDifficulty"
+        	android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:gravity="center_vertical|right"
+        	android:text="Schwierigkeit"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/hitRate"
-        android:layout_width="80sp"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|right"
-        android:text="Treffer"
-   		android:padding="5sp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold" />
+    	<TextView
+        	android:id="@+id/hitRate"
+        	android:layout_width="80sp"
+        	android:layout_height="match_parent"
+        	android:gravity="center_vertical|right"
+        	android:text="Treffer"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:textStyle="bold" />
 
     </LinearLayout>
     

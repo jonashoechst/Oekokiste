@@ -1,198 +1,144 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-
+    android:id="@+id/scrollView1"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
->
+    android:layout_height="fill_parent" >
 
-<GridLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:columnCount="3"
-    android:orientation="horizontal"
-    android:rowCount="6" >
-    
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="2"
-        android:layout_row="0"
-        android:orientation="horizontal" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/recipeNameTextView"
-            android:layout_width="0dip"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="5sp"
-            android:text="@string/recipeFlammkuchenName"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:padding="@dimen/header_padding" >
 
-        <TextView
-            android:id="@+id/recipeTimeInMinutesTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:padding="5sp"
-            android:text="45 Min."
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            <TextView
+                android:id="@+id/recipeNameTextView"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Flammkuchen"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/recipeNumberOfPersonTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:padding="5sp"
-            android:text="5 Personen"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/recipeTimeTextView"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="45 Min."
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    
-    
-    
-    
-    
-    <!--SEPERATOR-->
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="left"
-        android:layout_row="1"
-        android:orientation="horizontal" >
-        
-        
-    	<View  
-    		android:layout_width="fill_parent"
-    		android:layout_height="1dp"
-    		android:background="@android:color/darker_gray"/>
-    </LinearLayout>
-   
-    
-    
-    
-    
-    
-    
-    <!--LINEARLAYOUT_SECTION FOR RECIPE_IMAGE, RECIPE_TIME AND RECIPE_DESCRIPTION--> 
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="left"
-        android:layout_row="2"
-        android:orientation="horizontal" >
+            <TextView
+                android:id="@+id/recipeNumberOfPersonTextView"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="5 Personen"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
 
         <ImageView
-            android:id="@+id/articleImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_weight="1"
-            android:padding="5sp"
+            android:id="@+id/recipeImageView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_weight="0.01"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             android:src="@drawable/flammkuchen" />
 
         <TextView
-            android:id="@+id/recipeLongDescription"
+            android:id="@+id/recipeLongDescriptionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:padding="5sp"
-            android:text="@string/recipeFlammkuchenDescr"
+            android:padding="@dimen/padding_small"
+            android:text="@string/lorem_ipsum"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
 
-    
-    
-    
-    
-    
-    <!--SEPERATOR-->
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="left"
-        android:layout_row="5"
-        android:orientation="horizontal" >
-        
-        <TextView 
-            android:id="@+id/recipeInstructions" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:padding="10sp" 
-            android:text="Instructions:" 
-            android:textAppearance="?android:attr/textAppearanceSmall" 
-            android:textStyle="bold" />
-        
-        <TextView
-            android:id="@+id/recipeExampleInstructions"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:padding="5sp"
-            android:textAppearance="?android:attr/textAppearanceSmall" 
-            android:text="@string/recipeFlammkuchenInstructions" />
+            android:padding="@dimen/padding_small" >
 
-             
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
-    
-    
-    
-    
-    
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="left"
-        android:layout_row="3"
-        android:orientation="horizontal" >
-        
-        
-    	<View  
-    		android:layout_width="fill_parent"
-    		android:layout_height="1dp"
-    		android:background="@android:color/darker_gray"/>
-    </LinearLayout>
-    
-    
-    
-    
-    
-    
-   	<!--LINEARLAYOUT_SECTION FOR RECIPE_COOKINGUTENSILS--> 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="left"
-        android:layout_row="4"
-        android:orientation="horizontal" >
+                <TextView
+                    android:id="@+id/recipeIngredientsTextViewHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recipeDetailActivity_ingredients_header"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/recipeCookingUtensils"
-            android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/recipeIngredientsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Karotte \nButter\n"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/recipeCookingUtensilsTextViewHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recipeDetailActivity_cookingutensils_header"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/recipeCookingUtensilsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Becher\nBlech\nSchüssel"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20sp"
-            android:text="Cooking Utensils:"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="@dimen/padding_small" >
 
-    	<TextView
-      	    android:id="@+id/recipeExampleCookingUtensils"
-       	    android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-           	android:padding="5sp"
-            android:text="@string/cookingUtensils1"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            <TextView
+                android:id="@+id/recipeInstructionsTextViewHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipeDetailActivity_cookinginstructions_header"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/recipeInstructionsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lorem_ipsum"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
     </LinearLayout>
-   
-    
-</GridLayout>
+
 </ScrollView>
