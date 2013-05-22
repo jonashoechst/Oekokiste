@@ -21,6 +21,9 @@ public class Order {
 	@DatabaseField
 	private List<OrderedArticle> articleList;
 	
+	@DatabaseField
+	private String barcodeString;
+	
 	public Order(int id, Date date, String name,
 			List<OrderedArticle> articleList) {
 		super();
@@ -62,6 +65,14 @@ public class Order {
 		this.articleList = articleList;
 	}
 	
+	public String getBarcodeString() {
+		return barcodeString;
+	}
+
+	public void setBarcodeString(String barcodeString) {
+		this.barcodeString = barcodeString;
+	}
+
 	public String getTotalOrderValue(){
 		int totalValue = 0;
 		totalValue = (int) (Math.random()*10000);
