@@ -1,11 +1,14 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Locale;
 import de.bosshammersch_hof.oekokiste.model.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -21,6 +24,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 public class OrderDetailActivity extends Activity {
 	
@@ -111,7 +115,7 @@ public class OrderDetailActivity extends Activity {
 		});
 		
 		TextView orderDateTextView = (TextView) findViewById(R.id.orderDateTextView);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
 		orderDateTextView.setText(dateFormat.format(dummyOrder.getDate()));
 		
 		getActionBar().setHomeButtonEnabled(true);
@@ -145,9 +149,11 @@ public class OrderDetailActivity extends Activity {
 	 */
 	public void viewBillClicked(View view){
 
-		String link = "http://vcp-kurhessen.info/wordpress/wp-content/uploads/2011/08/2011-08-09_regionsordnung.pdf";
+		//String link = "http://vcp-kurhessen.info/wordpress/wp-content/uploads/2011/08/2011-08-09_regionsordnung.pdf";
 		
-		Uri path = Uri.parse(link);
+		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/lieferscheine/1.pdf");
+		Uri path = Uri.fromFile(file);
+		
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(path, "application/pdf");
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -155,9 +161,12 @@ public class OrderDetailActivity extends Activity {
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-        	Intent webIntent = new Intent(this, WebPDFViewActivity.class);
-    		webIntent.setDataAndType(path, "application/pdf");
-    		startActivity(webIntent);
+        	//Intent webIntent = new Intent(this, WebPDFViewActivity.class);
+    		//webIntent.setDataAndType(path, "application/pdf");
+    		//startActivity(webIntent);
+        	Toast.makeText(OrderDetailActivity.this, 
+        			"Auf diesem Gerät ist keine App zum anzeigen von PDF Dokumenten installiert.", 
+        			Toast.LENGTH_SHORT).show();
         }
 	}
 	/**
