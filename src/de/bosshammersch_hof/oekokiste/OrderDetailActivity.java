@@ -115,7 +115,7 @@ public class OrderDetailActivity extends Activity {
 		});
 		
 		TextView orderDateTextView = (TextView) findViewById(R.id.orderDateTextView);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+        	SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
 		orderDateTextView.setText(dateFormat.format(dummyOrder.getDate()));
 		
 		getActionBar().setHomeButtonEnabled(true);
@@ -154,26 +154,25 @@ public class OrderDetailActivity extends Activity {
 		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/lieferscheine/1.pdf");
 		Uri path = Uri.fromFile(file);
 		
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(path, "application/pdf");
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        	Intent intent = new Intent(Intent.ACTION_VIEW);
+        	intent.setDataAndType(path, "application/pdf");
+        	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        try {
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-        	//Intent webIntent = new Intent(this, WebPDFViewActivity.class);
-    		//webIntent.setDataAndType(path, "application/pdf");
-    		//startActivity(webIntent);
-        	Toast.makeText(OrderDetailActivity.this, 
+        	try {
+            		startActivity(intent);
+        	} catch (ActivityNotFoundException e) {
+        		//Intent webIntent = new Intent(this, WebPDFViewActivity.class);
+    			//webIntent.setDataAndType(path, "application/pdf");
+    			//startActivity(webIntent);
+        		Toast.makeText(OrderDetailActivity.this, 
         			"Auf diesem Gerät ist keine App zum anzeigen von PDF Dokumenten installiert.", 
         			Toast.LENGTH_SHORT).show();
-        }
+        	}
 	}
 	/**
 	 *   supplies dummy data for testing the app
 	 *   @return Order returns a new Order
 	 */
-	@SuppressWarnings("deprecation")
 	private Order getDummyOrder(){
 		
 		LinkedList<OrderedArticle> articleList = new LinkedList<OrderedArticle>();

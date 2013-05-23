@@ -52,11 +52,11 @@ public class RecipeActivity extends Activity {
 		        	TextView recipeNameTextView = (TextView) row.findViewById(R.id.recipeName);
 		        	recipeNameTextView.setText(recipeList.get(position).getName());
 		        
-		        TextView recipeDifficultyTextView = (TextView) row.findViewById(R.id.recipeDifficulty);
-		        recipeDifficultyTextView.setText("" + recipeList.get(position).getDifficulty());
+		        	TextView recipeDifficultyTextView = (TextView) row.findViewById(R.id.recipeDifficulty);
+		        	recipeDifficultyTextView.setText("" + recipeList.get(position).getDifficulty());
 		        
-		        TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
-		        hitRateTextView.setText("" + recipeList.get(position).getHitPoints());
+		        	TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
+		        	hitRateTextView.setText("" + recipeList.get(position).getHitPoints());
 		       
 		        	return row;
 		    	}
@@ -104,7 +104,7 @@ public class RecipeActivity extends Activity {
 		LinkedList<Recipe> recipeList = new LinkedList<Recipe>();
 
 		recipeList.add(new Recipe("Chili sin carne", "", "", null, null, 3, 10, 30, 4, null, 90));
-		recipeList.add(new Recipe("Käsebrot", "", "", null, null, 1, 2, 0, 1, null, 80));
+		recipeList.add(new Recipe("Flammkuchen", "", "", null, null, 1, 45, 30, 5, null, 80));
 		recipeList.add(new Recipe("Milchreis", "", "", null, null, 3, 0, 10, 2, null, 77));
 		recipeList.add(new Recipe("Gemüse-Lasagne", "", "", null, null, 3, 20, 30, 6, null, 50));
 		recipeList.add(new Recipe("Hacksteak ala Patrick", "", "", null, null, 5, 30, 50, 4, null, 45));

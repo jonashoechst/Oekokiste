@@ -41,25 +41,25 @@ public class OrderActivity extends Activity {
 		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.listview_item_order, user.getOrderList()){
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
-		        View row = convertView;
+			        View row = convertView;
 		        
-		        if(row == null){
-		            LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
-		            row = inflater.inflate(R.layout.listview_item_order, parent, false);
-		        }
+			       	if(row == null){
+			            LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
+			            row = inflater.inflate(R.layout.listview_item_order, parent, false);
+			        }
 		        
-		        TextView orderDateTextView = (TextView) row.findViewById(R.id.orderDateTextView);
-		        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
-		        orderDateTextView.setText(dateFormat.format(user.getOrderList().get(position).getDate()));
+			        TextView orderDateTextView = (TextView) row.findViewById(R.id.orderDateTextView);
+			        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+			        orderDateTextView.setText(dateFormat.format(user.getOrderList().get(position).getDate()));
 		        
-		        TextView boxnameTextView = (TextView) row.findViewById(R.id.boxnameTextView);
-		        boxnameTextView.setText(user.getOrderList().get(position).getName());
+			        TextView boxnameTextView = (TextView) row.findViewById(R.id.boxnameTextView);
+			        boxnameTextView.setText(user.getOrderList().get(position).getName());
 		        
-		        TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
-		        priceTextView.setText(user.getOrderList().get(position).getTotalOrderValue());
+			        TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
+			        priceTextView.setText(user.getOrderList().get(position).getTotalOrderValue());
 		        
-		        return row;
-		    }
+			        return row;
+		    	}
 		};
 		
 		orderListView.setAdapter(adapter);
