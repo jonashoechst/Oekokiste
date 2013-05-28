@@ -29,6 +29,16 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 	
+	/**
+	 * Sends an intent if loginButton is clicked.
+	 * Starts LoginActivity lets the User login to the DB  
+	 * @param  view The clicked View.
+	 */
+	public void loginButtonClicked(View view){
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+	}
+	
 	
 	/**
 	 *   Inflate the menu; 
