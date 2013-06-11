@@ -18,7 +18,7 @@ public class Article {
 	@DatabaseField
 	private String origin;
 	
-	@DatabaseField
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private ArticleGroup articleGroup;
 
 	public Article(){

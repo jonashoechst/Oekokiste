@@ -13,7 +13,7 @@ public class ArticleGroup {
 	@DatabaseField(id = true)
 	private String name;
 	
-	@DatabaseField
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private Category category;
 	
 	@ForeignCollectionField(eager = false)

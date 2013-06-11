@@ -8,8 +8,8 @@ public class OrderedArticle {
 
 	@DatabaseField(generatedId = true)
 	private int id;
-	
-	@DatabaseField
+
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private Article article;
 	
 	@DatabaseField

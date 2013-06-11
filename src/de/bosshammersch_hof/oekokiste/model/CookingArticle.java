@@ -10,10 +10,10 @@ public class CookingArticle {
 	@DatabaseField(generatedId = true)
 	private int generatedId;
 	
-	@DatabaseField
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private Article article;
-	
-	@DatabaseField
+
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private ArticleGroup articleGroup;
 	
 	@DatabaseField
