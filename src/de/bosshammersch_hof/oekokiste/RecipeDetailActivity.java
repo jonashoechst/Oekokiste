@@ -2,6 +2,7 @@ package de.bosshammersch_hof.oekokiste;
 
 import java.util.LinkedList;
 
+import de.bosshammersch_hof.oekokiste.model.Article;
 import de.bosshammersch_hof.oekokiste.model.CookingArticle;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
 import android.os.Bundle;
@@ -53,8 +54,8 @@ public class RecipeDetailActivity extends Activity {
 		TextView recipeIngredientsTextView 		= (TextView) findViewById(R.id.recipeIngredientsTextView);
 		String ingredientsString = "";
 		for(CookingArticle item : recipe.getIngredients()){
-			if(item.getCount() != 1) ingredientsString += item.getCount()+" ";
-			ingredientsString += item.getName()+"\n";
+			if(item.getAmount() != 1) ingredientsString += item.getAmount()+" ";
+			ingredientsString += item.getArticle().getName()+"\n";
 		}
 		recipeIngredientsTextView.setText(ingredientsString);
 		
@@ -100,11 +101,17 @@ public class RecipeDetailActivity extends Activity {
 		cookware.add("Messer");
 		
 		LinkedList<CookingArticle> articleList = new LinkedList<CookingArticle>();
-		articleList.add(new CookingArticle(	0, "500g Mehl", "", 1));
-		articleList.add(new CookingArticle(	0, "1 Becher Schmand", "", 2));
-		articleList.add(new CookingArticle(	0, "250g Speck", "", 1));
-		articleList.add(new CookingArticle(	0, "1 Block Gouda", "", 1));
-		articleList.add(new CookingArticle(	0, "3 Zwiebeln", "", 2));
+
+		Article article1 = new Article(1, "Mehl", "");
+		articleList.add(new CookingArticle(article1, 200, "g", true));
+		Article article2 = new Article(2, "Schmand", "");
+		articleList.add(new CookingArticle(article2, 1, "Becher", false));
+		Article article3 = new Article(3, "Speck", "");
+		articleList.add(new CookingArticle(article3, 250, "g", true));
+		Article article4 = new Article(4, "Gouda", "");
+		articleList.add(new CookingArticle(article4, 1, "Block", true));
+		Article article5 = new Article(5, "Zwiebeln", "");
+		articleList.add(new CookingArticle(article5, 3, "Stück", true));
 		
 		Recipe recipeFlammkuchen = new Recipe("Flammkuchen", 
 											  description, 

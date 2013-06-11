@@ -56,7 +56,7 @@ public class RecipeActivity extends Activity {
 		        	recipeDifficultyTextView.setText("" + recipeList.get(position).getDifficulty());
 		        
 		        	TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
-		        	hitRateTextView.setText("" + recipeList.get(position).getHitPoints());
+		        	hitRateTextView.setText("");
 		       
 		        	return row;
 		    	}

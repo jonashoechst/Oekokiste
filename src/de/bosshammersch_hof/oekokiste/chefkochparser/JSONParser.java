@@ -1,4 +1,4 @@
-package de.bosshammersch_hof.oekokiste;
+package de.bosshammersch_hof.oekokiste.chefkochparser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

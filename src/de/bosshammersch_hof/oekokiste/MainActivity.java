@@ -1,5 +1,11 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.util.List;
+
+import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseHelper;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +13,8 @@ import android.view.Menu;
 import android.view.View;
 
 public class MainActivity extends Activity {
+	
+	User user;
 	
 	/**
 	 *   calls the super Constructor
@@ -17,6 +25,13 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// Init the Databasemanager
+		DatabaseManager.init(this);
+		
+		// get the last State of the app
+		List<OpenState> stateliste = DatabaseManager.getHelper().getOpenStateDao().queryForAll();
+		
 	}
 	
 	/**
@@ -50,6 +65,12 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	private void setupUser(int id){
+		
+		
+		
 	}
 	
 }

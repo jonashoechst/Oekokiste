@@ -1,15 +1,17 @@
 package de.bosshammersch_hof.oekokiste.model;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
 public class Order {
 	
-	@DatabaseField(generatedId = true)
+	@DatabaseField(id = true)
 	private int id;
 	
 	@DatabaseField
@@ -18,19 +20,22 @@ public class Order {
 	@DatabaseField
 	private String name;
 	
-	@DatabaseField
+	@ForeignCollectionField(eager = false)
 	private List<OrderedArticle> articleList;
 	
-	@DatabaseField
-	private String barcodeString;
+	@ForeignCollectionField(eager = false)
+	private List<Barcode> barcodeList;
 	
-	public Order(int id, Date date, String name,
-			List<OrderedArticle> articleList) {
-		super();
+	public Order(){
+		articleList = new LinkedList<OrderedArticle>();
+		barcodeList = new LinkedList<Barcode>();
+	}
+	
+	public Order(int id, Date date, String name) {
+		this();
 		this.id = id;
 		this.date = date;
 		this.name = name;
-		this.articleList = articleList;
 	}
 
 	public int getId() {
@@ -65,12 +70,14 @@ public class Order {
 		this.articleList = articleList;
 	}
 	
-	public String getBarcodeString() {
-		return barcodeString;
+	
+	
+	public List<Barcode> getBarcodeList() {
+		return barcodeList;
 	}
 
-	public void setBarcodeString(String barcodeString) {
-		this.barcodeString = barcodeString;
+	public void setBarcodeList(List<Barcode> barcodeList) {
+		this.barcodeList = barcodeList;
 	}
 
 	public String getTotalOrderValue(){

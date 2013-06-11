@@ -1,7 +1,10 @@
 package de.bosshammersch_hof.oekokiste.model;
 
 import java.util.LinkedList;
+import java.util.List;
+
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
@@ -17,14 +20,21 @@ public class User {
 	private String firstName;
 	
 	@DatabaseField
-	private LinkedList<Order> orderList;
+	private String loginName;
+
+	@ForeignCollectionField(eager = false)
+	private List<Order> orderList;
 	
-	public User(int id, String lastName, String firstName, LinkedList<Order> orderList) {
-		super();
+	private User(){
+		this.orderList = new LinkedList<Order>();
+	}
+	
+	public User(int id, String lastName, String firstName, String loginName) {
+		this();
 		this.id = id;
 		this.lastName = lastName;
 		this.firstName = firstName;
-		this.orderList = orderList;
+		this.loginName = loginName;
 	}
 
 	public int getId() {
@@ -51,11 +61,19 @@ public class User {
 		this.firstName = firstName;
 	}
 
-	public LinkedList<Order> getOrderList() {
+	public List<Order> getOrderList() {
 		return orderList;
 	}
 
 	public void setOrderList(LinkedList<Order> orderList) {
 		this.orderList = orderList;
+	}
+	
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
 	}
 }

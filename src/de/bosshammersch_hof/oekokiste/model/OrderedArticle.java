@@ -1,34 +1,73 @@
 package de.bosshammersch_hof.oekokiste.model;
 
-public class OrderedArticle extends Article {
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable
+public class OrderedArticle {
+
+	@DatabaseField(generatedId = true)
+	private int id;
 	
-	private int count;
+	@DatabaseField
+	private Article article;
 	
+	@DatabaseField
+	private double amount;
+	
+	@DatabaseField
+	private String amountType;
+	
+	@DatabaseField
 	private int price;
 
-	public OrderedArticle(int id, String name, String description, int price, int count) {
-		super(id, name, description);
-		this.price = price;
-		this.count = count;
+	private OrderedArticle(){	
 	}
 	
+	public OrderedArticle(Article article, double amount, String amountType, int price) {
+		this();
+		this.article = article;
+		this.amountType = amountType;
+		this.amount = amount;
+		this.price = price;
+	}
+	
+	public Article getArticle() {
+		return article;
+	}
+
+	public void setArticle(Article article) {
+		this.article = article;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public String getAmountType() {
+		return amountType;
+	}
+
+	public void setAmountType(String amountType) {
+		this.amountType = amountType;
+	}
+
 	public int getPrice() {
 		return price;
 	}
-	
-	public int getTotalPrice() {
-		return count*price;
+
+	public double getTotalPrice() {
+		return price*amount;
 	}
 
 	public void setPrice(int price) {
 		this.price = price;
 	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
+	
+	
+	
 }

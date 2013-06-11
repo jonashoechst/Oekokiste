@@ -1,17 +1,18 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
-import de.bosshammersch_hof.oekokiste.model.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
+
+
+import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.*;
 
 public class OrderDetailActivity extends Activity {
 	
@@ -53,14 +58,14 @@ public class OrderDetailActivity extends Activity {
 		            	    LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
 		        	    row = inflater.inflate(R.layout.listview_item_order_detail, parent, false);
 		        	}
-
+ 
 		        	TextView nameTextView = (TextView) row.findViewById(R.id.nameTextView);
 		        	TextView amountTextView = (TextView) row.findViewById(R.id.amountTextView);
 		        	TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
 		        
-		        	nameTextView.setText(dummyOrder.getArticleList().get(position).getName());
-		        	amountTextView.setText(dummyOrder.getArticleList().get(position).getCount()+"");
-		        	int price = dummyOrder.getArticleList().get(position).getTotalPrice();
+		        	nameTextView.setText(dummyOrder.getArticleList().get(position).getArticle().getName());
+		        	amountTextView.setText(dummyOrder.getArticleList().get(position).getAmount()+"");
+		        	double price = dummyOrder.getArticleList().get(position).getTotalPrice();
 		        	priceTextView.setText((price/100)+","+(price%100)+"€");
 		        
 		        	return row;
@@ -120,6 +125,24 @@ public class OrderDetailActivity extends Activity {
 		
 		getActionBar().setHomeButtonEnabled(true);
 		
+		// ORMLite first trys
+		
+		Article article1 = new Article(1, "Apfel", "Ein Apfel ist ein Obst...");
+		Article article2 = new Article(2, "Banane", "... fängt mit B an!");
+		Article article3 = new Article(3, "Citron", "... uiiiiiiii, sauer!");
+		
+		DatabaseHelper helper = MainActivity.helper;
+	
+		try {
+			//helper.getArticleDao().create(article1);
+			//helper.getArticleDao().create(article2);
+			//helper.getArticleDao().create(article3);
+			//Log.i("DAO", "Articles created.");
+			Log.i("Article", helper.getArticleDao().queryForAll().toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	/**
@@ -177,20 +200,18 @@ public class OrderDetailActivity extends Activity {
 		
 		LinkedList<OrderedArticle> articleList = new LinkedList<OrderedArticle>();
 		
-		articleList.add(new OrderedArticle(0, "Gouda", "", 245, 2));
-		articleList.add(new OrderedArticle(0, "Kohlrabi", "", 115, 1));
-		articleList.add(new OrderedArticle(0, "Blattsalat", "", 120, 2));
-		articleList.add(new OrderedArticle(0, "Gurke", "", 70, 3));
-		articleList.add(new OrderedArticle(0, "Möhren (500g)", "", 219, 1));
-		articleList.add(new OrderedArticle(0, "Nackensteak (200g)", "", 550, 2));
-		articleList.add(new OrderedArticle(0, "Bierschinken (50g)", "", 100, 5));
-		articleList.add(new OrderedArticle(0, "Geflügelwürtchen (180g)", "", 459, 2));
-		articleList.add(new OrderedArticle(0, "Joghurt (500g)", "", 239, 1));
-		articleList.add(new OrderedArticle(0, "ROCKSTAR ENGERY DRINK (483 ml)", "", 279, 24));
 		
-		return new Order(0, new Date(112, 3, 24), "Beispielkiste", articleList);
-
+		Article article1 = new Article(1, "Gouda", "");
+		articleList.add(new OrderedArticle(article1, 2.2, "100g", 245));
+		Article article2 = new Article(2, "Blattsalat", "");
+		articleList.add(new OrderedArticle(article2, 2, "Kopf", 120));
 		
+		@SuppressWarnings("deprecation")
+		Order order = new Order(0, new Date(112, 3, 24), "Beispielkiste");
+		
+		order.setArticleList(articleList);
+		
+		return order;
 		
 	}
 }

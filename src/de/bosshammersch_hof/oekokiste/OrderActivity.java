@@ -102,17 +102,21 @@ public class OrderActivity extends Activity {
 	private User getDummyUser(){
 		
 		LinkedList<Order> orderList = new LinkedList<Order>();
-		orderList.add(new Order(0, new Date(), "Speedykiste", null));
-		orderList.add(new Order(0, new Date(), "Obstkiste", null));
-		orderList.add(new Order(0, new Date(), "Schonkostkiste", null));
-		orderList.add(new Order(0, new Date(), "Regianlkiste", null));
-		orderList.add(new Order(0, new Date(), "Fruchtjoghurt-Karussel", null));
-		orderList.add(new Order(0, new Date(), "Käsepaket", null));
-		orderList.add(new Order(0, new Date(), "Single", null));
-		orderList.add(new Order(0, new Date(), "Vollsortiment", null));
-		orderList.add(new Order(0, new Date(), "Gemüsekiste", null));
+		orderList.add(new Order(0, new Date(), "Speedykiste"));
+		orderList.add(new Order(0, new Date(), "Obstkiste"));
+		orderList.add(new Order(0, new Date(), "Schonkostkiste"));
+		orderList.add(new Order(0, new Date(), "Regianlkiste"));
+		orderList.add(new Order(0, new Date(), "Fruchtjoghurt-Karussel"));
+		orderList.add(new Order(0, new Date(), "Käsepaket"));
+		orderList.add(new Order(0, new Date(), "Single"));
+		orderList.add(new Order(0, new Date(), "Vollsortiment"));
+		orderList.add(new Order(0, new Date(), "Gemüsekiste"));
+
+		User artur = new User(0, "Sterz", "Artur", "a-dur1990");
 		
-		return new User(0, "Sterz", "Artur", orderList);
+		artur.setOrderList(orderList);
+
+		return artur;
 			
 	}
 }

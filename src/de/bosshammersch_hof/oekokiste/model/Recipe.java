@@ -1,44 +1,63 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 
 import android.graphics.Bitmap;
 
 public class Recipe {
 
+	@DatabaseField
+	private int id;
+	
+	@DatabaseField
 	private String name;
+	
+	@DatabaseField
 	private String description;
+	
+	@DatabaseField
 	private String instructions;
 	
+	@ForeignCollectionField(eager = false)
 	private List<String> cookware;
 	
-	private Bitmap image;
-	
+	@DatabaseField
 	private int difficulty;
+	@DatabaseField
 	private int workingTimeInMin;
+	@DatabaseField
 	private int cookingTimeInMin;
+	@DatabaseField
 	private int servings;
 	
+	@ForeignCollectionField(eager = false)
 	private List<CookingArticle> ingredients;
 	
-	private int hitPoints;
+	public Recipe(){
+		this.ingredients = new LinkedList<CookingArticle>();
+		this.cookware = new LinkedList<String>(); 
+	}
 	
 	public Recipe(String name, String description, String instructions,
 			List<String> cookware, Bitmap image, int difficulty,
 			int workingTimeInMin, int cookingTimeInMin, int servings,
 			List<CookingArticle> ingredients, int hitPoints) {
-		super();
+		this();
 		this.name = name;
 		this.description = description;
 		this.instructions = instructions;
 		this.cookware = cookware;
-		this.image = image;
+		//this.image = image;
 		this.difficulty = difficulty;
 		this.workingTimeInMin = workingTimeInMin;
 		this.cookingTimeInMin = cookingTimeInMin;
 		this.servings = servings;
 		this.ingredients = ingredients;
-		this.hitPoints = hitPoints;
+		//this.hitPoints = hitPoints;
 	}
 	
 	public String getName() {
@@ -71,14 +90,6 @@ public class Recipe {
 	
 	public void setCookware(List<String> cookware) {
 		this.cookware = cookware;
-	}
-	
-	public Bitmap getImage() {
-		return image;
-	}
-	
-	public void setImage(Bitmap image) {
-		this.image = image;
 	}
 	
 	public int getDifficulty() {
@@ -121,11 +132,4 @@ public class Recipe {
 		this.ingredients = ingredients;
 	}
 	
-	public int getHitPoints() {
-		return hitPoints;
-	}
-	
-	public void setHitPoints(int hitPoints) {
-		this.hitPoints = hitPoints;
-	}	
 }

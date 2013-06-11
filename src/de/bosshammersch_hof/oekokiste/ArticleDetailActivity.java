@@ -1,11 +1,16 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.SQLException;
+
 import de.bosshammersch_hof.oekokiste.model.Article;
+import de.bosshammersch_hof.oekokiste.ormlite.*;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 
 public class ArticleDetailActivity extends Activity {
 	
@@ -19,8 +24,17 @@ public class ArticleDetailActivity extends Activity {
 		setContentView(R.layout.activity_article_detail);
 		getActionBar().setHomeButtonEnabled(true);
 		
-		Article article = getDummyArticle();
+		//Article article = getDummyArticle();
 	
+		Article article = getDummyArticle();
+		
+		try {
+			DatabaseHelper helper = MainActivity.helper;
+			article = helper.getArticleDao().queryForId(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		// Fill the Article Activity
 		setTitle(article.getName());
 		
