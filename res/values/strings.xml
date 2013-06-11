@@ -40,6 +40,7 @@
     
     <string name="loginActivity_welcome">Willkommen bei der Ökokiste!\n\nUm sich anzumelden geben Sie bitte ihre E-Mail Adresse und ihr Passwort ein. \n\nWenn sie damit nichts anzufangen wissen, besuchen sie doch unsere Website. </string>
 
+    <string name="mainActivity_userCouldNotBeLoaded">Benutzer konnte nicht geladen werden. Bitte melden sie sich an.</string>
     
     <!-- Strings von Eclipse, ohne Konvention -->
     

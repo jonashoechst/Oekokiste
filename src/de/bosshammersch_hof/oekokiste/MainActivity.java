@@ -1,9 +1,6 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.util.List;
-
 import de.bosshammersch_hof.oekokiste.model.*;
-import de.bosshammersch_hof.oekokiste.ormlite.DatabaseHelper;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 import android.os.Bundle;
@@ -11,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
@@ -28,9 +26,14 @@ public class MainActivity extends Activity {
 		
 		// Init the Databasemanager
 		DatabaseManager.init(this);
+		setupUser(DatabaseManager.getLastOpenState().getId());
 		
-		// get the last State of the app
-		List<OpenState> stateliste = DatabaseManager.getHelper().getOpenStateDao().queryForAll();
+		if(user != null) updateUi();
+		else {
+			// Print a warning / Maybe show Login-Screen?
+			Toast warning = Toast.makeText(this, R.string.mainActivity_userCouldNotBeLoaded, 10);
+			warning.show();
+		}
 		
 	}
 	
@@ -41,6 +44,7 @@ public class MainActivity extends Activity {
 	 */
 	public void orderButtonClicked(View view){
 		Intent intent = new Intent(this, OrderActivity.class);
+		intent.putExtra(Constants.keyUser, user.getId());
 		startActivity(intent);
 	}
 	
@@ -67,9 +71,12 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	private void setupUser(int id){
-		
-		
+	private void setupUser(int id){	
+		user = DatabaseManager.getUser(id);	
+	}
+	
+	private void updateUi(){
+		// Do stuff to update the UI
 		
 	}
 	

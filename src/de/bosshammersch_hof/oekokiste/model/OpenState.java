@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class OpenState {
 	
-	@DatabaseField(generatedId = true)
+	@DatabaseField(id = true)
 	int id;
 
 	@DatabaseField
@@ -22,6 +22,15 @@ public class OpenState {
 	public void setLastUserId(int lastUserId) {
 		this.lastUserId = lastUserId;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	
 	
 	

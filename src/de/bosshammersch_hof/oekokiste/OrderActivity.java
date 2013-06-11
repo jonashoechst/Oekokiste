@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 
 import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,9 +21,13 @@ import android.widget.AdapterView.OnItemClickListener;
 public class OrderActivity extends Activity {
 	
 	
-	TextView orderDateTextView;
+	/*TextView orderDateTextView;
 	TextView boxnameTextView;
-	TextView priceTextView;
+	TextView priceTextView;*/
+	
+	User user;
+	
+	ListView orderListView;
 	
 	/**
 	 *   creats the order list 
@@ -34,9 +39,15 @@ public class OrderActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order);
 		
-		final User user = getDummyUser();
+		setupUser();
 		
-		final ListView orderListView = (ListView) findViewById(R.id.orderListView);
+		updateUi();
+		
+		getActionBar().setHomeButtonEnabled(true);
+	}
+
+	private void updateUi() {
+		orderListView = (ListView) findViewById(R.id.orderListView);
 		 
 		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.listview_item_order, user.getOrderList()){
 			@Override
@@ -68,11 +79,16 @@ public class OrderActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(OrderActivity.this,OrderDetailActivity.class);
+				intent.putExtra(Constants.keyOrder, user.getOrderList().get(arg2).getId());
 				startActivity(intent);
 			}
 		});
-		
-		getActionBar().setHomeButtonEnabled(true);
+	}
+
+	private void setupUser() {
+		// get User Id and matching User 
+		int userId = getIntent().getIntExtra(Constants.keyUser, 0);
+		user = DatabaseManager.getUser(userId);
 	}
 	
 	/**

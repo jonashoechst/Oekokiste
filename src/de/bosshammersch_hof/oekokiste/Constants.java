@@ -10,4 +10,6 @@ public class Constants {
 	public static final String keyOrderedArticle = "keyOrderedArticle";
 	public static final String keyRecipe = "keyRecipe";
 	public static final String keyUser = "keyUser";
+	
+	public static final String errorName = "…kokiste Error";
 }

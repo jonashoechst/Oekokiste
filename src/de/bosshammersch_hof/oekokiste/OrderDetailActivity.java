@@ -33,10 +33,10 @@ import de.bosshammersch_hof.oekokiste.ormlite.*;
 
 public class OrderDetailActivity extends Activity {
 	
-	final static String ARTICLE_NAME_KEY = "ARTICLE_NAME_KEY";
+	private Order order;
 	
 	/** 
-	 *   creats the detail-view of order
+	 *   creates the detail-view of order
 	 *   @param Bundle saved Instance State
 	 */
 	@Override
@@ -44,11 +44,18 @@ public class OrderDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_detail);
 		
+		// setup order
+		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
+		order = DatabaseHelper.
+		
+		updateUI();
+	}
+
+	private void updateUI() {
+		// update UI
 		ListView orderDetailArticleListView = (ListView) findViewById(R.id.orderDetailArticleListView);
 		
-		final Order dummyOrder = getDummyOrder();
-		
-		ListAdapter adapter = new ArrayAdapter<OrderedArticle>(this, R.layout.listview_item_order_detail, dummyOrder.getArticleList()){
+		ListAdapter adapter = new ArrayAdapter<OrderedArticle>(this, R.layout.listview_item_order_detail, order.getArticleList()){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -63,9 +70,9 @@ public class OrderDetailActivity extends Activity {
 		        	TextView amountTextView = (TextView) row.findViewById(R.id.amountTextView);
 		        	TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
 		        
-		        	nameTextView.setText(dummyOrder.getArticleList().get(position).getArticle().getName());
-		        	amountTextView.setText(dummyOrder.getArticleList().get(position).getAmount()+"");
-		        	double price = dummyOrder.getArticleList().get(position).getTotalPrice();
+		        	nameTextView.setText(order.getArticleList().get(position).getArticle().getName());
+		        	amountTextView.setText(order.getArticleList().get(position).getAmount()+"");
+		        	double price = order.getArticleList().get(position).getTotalPrice();
 		        	priceTextView.setText((price/100)+","+(price%100)+"€");
 		        
 		        	return row;
@@ -77,7 +84,7 @@ public class OrderDetailActivity extends Activity {
       	  	View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
         	int finalPrice = 0;
-        	for(OrderedArticle article : dummyOrder.getArticleList()){
+        	for(OrderedArticle article : order.getArticleList()){
         		finalPrice += article.getTotalPrice(); 
         	}
         
@@ -110,11 +117,12 @@ public class OrderDetailActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				
-				if (arg2 >= dummyOrder.getArticleList().size()){
+				if (arg2 >= order.getArticleList().size()){
 					return;
 				}
 
 				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
+				intent.putExtra(Constants.keyArticleId, order.getArticleList().get(arg2).getArticle().getId());
 				startActivity(intent);
 			}
 		});
@@ -124,25 +132,6 @@ public class OrderDetailActivity extends Activity {
 		orderDateTextView.setText(dateFormat.format(dummyOrder.getDate()));
 		
 		getActionBar().setHomeButtonEnabled(true);
-		
-		// ORMLite first trys
-		
-		Article article1 = new Article(1, "Apfel", "Ein Apfel ist ein Obst...");
-		Article article2 = new Article(2, "Banane", "... fängt mit B an!");
-		Article article3 = new Article(3, "Citron", "... uiiiiiiii, sauer!");
-		
-		DatabaseHelper helper = MainActivity.helper;
-	
-		try {
-			//helper.getArticleDao().create(article1);
-			//helper.getArticleDao().create(article2);
-			//helper.getArticleDao().create(article3);
-			//Log.i("DAO", "Articles created.");
-			Log.i("Article", helper.getArticleDao().queryForAll().toString());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
 	}
 	
 	/**
