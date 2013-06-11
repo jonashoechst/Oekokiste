@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import de.bosshammersch_hof.oekokiste.model.Article;
 import de.bosshammersch_hof.oekokiste.model.CookingArticle;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class RecipeDetailActivity extends Activity {
+	
+	Recipe recipe;
 	
 	/** 
 	 *   creats the detail-view of recipe
@@ -21,11 +24,16 @@ public class RecipeDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_detail);
-		
 		getActionBar().setHomeButtonEnabled(true);
 		
-		Recipe recipe = getDummyRecipe();
+		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
+		recipe = DatabaseManager.getRecipe(recipeId);
 		
+		updateUi();
+		
+	}
+
+	private void updateUi() {
 		// Fill the Recipe Activity
 		setTitle(recipe.getName());
 		
@@ -61,7 +69,6 @@ public class RecipeDetailActivity extends Activity {
 		
 		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
 		recipeInstructionsTextView.setText(recipe.getInstructions());
-		
 	}
 	
 	/**

@@ -46,7 +46,7 @@ public class OrderDetailActivity extends Activity {
 		
 		// setup order
 		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
-		order = DatabaseHelper.
+		order = DatabaseManager.getOrder(orderId);
 		
 		updateUI();
 	}
@@ -94,13 +94,16 @@ public class OrderDetailActivity extends Activity {
         	nameTextView.setText("Summe: ");
         	finalPriceTextView.setText((finalPrice/100)+","+(finalPrice%100)+"€");
         
-		orderDetailArticleListView.addFooterView(sumRow);
+        	orderDetailArticleListView.addFooterView(sumRow);
 
-		// creating and filling the recipe finder line
+        	// creating and filling the recipe finder line
         	View recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
         
         	Button recipeFindButton = (Button) recipeFindRow.findViewById(R.id.recipeFindButton);
         
+        	// temporary disbale button
+        	recipeFindButton.setEnabled(false);
+        	
         	recipeFindButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
@@ -122,14 +125,14 @@ public class OrderDetailActivity extends Activity {
 				}
 
 				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
-				intent.putExtra(Constants.keyArticleId, order.getArticleList().get(arg2).getArticle().getId());
+				intent.putExtra(Constants.keyArticleId, order.getArticleList().get(arg2).getId());
 				startActivity(intent);
 			}
 		});
 		
 		TextView orderDateTextView = (TextView) findViewById(R.id.orderDateTextView);
         	SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
-		orderDateTextView.setText(dateFormat.format(dummyOrder.getDate()));
+		orderDateTextView.setText(dateFormat.format(order.getDate()));
 		
 		getActionBar().setHomeButtonEnabled(true);
 	}

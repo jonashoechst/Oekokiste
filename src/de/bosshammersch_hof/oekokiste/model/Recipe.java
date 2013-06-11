@@ -131,5 +131,15 @@ public class Recipe {
 	public void setIngredients(List<CookingArticle> ingredients) {
 		this.ingredients = ingredients;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	
 	
 }

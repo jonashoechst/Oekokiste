@@ -60,6 +60,47 @@ public class DatabaseManager {
 			return null;
 		}
     }
+    
+    public static Order getOrder(int id){
+    	
+    	try {
+			return helper.getOrderDao().queryForId(id);
+		} catch (SQLException e) {
+			Log.e(Constants.errorName, "No Order could be found.");
+			return null;
+		}
+    	
+    }
+    
+    public static OrderedArticle getOrderedArticle(int id){
+    	
+    	try {
+			return helper.getOrderedArticleDao().queryForId(id);
+		} catch (SQLException e) {
+			Log.e(Constants.errorName, "No OrderedArticle could be found.");
+			return null;
+		}
+    	
+    }
+
+    public static Article getArticle(int id){
+    	try {
+			return helper.getArticleDao().queryForId(id);
+		} catch (SQLException e) {
+			Log.e(Constants.errorName, "No Article could be found.");
+			return null;
+		}
+    }
+
+
+    public static Recipe getRecipe(int id){
+    	try {
+			return helper.getRecipeDao().queryForId(id);
+		} catch (SQLException e) {
+			Log.e(Constants.errorName, "No Article could be found.");
+			return null;
+		}
+    }
 
     /*public List<WishList> getAllWishLists() {
         List<WishList> wishLists = null;

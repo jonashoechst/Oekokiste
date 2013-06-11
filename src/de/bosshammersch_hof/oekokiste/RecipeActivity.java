@@ -20,9 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class RecipeActivity extends Activity {
 	
-	
-	TextView recipeNameTextView;
-	TextView hitRateTextView;
+	LinkedList<Recipe> recipeList;
 	
 	/** 
 	 *   creats the hole list of recipe
@@ -32,9 +30,15 @@ public class RecipeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe);
+		getActionBar().setHomeButtonEnabled(true);
 		
-		final LinkedList<Recipe> recipeList = getDummyRecipeList();
+		recipeList = getDummyRecipeList();
 		
+		updateUi();
+		
+	}
+
+	private void updateUi() {
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
 	
 		ListAdapter adapter = new ArrayAdapter<Recipe>(this, R.layout.listview_item_recipe, recipeList){
@@ -68,11 +72,10 @@ public class RecipeActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(RecipeActivity.this, RecipeDetailActivity.class);
+				intent.putExtra(Constants.keyRecipe, recipeList.get(arg2).getId());
 				startActivity(intent);
 			}
 		});
-		
-		getActionBar().setHomeButtonEnabled(true);
 	}
 	
 	/**
