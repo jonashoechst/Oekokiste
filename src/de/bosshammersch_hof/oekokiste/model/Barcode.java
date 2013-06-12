@@ -9,10 +9,11 @@ public class Barcode {
 	@DatabaseField(id = true)
 	private String barcodeString;
 
-	private Barcode(){
+	public Barcode(){
+		
 	}
 	
-	private Barcode(String barcodeString){
+	public Barcode(String barcodeString){
 		this.barcodeString = barcodeString;
 	}
 	

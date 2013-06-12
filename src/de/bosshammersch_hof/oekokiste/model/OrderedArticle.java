@@ -21,7 +21,7 @@ public class OrderedArticle {
 	@DatabaseField
 	private int price;
 
-	private OrderedArticle(){	
+	public OrderedArticle(){	
 	}
 	
 	public OrderedArticle(Article article, double amount, String amountType, int price) {

@@ -25,7 +25,7 @@ public class User {
 	@ForeignCollectionField(eager = false)
 	private List<Order> orderList;
 	
-	private User(){
+	public User(){
 		this.orderList = new LinkedList<Order>();
 	}
 	
