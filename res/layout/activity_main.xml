@@ -2,20 +2,18 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
-    <Space
-        android:layout_width="match_parent"
+    
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
-
-    <Button
-        android:id="@+id/orderButton"
         android:padding="@dimen/header_padding"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="orderButtonClicked"
-    	android:gravity="center"
-        android:text="Bestellungen" />
+        android:text="@string/mainActivity_welcome"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
     
     <Button
         android:id="@+id/loginButton"
@@ -25,10 +23,5 @@
         android:onClick="loginButtonClicked"
     	android:gravity="center"
         android:text="Login" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
 
 </LinearLayout>

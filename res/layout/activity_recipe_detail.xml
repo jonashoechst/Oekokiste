@@ -37,6 +37,7 @@
                 android:gravity="right"
                 android:text="5 Personen"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+            
         </LinearLayout>
 
         <View
@@ -90,6 +91,7 @@
                     android:layout_height="wrap_content"
                     android:text="Karotte \nButter\n"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
+                
             </LinearLayout>
 
             <LinearLayout
@@ -111,7 +113,9 @@
                     android:layout_height="wrap_content"
                     android:text="Becher\nBlech\nSchüssel"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
+                
             </LinearLayout>
+            
         </LinearLayout>
 
         <View
@@ -138,7 +142,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/lorem_ipsum"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+            
         </LinearLayout>
+        
     </LinearLayout>
 
 </ScrollView>
