@@ -16,11 +16,11 @@ import de.bosshammersch_hof.oekokiste.model.OrderedArticle;
 import de.bosshammersch_hof.oekokiste.model.User;
 import android.os.AsyncTask;
 
-public class FillDatabase extends AsyncTask<Integer, Integer, boolean[]> {
+public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 
 	private static final String POSTGRES = "org.postgresql.Driver";
 
-	private static final String URL = "vcp-lumdatal.de:61089";
+	private static final String URL = "jdbc:postgresql://vcp-lumdatal.de:61089";
 
 	private Connection connection = null;
 
@@ -31,7 +31,7 @@ public class FillDatabase extends AsyncTask<Integer, Integer, boolean[]> {
 	private boolean[] output;
 
 	@Override
-	protected boolean[] doInBackground(Integer... params) {
+	protected boolean[] doInBackground(Login... params) {
 		try {
 			Class.forName(POSTGRES);
 		} catch (ClassNotFoundException e) {
@@ -40,8 +40,8 @@ public class FillDatabase extends AsyncTask<Integer, Integer, boolean[]> {
 		}
 		connect();
 		
-		output[0] = createUser(params[0]);
-
+		output[0] = createUser(params[0].getUserId());
+		disconnect();
 		return output;
 	}
 	
