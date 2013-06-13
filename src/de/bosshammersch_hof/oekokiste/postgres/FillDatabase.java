@@ -34,7 +34,7 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		con.disconnect();
 		return output;
 	}
-	
+	// Artur will es so :-)
 	private boolean createUser(int userId){
 		
 		User user = null;
