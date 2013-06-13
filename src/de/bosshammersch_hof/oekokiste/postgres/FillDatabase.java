@@ -17,59 +17,23 @@ import de.bosshammersch_hof.oekokiste.model.User;
 import android.os.AsyncTask;
 
 public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
-
-	private static final String POSTGRES = "org.postgresql.Driver";
-
-	private static final String URL = "jdbc:postgresql://vcp-lumdatal.de:61089";
-
+	
 	private Connection connection = null;
-
-	private static final String user = "oekokiste"; 
-
-	private static final String password = "testPassword123";
 	
 	private boolean[] output;
 
 	@Override
 	protected boolean[] doInBackground(Login... params) {
-		try {
-			Class.forName(POSTGRES);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-		connect();
 		
-		output[0] = createUser(params[0].getUserId());
-		disconnect();
+		ConnectToDatabase con = new ConnectToDatabase();
+		con.connect();
+		connection = con.getConnection();
+		if(params[0].validateUser())
+			output[0] = createUser(params[0].getUserId());
+		
+		con.disconnect();
 		return output;
 	}
-	
-	private boolean connect() {
-		if(connection == null ){
-			try {
-				connection = DriverManager.getConnection(URL, user, password);
-				return true;
-			} catch (SQLException e) {
-				
-			}
-		}
-		return false;
-	}
-	
-	private void disconnect() {
-		if (connection != null){
-			try {
-				if (!connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		connection = null;
-	}
-	
 	
 	private boolean createUser(int userId){
 		
@@ -91,7 +55,8 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 			user.setLastName(rs.getString("lastname"));
 			user.setFirstName(rs.getString("firstname"));
 			user.setLoginName(rs.getString("loginname"));
-			user.setOrderList(orderList);
+			for(Order order : orderList)
+				user.addOrder(order);
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -201,8 +166,11 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 					tmpOrderedArticle.setArticle(tmpArticle);
 					tmpOrderedArticleList.add(tmpOrderedArticle);
 				}
-			tmpOrder.setArticleList(tmpOrderedArticleList);
-			tmpOrder.setBarcodeList(tmpBarcodeList);
+			
+			for(OrderedArticle articel : tmpOrderedArticleList)
+				tmpOrder.addOrderedArticle(articel);
+			for(Barcode barcode : tmpBarcodeList)
+				tmpOrder.addBarcode(barcode);
 			output.add(tmpOrder);
 			}
 			return output;
