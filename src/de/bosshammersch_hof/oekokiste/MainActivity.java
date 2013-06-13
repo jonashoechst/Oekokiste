@@ -1,12 +1,20 @@
 package de.bosshammersch_hof.oekokiste;
 
+import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseFillMock;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	
+	User user;
 	
 	/**
 	 *   calls the super Constructor
@@ -17,6 +25,28 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		
+		// Init the Databasemanager
+		DatabaseManager.init(this);
+		
+		// Try to fill the DB
+		DatabaseFillMock.main(new String[0]);
+		
+		OpenState lastOpenState = DatabaseManager.getLastOpenState();
+		
+		if(lastOpenState != null) {
+			Log.i("Main Activity", "last Open State found.");
+			setupUser(lastOpenState.getId());
+			
+			updateUi();
+		}
+		else {
+			// Print a warning / Maybe show Login-Screen?
+			Toast warning = Toast.makeText(this, R.string.mainActivity_userCouldNotBeLoaded, 50);
+			warning.show();
+		}
+		
 	}
 	
 	/**
@@ -26,6 +56,8 @@ public class MainActivity extends Activity {
 	 */
 	public void orderButtonClicked(View view){
 		Intent intent = new Intent(this, OrderActivity.class);
+		intent.putExtra(Constants.keyUser, user.getId());
+		Log.i("MainActivity", "Order Activity Intent created, UserId: "+intent.getIntExtra(Constants.keyUser, 0));
 		startActivity(intent);
 	}
 	
@@ -50,6 +82,15 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	private void setupUser(int id){	
+		user = DatabaseManager.getUser(id);	
+	}
+	
+	private void updateUi(){
+		// Do stuff to update the UI
+		
 	}
 	
 }

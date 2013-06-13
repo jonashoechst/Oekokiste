@@ -1,11 +1,19 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+
 @DatabaseTable
-public class User {
+public class User extends BaseDaoEnabled<User, Integer>{
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -17,14 +25,22 @@ public class User {
 	private String firstName;
 	
 	@DatabaseField
-	private LinkedList<Order> orderList;
+	private String loginName;
+
+	@ForeignCollectionField(eager = true)
+	private Collection<Order> orderCollection;
 	
-	public User(int id, String lastName, String firstName, LinkedList<Order> orderList) {
-		super();
+	public User(){
+		this.setDao(DatabaseManager.getHelper().getUserDao());
+		this.orderCollection = (Collection<Order>)  new Vector<Order>();
+	}
+	
+	public User(int id, String lastName, String firstName, String loginName) {
+		this();
 		this.id = id;
 		this.lastName = lastName;
 		this.firstName = firstName;
-		this.orderList = orderList;
+		this.loginName = loginName;
 	}
 
 	public int getId() {
@@ -51,11 +67,28 @@ public class User {
 		this.firstName = firstName;
 	}
 
-	public LinkedList<Order> getOrderList() {
-		return orderList;
+	public Collection<Order> getOrderCollection() {
+		return (Collection<Order>) orderCollection;
 	}
 
-	public void setOrderList(LinkedList<Order> orderList) {
-		this.orderList = orderList;
+	public List<Order> getOrderList() {
+		
+		List<Order> orderList = new LinkedList<Order>();
+		for(Order order : orderCollection)
+			orderList.add(order);
+		return orderList;
+	}
+	
+	public void addOrder(Order order){
+		order.setUser(this);
+		this.orderCollection.add(order);
+	}
+	
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
 	}
 }

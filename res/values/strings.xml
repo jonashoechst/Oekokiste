@@ -30,6 +30,7 @@
     
     <string name="loginActivity_info">Geben Sie bitte Ihren Nutzernamen und ihr Passwort ein. \n\nWenn Sie noch keinen Nutzerkonto haben, gehen Sie bitte auf unsere Homepage und legen Sie sich eins an. </string>
 
+    <string name="mainActivity_userCouldNotBeLoaded">Benutzer konnte nicht geladen werden. Bitte melden sie sich an.</string>
     
     <!-- Strings von Eclipse, ohne Konvention -->
     

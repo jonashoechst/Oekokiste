@@ -1,17 +1,19 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
-import de.bosshammersch_hof.oekokiste.model.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,12 +28,16 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
+
+import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.*;
+
 public class OrderDetailActivity extends Activity {
 	
-	final static String ARTICLE_NAME_KEY = "ARTICLE_NAME_KEY";
+	private Order order;
 	
 	/** 
-	 *   creats the detail-view of order
+	 *   creates the detail-view of order
 	 *   @param Bundle saved Instance State
 	 */
 	@Override
@@ -39,11 +45,20 @@ public class OrderDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_detail);
 		
+		// setup order
+		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
+		order = DatabaseManager.getOrder(orderId);
+		
+		updateUI();
+	}
+
+	private void updateUI() {
+		// update UI
 		ListView orderDetailArticleListView = (ListView) findViewById(R.id.orderDetailArticleListView);
 		
-		final Order dummyOrder = getDummyOrder();
+		final List<OrderedArticle> orderedArticleList = order.getArticleList();
 		
-		ListAdapter adapter = new ArrayAdapter<OrderedArticle>(this, R.layout.listview_item_order_detail, dummyOrder.getArticleList()){
+		ListAdapter adapter = new ArrayAdapter<OrderedArticle>(this, R.layout.listview_item_order_detail, orderedArticleList){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -53,14 +68,14 @@ public class OrderDetailActivity extends Activity {
 		            	    LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
 		        	    row = inflater.inflate(R.layout.listview_item_order_detail, parent, false);
 		        	}
-
+ 
 		        	TextView nameTextView = (TextView) row.findViewById(R.id.nameTextView);
 		        	TextView amountTextView = (TextView) row.findViewById(R.id.amountTextView);
 		        	TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
 		        
-		        	nameTextView.setText(dummyOrder.getArticleList().get(position).getName());
-		        	amountTextView.setText(dummyOrder.getArticleList().get(position).getCount()+"");
-		        	int price = dummyOrder.getArticleList().get(position).getTotalPrice();
+		        	nameTextView.setText(orderedArticleList.get(position).getArticle().getName());
+		        	amountTextView.setText(orderedArticleList.get(position).getAmount()+"");
+		        	double price = orderedArticleList.get(position).getTotalPrice();
 		        	priceTextView.setText((price/100)+","+(price%100)+"€");
 		        
 		        	return row;
@@ -72,7 +87,7 @@ public class OrderDetailActivity extends Activity {
       	  	View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
         	int finalPrice = 0;
-        	for(OrderedArticle article : dummyOrder.getArticleList()){
+        	for(OrderedArticle article : orderedArticleList){
         		finalPrice += article.getTotalPrice(); 
         	}
         
@@ -82,17 +97,21 @@ public class OrderDetailActivity extends Activity {
         	nameTextView.setText("Summe: ");
         	finalPriceTextView.setText((finalPrice/100)+","+(finalPrice%100)+"€");
         
-		orderDetailArticleListView.addFooterView(sumRow);
+        	orderDetailArticleListView.addFooterView(sumRow);
 
-		// creating and filling the recipe finder line
+        	// creating and filling the recipe finder line
         	View recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
         
         	Button recipeFindButton = (Button) recipeFindRow.findViewById(R.id.recipeFindButton);
         
+        	// temporary disbale button
+        	recipeFindButton.setEnabled(false);
+        	
         	recipeFindButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
 				Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
+				//intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(location))
 				startActivity(intent);
 			}
 		});
@@ -105,21 +124,21 @@ public class OrderDetailActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				
-				if (arg2 >= dummyOrder.getArticleList().size()){
+				if (arg2 >= order.getArticleList().size()){
 					return;
 				}
 
 				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
+				intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(arg2).getId());
 				startActivity(intent);
 			}
 		});
 		
 		TextView orderDateTextView = (TextView) findViewById(R.id.orderDateTextView);
         	SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
-		orderDateTextView.setText(dateFormat.format(dummyOrder.getDate()));
+		orderDateTextView.setText(dateFormat.format(order.getDate()));
 		
 		getActionBar().setHomeButtonEnabled(true);
-		
 	}
 	
 	/**
@@ -177,20 +196,18 @@ public class OrderDetailActivity extends Activity {
 		
 		LinkedList<OrderedArticle> articleList = new LinkedList<OrderedArticle>();
 		
-		articleList.add(new OrderedArticle(0, "Gouda", "", 245, 2));
-		articleList.add(new OrderedArticle(0, "Kohlrabi", "", 115, 1));
-		articleList.add(new OrderedArticle(0, "Blattsalat", "", 120, 2));
-		articleList.add(new OrderedArticle(0, "Gurke", "", 70, 3));
-		articleList.add(new OrderedArticle(0, "Möhren (500g)", "", 219, 1));
-		articleList.add(new OrderedArticle(0, "Nackensteak (200g)", "", 550, 2));
-		articleList.add(new OrderedArticle(0, "Bierschinken (50g)", "", 100, 5));
-		articleList.add(new OrderedArticle(0, "Geflügelwürtchen (180g)", "", 459, 2));
-		articleList.add(new OrderedArticle(0, "Joghurt (500g)", "", 239, 1));
-		articleList.add(new OrderedArticle(0, "ROCKSTAR ENGERY DRINK (483 ml)", "", 279, 24));
 		
-		return new Order(0, new Date(112, 3, 24), "Beispielkiste", articleList);
-
+		Article article1 = new Article(1, "Gouda", "");
+		articleList.add(new OrderedArticle(article1, 2.2, "100g", 245));
+		Article article2 = new Article(2, "Blattsalat", "");
+		articleList.add(new OrderedArticle(article2, 2, "Kopf", 120));
 		
+		@SuppressWarnings("deprecation")
+		Order order = new Order(0, new Date(112, 3, 24), "Beispielkiste");
+		
+		//order.setArticleCollection(articleList);
+		
+		return order;
 		
 	}
 }

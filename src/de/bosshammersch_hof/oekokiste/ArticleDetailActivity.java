@@ -1,13 +1,21 @@
 package de.bosshammersch_hof.oekokiste;
 
-import de.bosshammersch_hof.oekokiste.model.Article;
+import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.*;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+
 public class ArticleDetailActivity extends Activity {
+	
+	private OrderedArticle orderedArticle;
+	
+	private Article article;
 	
 	/** 
 	 *   creats the detail-view for articles
@@ -19,8 +27,23 @@ public class ArticleDetailActivity extends Activity {
 		setContentView(R.layout.activity_article_detail);
 		getActionBar().setHomeButtonEnabled(true);
 		
-		Article article = getDummyArticle();
-	
+		int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
+		Log.e("ArticleDetailActivity", "OA id: "+orderedArticleId);
+		orderedArticle = DatabaseManager.getOrderedArticle(orderedArticleId);
+		Log.e("ArticleDetailActivity", "orderedArticle: "+orderedArticle.getId());
+		Log.e("ArticleDetailActivity", "article in oa: "+orderedArticle.getId());
+		
+		if(orderedArticle != null) article = orderedArticle.getArticle();
+		else {
+			int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
+			article = DatabaseManager.getArticle(articleId);
+		}
+		
+		updateUi();
+		
+	}
+
+	private void updateUi() {
 		// Fill the Article Activity
 		setTitle(article.getName());
 		
@@ -28,7 +51,6 @@ public class ArticleDetailActivity extends Activity {
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
 		
 		articleDescriptionView.setText(article.getDescription());
-		
 	}
 	
 	/**
@@ -55,14 +77,11 @@ public class ArticleDetailActivity extends Activity {
 	 *   supplies dummy data for testing the app
 	 *   @return Article with dummy data
 	 */
-	private Article getDummyArticle(){
+	private void setDummyArticle(){
 		
 		String description = "Gouda stammt ursprünglich aus den Städten Stolwijk und Haastrecht, aus der Region Krimpenerwaard[2] südlich der gleichnamigen Stadt Gouda, im Westen der Niederlande. Seinen Namen verdankt er auch dieser, von deren Markt aus sich der Ruf dieses Käses in alle Welt verbreitet hat. Die erste urkundliche Erwähnung des Gouda-Käses findet sich bereits 1184.[3] Damit ist Gouda eine der ältesten schriftlich belegten Käsesorten, die bis in unsere Zeit hergestellt und gehandelt werden.";
 		
-		Article article = new Article(0, "Gouda", description);
-		return article;
-		
-		
+		article = new Article(0, "Gouda", description);		
 	}
 	
 }

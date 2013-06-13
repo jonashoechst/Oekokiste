@@ -1,44 +1,67 @@
 package de.bosshammersch_hof.oekokiste.model;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Vector;
+
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
+
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 import android.graphics.Bitmap;
 
-public class Recipe {
+public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 
+	@DatabaseField(id = true)
+	private int id;
+	
+	@DatabaseField
 	private String name;
+	
+	@DatabaseField
 	private String description;
+	
+	@DatabaseField
 	private String instructions;
 	
-	private List<String> cookware;
+	@ForeignCollectionField(eager = false)
+	private Collection<Cookware> cookware;
 	
-	private Bitmap image;
-	
+	@DatabaseField
 	private int difficulty;
+	@DatabaseField
 	private int workingTimeInMin;
+	@DatabaseField
 	private int cookingTimeInMin;
+	@DatabaseField
 	private int servings;
 	
-	private List<CookingArticle> ingredients;
+	@ForeignCollectionField(eager = false)
+	private Collection<CookingArticle> ingredients;
 	
-	private int hitPoints;
+	public Recipe(){
+		this.setDao(DatabaseManager.getHelper().getRecipeDao());
+		this.ingredients = (Collection<CookingArticle>) new Vector<CookingArticle>();
+		this.cookware = (Collection<Cookware>) new Vector<Cookware>();
+	}
 	
 	public Recipe(String name, String description, String instructions,
-			List<String> cookware, Bitmap image, int difficulty,
+			Collection<Cookware> cookware, Bitmap image, int difficulty,
 			int workingTimeInMin, int cookingTimeInMin, int servings,
-			List<CookingArticle> ingredients, int hitPoints) {
-		super();
+			Collection<CookingArticle> ingredients, int hitPoints) {
+		this();
 		this.name = name;
 		this.description = description;
 		this.instructions = instructions;
 		this.cookware = cookware;
-		this.image = image;
+		//this.image = image;
 		this.difficulty = difficulty;
 		this.workingTimeInMin = workingTimeInMin;
 		this.cookingTimeInMin = cookingTimeInMin;
 		this.servings = servings;
 		this.ingredients = ingredients;
-		this.hitPoints = hitPoints;
+		//this.hitPoints = hitPoints;
 	}
 	
 	public String getName() {
@@ -65,20 +88,13 @@ public class Recipe {
 		this.instructions = instructions;
 	}
 	
-	public List<String> getCookware() {
+	public Collection<Cookware> getCookware() {
 		return cookware;
 	}
 	
-	public void setCookware(List<String> cookware) {
-		this.cookware = cookware;
-	}
-	
-	public Bitmap getImage() {
-		return image;
-	}
-	
-	public void setImage(Bitmap image) {
-		this.image = image;
+	public void addCookware(Cookware inCookware) {
+		inCookware.setRecipe(this);
+		this.cookware.add(inCookware);
 	}
 	
 	public int getDifficulty() {
@@ -113,19 +129,24 @@ public class Recipe {
 		this.servings = servings;
 	}
 	
-	public List<CookingArticle> getIngredients() {
+	public Collection<CookingArticle> getIngredients() {
 		return ingredients;
 	}
-	
-	public void setIngredients(List<CookingArticle> ingredients) {
+	/*
+	public void setIngredients(Collection<CookingArticle> ingredients){
 		this.ingredients = ingredients;
-	}
+	}*/
 	
-	public int getHitPoints() {
-		return hitPoints;
+	public void addIngredient(CookingArticle article){
+		article.setRecipe(this);
+		ingredients.add(article);
 	}
-	
-	public void setHitPoints(int hitPoints) {
-		this.hitPoints = hitPoints;
-	}	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 }

@@ -1,14 +1,18 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,9 +24,13 @@ import android.widget.AdapterView.OnItemClickListener;
 public class OrderActivity extends Activity {
 	
 	
-	TextView orderDateTextView;
+	/*TextView orderDateTextView;
 	TextView boxnameTextView;
-	TextView priceTextView;
+	TextView priceTextView;*/
+	
+	User user;
+	
+	ListView orderListView;
 	
 	/**
 	 *   creats the order list 
@@ -34,9 +42,31 @@ public class OrderActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order);
 		
-		final User user = getDummyUser();
+		setupUser();
 		
-		final ListView orderListView = (ListView) findViewById(R.id.orderListView);
+		List<Order> ol;
+		try {
+			ol = DatabaseManager.getHelper().getOrderDao().queryForAll();
+			
+			for(Order o : ol){
+				Log.i("All Orders :", o.getName()+", "+o.getUser().getId());
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(Order o : user.getOrderCollection()){
+			Log.i("Order :", o.getName());
+		}
+		
+		updateUi();
+		
+		getActionBar().setHomeButtonEnabled(true);
+	}
+
+	private void updateUi() {
+		orderListView = (ListView) findViewById(R.id.orderListView);
 		 
 		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.listview_item_order, user.getOrderList()){
 			@Override
@@ -68,11 +98,17 @@ public class OrderActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(OrderActivity.this,OrderDetailActivity.class);
+				intent.putExtra(Constants.keyOrder, user.getOrderList().get(arg2).getId());
 				startActivity(intent);
 			}
 		});
-		
-		getActionBar().setHomeButtonEnabled(true);
+	}
+
+	private void setupUser() {
+		// get User Id and matching User 
+		int userId = getIntent().getIntExtra(Constants.keyUser, 0);
+		Log.i(OrderActivity.class.getName(), "userId found: "+userId);
+		user = DatabaseManager.getUser(userId);
 	}
 	
 	/**
@@ -102,17 +138,21 @@ public class OrderActivity extends Activity {
 	private User getDummyUser(){
 		
 		LinkedList<Order> orderList = new LinkedList<Order>();
-		orderList.add(new Order(0, new Date(), "Speedykiste", null));
-		orderList.add(new Order(0, new Date(), "Obstkiste", null));
-		orderList.add(new Order(0, new Date(), "Schonkostkiste", null));
-		orderList.add(new Order(0, new Date(), "Regianlkiste", null));
-		orderList.add(new Order(0, new Date(), "Fruchtjoghurt-Karussel", null));
-		orderList.add(new Order(0, new Date(), "Käsepaket", null));
-		orderList.add(new Order(0, new Date(), "Single", null));
-		orderList.add(new Order(0, new Date(), "Vollsortiment", null));
-		orderList.add(new Order(0, new Date(), "Gemüsekiste", null));
+		orderList.add(new Order(0, new Date(), "Speedykiste"));
+		orderList.add(new Order(0, new Date(), "Obstkiste"));
+		orderList.add(new Order(0, new Date(), "Schonkostkiste"));
+		orderList.add(new Order(0, new Date(), "Regianlkiste"));
+		orderList.add(new Order(0, new Date(), "Fruchtjoghurt-Karussel"));
+		orderList.add(new Order(0, new Date(), "Käsepaket"));
+		orderList.add(new Order(0, new Date(), "Single"));
+		orderList.add(new Order(0, new Date(), "Vollsortiment"));
+		orderList.add(new Order(0, new Date(), "Gemüsekiste"));
+
+		User artur = new User(0, "Sterz", "Artur", "a-dur1990");
 		
-		return new User(0, "Sterz", "Artur", orderList);
+		//artur.setOrderCollection(orderList);
+
+		return artur;
 			
 	}
 }

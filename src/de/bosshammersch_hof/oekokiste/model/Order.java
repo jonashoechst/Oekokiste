@@ -1,15 +1,22 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+
 @DatabaseTable
-public class Order {
+public class Order extends BaseDaoEnabled<Order, Integer>{
 	
-	@DatabaseField(generatedId = true)
+	@DatabaseField(id = true)
 	private int id;
 	
 	@DatabaseField
@@ -18,19 +25,26 @@ public class Order {
 	@DatabaseField
 	private String name;
 	
-	@DatabaseField
-	private List<OrderedArticle> articleList;
+	@DatabaseField(foreign = true)
+	private User user;
 	
-	@DatabaseField
-	private String barcodeString;
+	@ForeignCollectionField(eager = false)
+	private Collection<OrderedArticle> articleCollection;
 	
-	public Order(int id, Date date, String name,
-			List<OrderedArticle> articleList) {
-		super();
+	@ForeignCollectionField(eager = false)
+	private Collection<Barcode> barcodeList;
+	
+	public Order(){
+		this.setDao(DatabaseManager.getHelper().getOrderDao());
+		articleCollection = (Collection<OrderedArticle>) new Vector<OrderedArticle>();
+		barcodeList = (Collection<Barcode>) new Vector<Barcode>();
+	}
+	
+	public Order(int id, Date date, String name) {
+		this();
 		this.id = id;
 		this.date = date;
 		this.name = name;
-		this.articleList = articleList;
 	}
 
 	public int getId() {
@@ -57,20 +71,45 @@ public class Order {
 		this.name = name;
 	}
 
-	public List<OrderedArticle> getArticleList() {
-		return articleList;
-	}
-
-	public void setArticleList(List<OrderedArticle> articleList) {
-		this.articleList = articleList;
+	public Collection<OrderedArticle> getArticleCollection() {
+		return articleCollection;
 	}
 	
-	public String getBarcodeString() {
-		return barcodeString;
+	public List<OrderedArticle> getArticleList(){
+		List<OrderedArticle> articleList = new LinkedList<OrderedArticle>();
+		for(OrderedArticle oa : articleCollection)
+			articleList.add(oa);
+		return articleList;
+	}
+/*
+	public void setArticleCollection(Collection<OrderedArticle> articleCollection) {
+		this.articleCollection = articleCollection;
+	}*/
+	
+	public Collection<Barcode> getBarcodeList() {
+		return barcodeList;
+	}
+/*
+	public void setBarcodeList(Collection<Barcode> barcodeList) {
+		this.barcodeList = barcodeList;
+	}*/
+
+	public void addBarcode(Barcode barcode) {
+		barcode.setOrder(this);
+		this.barcodeList.add(barcode);
 	}
 
-	public void setBarcodeString(String barcodeString) {
-		this.barcodeString = barcodeString;
+	public void addOrderedArticle(OrderedArticle oa) {
+		oa.setOrder(this);
+		this.articleCollection.add(oa);
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getTotalOrderValue(){

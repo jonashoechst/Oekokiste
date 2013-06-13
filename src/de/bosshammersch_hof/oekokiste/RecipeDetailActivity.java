@@ -2,8 +2,8 @@ package de.bosshammersch_hof.oekokiste;
 
 import java.util.LinkedList;
 
-import de.bosshammersch_hof.oekokiste.model.CookingArticle;
-import de.bosshammersch_hof.oekokiste.model.Recipe;
+import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class RecipeDetailActivity extends Activity {
+	
+	Recipe recipe;
 	
 	/** 
 	 *   creats the detail-view of recipe
@@ -20,11 +22,16 @@ public class RecipeDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_detail);
-		
 		getActionBar().setHomeButtonEnabled(true);
 		
-		Recipe recipe = getDummyRecipe();
+		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
+		recipe = DatabaseManager.getRecipe(recipeId);
 		
+		updateUi();
+		
+	}
+
+	private void updateUi() {
 		// Fill the Recipe Activity
 		setTitle(recipe.getName());
 		
@@ -45,22 +52,21 @@ public class RecipeDetailActivity extends Activity {
 
 		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
 		String cookwareString = "";
-		for(String item : recipe.getCookware()){
-			cookwareString += item+"\n";
+		for(Cookware item : recipe.getCookware()){
+			cookwareString += item.getName()+"\n";
 		}
 		recipeCookingUtensilsTextView.setText(cookwareString);
 		
 		TextView recipeIngredientsTextView 		= (TextView) findViewById(R.id.recipeIngredientsTextView);
 		String ingredientsString = "";
 		for(CookingArticle item : recipe.getIngredients()){
-			if(item.getCount() != 1) ingredientsString += item.getCount()+" ";
-			ingredientsString += item.getName()+"\n";
+			if(item.getAmount() != 1) ingredientsString += item.getAmount()+" ";
+			ingredientsString += item.getArticle().getName()+"\n";
 		}
 		recipeIngredientsTextView.setText(ingredientsString);
 		
 		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
 		recipeInstructionsTextView.setText(recipe.getInstructions());
-		
 	}
 	
 	/**
@@ -91,20 +97,26 @@ public class RecipeDetailActivity extends Activity {
 		String description = "Flammkuchen, Flammenkuchen oder Flammekueche (frz. Tarte flambée) ist ein herzhafter Kuchen aus dem Elsass (frz. Alsace) in Frankreich. Ursprünglich war Flammkuchen ein bäuerliches Essen, mit dem am Backtag getestet wurde, ob der dörfliche Backofen heiß genug war, bevor die Brote für die Woche gebacken wurden. Da der Backtag im dörflichen Arbeitsrhythmus ein Gemeinschaftsereignis war und der Backofen im Backhaus auch vor Feiertagen angeheizt wurde, entwickelte sich der Flammkuchen mit der Zeit zum Festtagsessen. Als Teig benutzte man Brotteig.";
 		String instruction = "Den Brotteig in 45 Stücke zerteilen, mit einem Küchentuch abdecken und die Teigstücke 30 Minuten ruhen lassen. Den Quark (mit oder ohne Crème fraîche, siehe Varianten) mit Salz und Pfeffer verrühren. Zwiebel in dünne Ringe schneiden oder hobeln. Den Frühstücksspeck in Streifen schneiden. Den Teig auf einer bemehlten Arbeitsfläche so dünn wie möglich auswellen und mit dem Quark gleichmäßig dünn bestreichen. Mit Frühstücksspeck, Zwiebelringen (und Käse, siehe Varianten) belegen.";
 		
-		LinkedList<String> cookware = new LinkedList<String>();
-		cookware.add("Nudelholz");
-		cookware.add("Backblech");
-		cookware.add("2 Bögen Backpapier");
-		cookware.add("Teigschaber");
-		cookware.add("Rührschüssel");
-		cookware.add("Messer");
+		LinkedList<Cookware> cookware = new LinkedList<Cookware>();
+		cookware.add(new Cookware("Nudelholz"));
+		cookware.add(new Cookware("Backblech"));
+		cookware.add(new Cookware("2 Bögen Backpapier"));
+		cookware.add(new Cookware("Teigschaber"));
+		cookware.add(new Cookware("Rührschüssel"));
+		cookware.add(new Cookware("Messer"));
 		
 		LinkedList<CookingArticle> articleList = new LinkedList<CookingArticle>();
-		articleList.add(new CookingArticle(	0, "500g Mehl", "", 1));
-		articleList.add(new CookingArticle(	0, "1 Becher Schmand", "", 2));
-		articleList.add(new CookingArticle(	0, "250g Speck", "", 1));
-		articleList.add(new CookingArticle(	0, "1 Block Gouda", "", 1));
-		articleList.add(new CookingArticle(	0, "3 Zwiebeln", "", 2));
+
+		Article article1 = new Article(1, "Mehl", "");
+		articleList.add(new CookingArticle(article1, 200, "g", true));
+		Article article2 = new Article(2, "Schmand", "");
+		articleList.add(new CookingArticle(article2, 1, "Becher", false));
+		Article article3 = new Article(3, "Speck", "");
+		articleList.add(new CookingArticle(article3, 250, "g", true));
+		Article article4 = new Article(4, "Gouda", "");
+		articleList.add(new CookingArticle(article4, 1, "Block", true));
+		Article article5 = new Article(5, "Zwiebeln", "");
+		articleList.add(new CookingArticle(article5, 3, "Stück", true));
 		
 		Recipe recipeFlammkuchen = new Recipe("Flammkuchen", 
 											  description, 
