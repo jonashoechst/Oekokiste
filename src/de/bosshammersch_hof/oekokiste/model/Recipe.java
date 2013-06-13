@@ -1,16 +1,19 @@
 package de.bosshammersch_hof.oekokiste.model;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Vector;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
+
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 import android.graphics.Bitmap;
 
-public class Recipe {
+public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 
-	@DatabaseField
+	@DatabaseField(id = true)
 	private int id;
 	
 	@DatabaseField
@@ -23,7 +26,7 @@ public class Recipe {
 	private String instructions;
 	
 	@ForeignCollectionField(eager = false)
-	private List<String> cookware;
+	private Collection<Cookware> cookware;
 	
 	@DatabaseField
 	private int difficulty;
@@ -35,17 +38,18 @@ public class Recipe {
 	private int servings;
 	
 	@ForeignCollectionField(eager = false)
-	private List<CookingArticle> ingredients;
+	private Collection<CookingArticle> ingredients;
 	
 	public Recipe(){
-		this.ingredients = new LinkedList<CookingArticle>();
-		this.cookware = new LinkedList<String>(); 
+		this.setDao(DatabaseManager.getHelper().getRecipeDao());
+		this.ingredients = (Collection<CookingArticle>) new Vector<CookingArticle>();
+		this.cookware = (Collection<Cookware>) new Vector<Cookware>();
 	}
 	
 	public Recipe(String name, String description, String instructions,
-			List<String> cookware, Bitmap image, int difficulty,
+			Collection<Cookware> cookware, Bitmap image, int difficulty,
 			int workingTimeInMin, int cookingTimeInMin, int servings,
-			List<CookingArticle> ingredients, int hitPoints) {
+			Collection<CookingArticle> ingredients, int hitPoints) {
 		this();
 		this.name = name;
 		this.description = description;
@@ -84,12 +88,13 @@ public class Recipe {
 		this.instructions = instructions;
 	}
 	
-	public List<String> getCookware() {
+	public Collection<Cookware> getCookware() {
 		return cookware;
 	}
 	
-	public void setCookware(List<String> cookware) {
-		this.cookware = cookware;
+	public void addCookware(Cookware inCookware) {
+		inCookware.setRecipe(this);
+		this.cookware.add(inCookware);
 	}
 	
 	public int getDifficulty() {
@@ -124,12 +129,17 @@ public class Recipe {
 		this.servings = servings;
 	}
 	
-	public List<CookingArticle> getIngredients() {
+	public Collection<CookingArticle> getIngredients() {
 		return ingredients;
 	}
-	
-	public void setIngredients(List<CookingArticle> ingredients) {
+	/*
+	public void setIngredients(Collection<CookingArticle> ingredients){
 		this.ingredients = ingredients;
+	}*/
+	
+	public void addIngredient(CookingArticle article){
+		article.setRecipe(this);
+		ingredients.add(article);
 	}
 
 	public int getId() {
@@ -139,7 +149,4 @@ public class Recipe {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
-	
 }

@@ -1,8 +1,10 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -10,6 +12,7 @@ import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +43,22 @@ public class OrderActivity extends Activity {
 		setContentView(R.layout.activity_order);
 		
 		setupUser();
+		
+		List<Order> ol;
+		try {
+			ol = DatabaseManager.getHelper().getOrderDao().queryForAll();
+			
+			for(Order o : ol){
+				Log.i("All Orders :", o.getName()+", "+o.getUser().getId());
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(Order o : user.getOrderCollection()){
+			Log.i("Order :", o.getName());
+		}
 		
 		updateUi();
 		
@@ -88,6 +107,7 @@ public class OrderActivity extends Activity {
 	private void setupUser() {
 		// get User Id and matching User 
 		int userId = getIntent().getIntExtra(Constants.keyUser, 0);
+		Log.i(OrderActivity.class.getName(), "userId found: "+userId);
 		user = DatabaseManager.getUser(userId);
 	}
 	
@@ -130,7 +150,7 @@ public class OrderActivity extends Activity {
 
 		User artur = new User(0, "Sterz", "Artur", "a-dur1990");
 		
-		artur.setOrderList(orderList);
+		//artur.setOrderCollection(orderList);
 
 		return artur;
 			

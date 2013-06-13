@@ -17,7 +17,7 @@ import com.j256.ormlite.table.TableUtils;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // name of the database file for your application -- change to something appropriate for your app
-    private static final String DATABASE_NAME = "Oekokiste.sqlite";
+    private static final String DATABASE_NAME = "Oekokiste10.sqlite";
 
     // any time you make changes to your database objects, you may have to increase the database version
     private static final int DATABASE_VERSION = 1;
@@ -28,10 +28,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Barcode, String> barcodeDao = null;
     private Dao<OrderedArticle, Integer> orderedArticleDao = null;
     private Dao<Article, Integer> articleDao = null;
-    private Dao<ArticleGroup, Integer> articleGroupDao = null;
+    private Dao<CookingArticle, Integer> cookingArticleDao = null;
+    private Dao<ArticleGroup, String> articleGroupDao = null;
     private Dao<Category, String> categoryDao = null;
     private Dao<Recipe, Integer> recipeDao = null;
     private Dao<OpenState, Integer> openStateDao = null;
+    private Dao<Cookware, Integer> cookwareDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,6 +43,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, Article.class);
+            TableUtils.createTable(connectionSource, ArticleGroup.class);
+            TableUtils.createTable(connectionSource, Barcode.class);
+            TableUtils.createTable(connectionSource, Category.class);
+            TableUtils.createTable(connectionSource, CookingArticle.class);
+            TableUtils.createTable(connectionSource, OpenState.class);
+            TableUtils.createTable(connectionSource, Order.class);
+            TableUtils.createTable(connectionSource, OrderedArticle.class);
+            TableUtils.createTable(connectionSource, Recipe.class);
+            TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, Cookware.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
             throw new RuntimeException(e);
@@ -79,6 +91,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
         }
         return articleDao;
+    }
+
+    public Dao<CookingArticle, Integer> getCookingArticleDao() {
+        if (null == cookingArticleDao) {
+            try {
+            	cookingArticleDao = getDao(CookingArticle.class);
+            }catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return cookingArticleDao;
     }
 
 	public Dao<User, Integer> getUserDao() {
@@ -125,7 +148,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return orderedArticleDao;
 	}
 
-	public Dao<ArticleGroup, Integer> getArticleGroupDao() {
+	public Dao<ArticleGroup, String> getArticleGroupDao() {
 		if (null == articleGroupDao) {
             try {
             	articleGroupDao = getDao(ArticleGroup.class);
@@ -167,6 +190,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
         }
 		return openStateDao;
+	}
+
+	public Dao<Cookware, Integer> getCookwareDao() {
+		if (null == cookwareDao) {
+            try {
+            	cookwareDao = getDao(Cookware.class);
+            }catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		return cookwareDao;
 	}
 
 }

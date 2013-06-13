@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,7 +56,9 @@ public class OrderDetailActivity extends Activity {
 		// update UI
 		ListView orderDetailArticleListView = (ListView) findViewById(R.id.orderDetailArticleListView);
 		
-		ListAdapter adapter = new ArrayAdapter<OrderedArticle>(this, R.layout.listview_item_order_detail, order.getArticleList()){
+		final List<OrderedArticle> orderedArticleList = order.getArticleList();
+		
+		ListAdapter adapter = new ArrayAdapter<OrderedArticle>(this, R.layout.listview_item_order_detail, orderedArticleList){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -70,9 +73,9 @@ public class OrderDetailActivity extends Activity {
 		        	TextView amountTextView = (TextView) row.findViewById(R.id.amountTextView);
 		        	TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
 		        
-		        	nameTextView.setText(order.getArticleList().get(position).getArticle().getName());
-		        	amountTextView.setText(order.getArticleList().get(position).getAmount()+"");
-		        	double price = order.getArticleList().get(position).getTotalPrice();
+		        	nameTextView.setText(orderedArticleList.get(position).getArticle().getName());
+		        	amountTextView.setText(orderedArticleList.get(position).getAmount()+"");
+		        	double price = orderedArticleList.get(position).getTotalPrice();
 		        	priceTextView.setText((price/100)+","+(price%100)+"€");
 		        
 		        	return row;
@@ -84,7 +87,7 @@ public class OrderDetailActivity extends Activity {
       	  	View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
         	int finalPrice = 0;
-        	for(OrderedArticle article : order.getArticleList()){
+        	for(OrderedArticle article : orderedArticleList){
         		finalPrice += article.getTotalPrice(); 
         	}
         
@@ -108,6 +111,7 @@ public class OrderDetailActivity extends Activity {
 			@Override
 			public void onClick(View v){
 				Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
+				//intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(location))
 				startActivity(intent);
 			}
 		});
@@ -125,7 +129,7 @@ public class OrderDetailActivity extends Activity {
 				}
 
 				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
-				intent.putExtra(Constants.keyArticleId, order.getArticleList().get(arg2).getId());
+				intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(arg2).getId());
 				startActivity(intent);
 			}
 		});
@@ -201,7 +205,7 @@ public class OrderDetailActivity extends Activity {
 		@SuppressWarnings("deprecation")
 		Order order = new Order(0, new Date(112, 3, 24), "Beispielkiste");
 		
-		order.setArticleList(articleList);
+		//order.setArticleCollection(articleList);
 		
 		return order;
 		

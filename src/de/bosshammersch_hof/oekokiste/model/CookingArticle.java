@@ -1,10 +1,13 @@
 package de.bosshammersch_hof.oekokiste.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+
 @DatabaseTable
-public class CookingArticle {
+public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 
 	
 	@DatabaseField(generatedId = true)
@@ -24,9 +27,12 @@ public class CookingArticle {
 	
 	@DatabaseField
 	private boolean isStandartIngredient;
+	
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
+	private Recipe recipe;
 
 	private CookingArticle(){
-		
+		this.setDao(DatabaseManager.getHelper().getCookingArticleDao());
 	}
 	
 	public CookingArticle(Article article, double amount, String amountType, boolean isStandartIngredient) {
@@ -75,6 +81,18 @@ public class CookingArticle {
 
 	public void setArticleGroup(ArticleGroup articleGroup) {
 		this.articleGroup = articleGroup;
+	}
+
+	public Recipe getRecipe() {
+		return recipe;
+	}
+
+	public void setStandartIngredient(boolean isStandartIngredient) {
+		this.isStandartIngredient = isStandartIngredient;
+	}
+
+	public void setRecipe(Recipe recipe) {
+		this.recipe = recipe;
 	}
 	
 	

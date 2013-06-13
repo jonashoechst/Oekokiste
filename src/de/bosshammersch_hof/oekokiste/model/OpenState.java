@@ -12,7 +12,7 @@ public class OpenState {
 	@DatabaseField
 	int lastUserId;
 	
-	private OpenState(){
+	public OpenState(){
 	}
 
 	public int getLastUserId() {
@@ -30,8 +30,5 @@ public class OpenState {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
-	
 	
 }

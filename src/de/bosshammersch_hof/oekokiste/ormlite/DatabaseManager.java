@@ -28,7 +28,7 @@ public class DatabaseManager {
         helper = new DatabaseHelper(ctx);
     }
 
-    private static DatabaseHelper getHelper() {
+    public static DatabaseHelper getHelper() {
         return helper;
     }
     
@@ -101,6 +101,31 @@ public class DatabaseManager {
 			return null;
 		}
     }
+    
+    public static void saveDataFromUser(User user){
+    	try {
+			helper.getUserDao().createIfNotExists(user);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
+    }
+
+	public static void saveDataFromRecipe(Recipe recipe) {
+		try {
+			helper.getRecipeDao().createIfNotExists(recipe);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void saveOpenState(OpenState openState) {
+		try {
+			helper.getOpenStateDao().createIfNotExists(openState);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
     /*public List<WishList> getAllWishLists() {
         List<WishList> wishLists = null;
