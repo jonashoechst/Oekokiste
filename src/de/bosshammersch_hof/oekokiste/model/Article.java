@@ -1,10 +1,13 @@
 package de.bosshammersch_hof.oekokiste.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+
 @DatabaseTable
-public class Article {
+public class Article  extends BaseDaoEnabled<Article, Integer>{
 
 	@DatabaseField(id = true)
 	private int id;
@@ -22,9 +25,11 @@ public class Article {
 	private ArticleGroup articleGroup;
 
 	public Article(){
+		this.setDao(DatabaseManager.getHelper().getArticleDao());
 	}
 	
 	public Article(int id, String name, String description){
+		this();
 		this.id = id;
 		this.name = name;
 		this.description = description;

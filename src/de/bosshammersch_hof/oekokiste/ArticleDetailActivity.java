@@ -6,6 +6,7 @@ import de.bosshammersch_hof.oekokiste.ormlite.*;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -27,7 +28,10 @@ public class ArticleDetailActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 		
 		int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
+		Log.e("ArticleDetailActivity", "OA id: "+orderedArticleId);
 		orderedArticle = DatabaseManager.getOrderedArticle(orderedArticleId);
+		Log.e("ArticleDetailActivity", "orderedArticle: "+orderedArticle.getId());
+		Log.e("ArticleDetailActivity", "article in oa: "+orderedArticle.getId());
 		
 		if(orderedArticle != null) article = orderedArticle.getArticle();
 		else {

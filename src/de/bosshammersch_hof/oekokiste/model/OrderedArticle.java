@@ -1,10 +1,13 @@
 package de.bosshammersch_hof.oekokiste.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+
 @DatabaseTable
-public class OrderedArticle {
+public class OrderedArticle extends BaseDaoEnabled<OrderedArticle, Integer>{
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -20,8 +23,12 @@ public class OrderedArticle {
 	
 	@DatabaseField
 	private int price;
+	
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
+	private Order order;
 
 	public OrderedArticle(){	
+		this.setDao(DatabaseManager.getHelper().getOrderedArticleDao());
 	}
 	
 	public OrderedArticle(Article article, double amount, String amountType, int price) {
@@ -74,6 +81,14 @@ public class OrderedArticle {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 	
 	
