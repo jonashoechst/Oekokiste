@@ -44,22 +44,6 @@ public class OrderActivity extends Activity {
 		
 		setupUser();
 		
-		List<Order> ol;
-		try {
-			ol = DatabaseManager.getHelper().getOrderDao().queryForAll();
-			
-			for(Order o : ol){
-				Log.i("All Orders :", o.getName()+", "+o.getUser().getId());
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		for(Order o : user.getOrderCollection()){
-			Log.i("Order :", o.getName());
-		}
-		
 		updateUi();
 		
 		getActionBar().setHomeButtonEnabled(true);
@@ -106,7 +90,7 @@ public class OrderActivity extends Activity {
 
 	private void setupUser() {
 		// get User Id and matching User 
-		int userId = getIntent().getIntExtra(Constants.keyUser, 0);
+		int userId = getIntent().getIntExtra(Constants.keyUser, 1);
 		Log.i(OrderActivity.class.getName(), "userId found: "+userId);
 		user = DatabaseManager.getUser(userId);
 	}

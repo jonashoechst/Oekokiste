@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:contentDescription="@string/loginActivity_welcome"
+    android:contentDescription="@string/loginActivity_info"
     android:orientation="vertical" >
 
     <ScrollView
@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/header_padding"
-                android:text="@string/loginActivity_welcome"
+                android:text="@string/loginActivity_info"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <View
@@ -37,7 +37,7 @@
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="E-Mail Adresse"
+                    android:text="Nutzname"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <EditText
@@ -45,8 +45,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="mail@example.com"
-                    android:inputType="textWebEmailAddress" />
+                    android:hint="Geben Sie hier Ihren Nutzernamen..."
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                
             </LinearLayout>
 
             <LinearLayout
@@ -67,8 +68,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="passwort"
+                    android:hint="... und hier Ihr Passwort"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:inputType="textWebPassword" />
+                
             </LinearLayout>
 
             <Button
@@ -76,6 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Anmelden" />
+            
         </LinearLayout>
 
     </ScrollView>
