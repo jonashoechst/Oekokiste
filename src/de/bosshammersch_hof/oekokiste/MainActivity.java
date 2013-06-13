@@ -3,6 +3,7 @@ package de.bosshammersch_hof.oekokiste;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseFillMock;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+import de.bosshammersch_hof.oekokiste.postgres.*;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -32,6 +33,10 @@ public class MainActivity extends Activity {
 		
 		// Try to fill the DB
 		DatabaseFillMock.main(new String[0]);
+		
+		// Login login = new Login(123, "b");
+		
+		//new FillDatabase().execute(login);
 		
 		OpenState lastOpenState = DatabaseManager.getLastOpenState();
 		

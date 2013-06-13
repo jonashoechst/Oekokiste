@@ -1,5 +1,6 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -36,8 +37,8 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 	
 	public Order(){
 		this.setDao(DatabaseManager.getHelper().getOrderDao());
-		articleCollection = (Collection<OrderedArticle>) new Vector<OrderedArticle>();
-		barcodeList = (Collection<Barcode>) new Vector<Barcode>();
+		articleCollection = new Vector<OrderedArticle>();
+		barcodeList = new Vector<Barcode>();
 	}
 	
 	public Order(int id, Date date, String name) {
@@ -45,6 +46,15 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 		this.id = id;
 		this.date = date;
 		this.name = name;
+	}
+	
+	@Override
+	public int create() throws SQLException{
+		for(OrderedArticle oa : articleCollection)
+			oa.create();
+		for(Barcode b : barcodeList)
+			b.create();
+		return super.create();
 	}
 
 	public int getId() {

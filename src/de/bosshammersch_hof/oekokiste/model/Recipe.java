@@ -1,5 +1,6 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,8 +45,8 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 	
 	public Recipe(){
 		this.setDao(DatabaseManager.getHelper().getRecipeDao());
-		this.ingredients = (Collection<CookingArticle>) new Vector<CookingArticle>();
-		this.cookware = (Collection<Cookware>) new Vector<Cookware>();
+		this.ingredients = new Vector<CookingArticle>();
+		this.cookware = new Vector<Cookware>();
 	}
 	
 	public Recipe(String name, String description, String instructions,
@@ -64,6 +65,15 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 		this.servings = servings;
 		this.ingredients = ingredients;
 		//this.hitPoints = hitPoints;
+	}
+	
+	@Override
+	public int create() throws SQLException{
+		for(Cookware c : cookware)
+			c.create();
+		for(CookingArticle ca : ingredients)
+			ca.create();
+		return super.create();
 	}
 	
 	public String getName() {

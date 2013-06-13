@@ -22,7 +22,7 @@ public class Login {
 	
 	public boolean validateUser(){
 		
-		ConnectToDatabase con = new ConnectToDatabase();
+		DatabaseConnection con = new DatabaseConnection();
 		con.connect();
 		connection = con.getConnection();
 		int result = 0;

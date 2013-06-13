@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-	public class ConnectToDatabase {
+	public class DatabaseConnection {
 
 	private static final String POSTGRES = "org.postgresql.Driver";
 
@@ -16,7 +16,7 @@ import java.sql.SQLException;
 
 	private static final String password = "testPassword123";
 	
-	public ConnectToDatabase(){
+	public DatabaseConnection(){
 		try {
 			Class.forName(POSTGRES);
 		} catch (ClassNotFoundException e) {
