@@ -1,6 +1,8 @@
 package de.bosshammersch_hof.oekokiste.model;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -132,6 +134,15 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 	public Collection<CookingArticle> getIngredients() {
 		return ingredients;
 	}
+	
+	public List<CookingArticle> collectionToList(Collection<CookingArticle> ca){
+		List<CookingArticle> lca = new LinkedList<CookingArticle>();
+		for(CookingArticle cafor : ca){
+			lca.add(cafor);
+		}
+		return lca;
+	}
+	
 	/*
 	public void setIngredients(Collection<CookingArticle> ingredients){
 		this.ingredients = ingredients;

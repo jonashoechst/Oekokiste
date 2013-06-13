@@ -1,13 +1,21 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class RecipeDetailActivity extends Activity {
@@ -30,6 +38,37 @@ public class RecipeDetailActivity extends Activity {
 		updateUi();
 		
 	}
+	
+	private void fillIngeridends(){
+		ListView cookingArticleListView = (ListView) findViewById(R.id.articleListView);
+		
+		final List<CookingArticle> cookingArticleList = recipe.collectionToList(recipe.getIngredients());
+		
+		ListAdapter adapter = new ArrayAdapter<CookingArticle>(this, R.layout.listview_item_recipe_ingrediends, cookingArticleList){
+			
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+		       	 	View row = convertView;
+		        
+		        	if(row == null){
+		            	    LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
+		        	    row = inflater.inflate(R.layout.listview_item_recipe_ingrediends, parent, false);
+		        	}
+ 
+		        	TextView nameTextView = (TextView) row.findViewById(R.id.ingrediendName);
+		        	TextView amountTextView = (TextView) row.findViewById(R.id.ingredientAmount);
+		        	TextView unitTextView = (TextView) row.findViewById(R.id.ingredientUnit);
+		        
+		        	amountTextView.setText(cookingArticleList.get(position).getAmount()+"");
+		        	unitTextView.setText(cookingArticleList.get(position).getAmountType());
+		        	nameTextView.setText(cookingArticleList.get(position).getArticle().getName());
+		        
+		        	return row;
+			}
+		};
+		
+		cookingArticleListView.setAdapter(adapter);
+	}
 
 	private void updateUi() {
 		// Fill the Recipe Activity
@@ -49,6 +88,8 @@ public class RecipeDetailActivity extends Activity {
 		
 		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
 		recipeLongDescriptionTextView.setText(recipe.getDescription());
+				
+		fillIngeridends();
 
 		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
 		String cookwareString = "";
@@ -56,14 +97,6 @@ public class RecipeDetailActivity extends Activity {
 			cookwareString += item.getName()+"\n";
 		}
 		recipeCookingUtensilsTextView.setText(cookwareString);
-		
-		TextView recipeIngredientsTextView 		= (TextView) findViewById(R.id.recipeIngredientsTextView);
-		String ingredientsString = "";
-		for(CookingArticle item : recipe.getIngredients()){
-			if(item.getAmount() != 1) ingredientsString += item.getAmount()+" ";
-			ingredientsString += item.getArticle().getName()+"\n";
-		}
-		recipeIngredientsTextView.setText(ingredientsString);
 		
 		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
 		recipeInstructionsTextView.setText(recipe.getInstructions());
@@ -86,6 +119,13 @@ public class RecipeDetailActivity extends Activity {
 	        default:
 	            return super.onOptionsItemSelected(item);  
 	    }
+	}
+	
+	private void setupRecipe() {
+		// get User Id and matching User 
+		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 1);
+		Log.i(OrderActivity.class.getName(), "userId found: "+recipeId);
+		recipe = DatabaseManager.getRecipe(recipeId);
 	}
 	
 	/** 

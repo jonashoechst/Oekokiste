@@ -46,6 +46,43 @@ public class DatabaseFillMock {
 		o.addOrderedArticle(oa);
 		u.addOrder(o);
 		
+		//------------------------------------------------------------------------------
+		String description = "Flammkuchen, Flammenkuchen oder Flammekueche (frz. Tarte flambée) ist ein herzhafter Kuchen aus dem Elsass (frz. Alsace) in Frankreich. Ursprünglich war Flammkuchen ein bäuerliches Essen, mit dem am Backtag getestet wurde, ob der dörfliche Backofen heiß genug war, bevor die Brote für die Woche gebacken wurden. Da der Backtag im dörflichen Arbeitsrhythmus ein Gemeinschaftsereignis war und der Backofen im Backhaus auch vor Feiertagen angeheizt wurde, entwickelte sich der Flammkuchen mit der Zeit zum Festtagsessen. Als Teig benutzte man Brotteig.";
+		String instruction = "Den Brotteig in 45 Stücke zerteilen, mit einem Küchentuch abdecken und die Teigstücke 30 Minuten ruhen lassen. Den Quark (mit oder ohne Crème fraîche, siehe Varianten) mit Salz und Pfeffer verrühren. Zwiebel in dünne Ringe schneiden oder hobeln. Den Frühstücksspeck in Streifen schneiden. Den Teig auf einer bemehlten Arbeitsfläche so dünn wie möglich auswellen und mit dem Quark gleichmäßig dünn bestreichen. Mit Frühstücksspeck, Zwiebelringen (und Käse, siehe Varianten) belegen.";
+		
+		LinkedList<Cookware> cookware = new LinkedList<Cookware>();
+		cookware.add(new Cookware("Nudelholz"));
+		cookware.add(new Cookware("Backblech"));
+		cookware.add(new Cookware("2 Bögen Backpapier"));
+		cookware.add(new Cookware("Teigschaber"));
+		cookware.add(new Cookware("Rührschüssel"));
+		cookware.add(new Cookware("Messer"));
+		
+		LinkedList<CookingArticle> articleList = new LinkedList<CookingArticle>();
+
+		Article article1 = new Article(1, "Mehl", "");
+		articleList.add(new CookingArticle(article1, 200, "g", true));
+		Article article2 = new Article(2, "Schmand", "");
+		articleList.add(new CookingArticle(article2, 1, "Becher", false));
+		Article article3 = new Article(3, "Speck", "");
+		articleList.add(new CookingArticle(article3, 250, "g", true));
+		Article article4 = new Article(4, "Gouda", "");
+		articleList.add(new CookingArticle(article4, 1, "Block", true));
+		Article article5 = new Article(5, "Zwiebeln", "");
+		articleList.add(new CookingArticle(article5, 3, "Stück", true));
+		
+		Recipe recipeFlammkuchen = new Recipe("Flammkuchen", 
+											  description, 
+											  instruction,
+											  cookware,//Cookware
+											  null,//Image
+											  3,//Difficulty
+											  45,//WorkingTime
+											  30,//CookingTime
+											  5,//servings
+											  articleList, //Ingediants
+											  3);//hitrate)
+		
 		try {
 			u.create();
 			o.create();
@@ -53,6 +90,7 @@ public class DatabaseFillMock {
 			a.create();
 			c.create();
 			ag.create();
+			recipeFlammkuchen.create();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

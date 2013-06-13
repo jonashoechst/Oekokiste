@@ -105,7 +105,7 @@ public class OrderDetailActivity extends Activity {
         	Button recipeFindButton = (Button) recipeFindRow.findViewById(R.id.recipeFindButton);
         
         	// temporary disbale button
-        	recipeFindButton.setEnabled(false);
+        	//recipeFindButton.setEnabled(false);
         	
         	recipeFindButton.setOnClickListener(new OnClickListener(){
 			@Override
