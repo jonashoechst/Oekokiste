@@ -1,5 +1,7 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.SQLException;
+
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseFillMock;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
@@ -11,6 +13,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -32,24 +35,32 @@ public class MainActivity extends Activity {
 		DatabaseManager.init(this);
 		
 		// Try to fill the DB
-		DatabaseFillMock.main(new String[0]);
+		//DatabaseFillMock.main(new String[0]);
 		
-		// Login login = new Login(123, "b");
+		int artursUserId = 8893;
+		String arturPasswordSha = "c98fa615f3eb3aa13aab4d607bb03deaedee9c254409ea6929661b1905dcb260";
 		
-		//new FillDatabase().execute(login);
+		Login login = new Login(artursUserId, arturPasswordSha);
 		
+		Login[] lArr = {login};
+		//new FillDatabase().doInBackground(lArr);
+
+		/*try {
+			DatabaseManager.getHelper().getOpenStateDao().delete(DatabaseManager.getHelper().getOpenStateDao().queryForAll());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}*/
+
 		OpenState lastOpenState = DatabaseManager.getLastOpenState();
 		
 		if(lastOpenState != null) {
 			Log.i("Main Activity", "last Open State found.");
-			setupUser(lastOpenState.getId());
-			
+			setupUser(8893);
 			updateUi();
 		}
 		else {
-			// Print a warning / Maybe show Login-Screen?
-			Toast warning = Toast.makeText(this, R.string.mainActivity_userCouldNotBeLoaded, 50);
-			warning.show();
+			Intent intent = new Intent(this, LoginActivity.class);
+			startActivity(intent);
 		}
 		
 	}
@@ -71,8 +82,13 @@ public class MainActivity extends Activity {
 	 * Starts LoginActivity lets the User login to the DB  
 	 * @param  view The clicked View.
 	 */
-	public void loginButtonClicked(View view){
+	public void logoutButtonClicked(View view){
 		Intent intent = new Intent(this, LoginActivity.class);
+		try {
+			DatabaseManager.getHelper().getOpenStateDao().deleteById(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		startActivity(intent);
 	}
 	
@@ -95,7 +111,8 @@ public class MainActivity extends Activity {
 	
 	private void updateUi(){
 		// Do stuff to update the UI
-		
+		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
+		welcomeTextView.setText(welcomeTextView.getText()+user.getFirstName()+" "+user.getLastName()+"!");
 	}
 	
 }

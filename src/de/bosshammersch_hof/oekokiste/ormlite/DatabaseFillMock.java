@@ -90,7 +90,7 @@ public class DatabaseFillMock {
 			a.create();
 			c.create();
 			ag.create();
-			recipeFlammkuchen.create();
+*/			recipeFlammkuchen.create();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

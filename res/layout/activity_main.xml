@@ -4,10 +4,18 @@
     android:orientation="vertical" >
     
     <TextView
+        android:id="@+id/welcomeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/header_padding"
         android:text="@string/mainActivity_welcome"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/header_padding"
+        android:text="@string/mainActivity_logged_in"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
     <View
@@ -16,12 +24,29 @@
         android:background="@android:color/darker_gray" />
     
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/orderButton"
         android:padding="@dimen/header_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="loginButtonClicked"
+        android:onClick="orderButtonClicked"
     	android:gravity="center"
-        android:text="Login" />
+        android:text="Bestellungen" />
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    
+    	<Button
+        	android:id="@+id/logoutButton"
+        	android:padding="@dimen/header_padding"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:onClick="logoutButtonClicked"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+    		android:gravity="center"
+        	android:text="Abmelden..." />
+        
+    </RelativeLayout>
 
 </LinearLayout>

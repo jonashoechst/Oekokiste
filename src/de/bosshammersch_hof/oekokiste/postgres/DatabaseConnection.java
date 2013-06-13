@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import android.os.StrictMode;
+
 	public class DatabaseConnection {
 
 	private static final String POSTGRES = "org.postgresql.Driver";
@@ -17,6 +19,8 @@ import java.sql.SQLException;
 	private static final String password = "testPassword123";
 	
 	public DatabaseConnection(){
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
 		try {
 			Class.forName(POSTGRES);
 		} catch (ClassNotFoundException e) {
@@ -31,7 +35,7 @@ import java.sql.SQLException;
 				connection = DriverManager.getConnection(URL, user, password);
 				return true;
 			} catch (SQLException e) {
-				
+				e.printStackTrace();
 			}
 		}
 		return false;
@@ -51,6 +55,7 @@ import java.sql.SQLException;
 	}
 	
 	public Connection getConnection(){
+		if(connection == null) this.connect();
 		return connection;
 	}
 	

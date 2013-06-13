@@ -12,7 +12,8 @@
 
     <!-- Konvention: fooBarActivity_name -->
     
-    <string name="mainActivity_welcome">Willkommen bei der Ökokiste!\n\nBitten melden Sie sich an, um ihere Bestellungen zu sehen.</string>
+    <string name="mainActivity_welcome">Willkommen bei der Ökokiste, </string>
+    <string name="mainActivity_logged_in">Sie sind angemeldet. Ihre Kisten sehen sie in der Übersicht:</string>
 
     <string name="recipeDetailActivity_ingredients_header">Zutaten</string>
     <string name="recipeDetailActivity_cookingutensils_header">Kochgeschirr</string>
@@ -30,8 +31,6 @@
     
     <string name="loginActivity_info">Geben Sie bitte Ihren Nutzernamen und ihr Passwort ein. \n\nWenn Sie noch keinen Nutzerkonto haben, gehen Sie bitte auf unsere Homepage und legen Sie sich eins an. </string>
 
-    <string name="mainActivity_userCouldNotBeLoaded">Benutzer konnte nicht geladen werden. Bitte melden sie sich an.</string>
-    
     <!-- Strings von Eclipse, ohne Konvention -->
     
 </resources>

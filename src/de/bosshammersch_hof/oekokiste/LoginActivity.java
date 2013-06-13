@@ -1,11 +1,14 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.SQLException;
+
+import de.bosshammersch_hof.oekokiste.model.OpenState;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 
 public class LoginActivity extends Activity {
 
@@ -14,18 +17,18 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
-		final Button button = (Button) findViewById(R.id.loginButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-			public void onClick(View v) {
-            	View view = null;
-				orderButtonClicked(view);
-            }
-        });
 	}
 	
-	public void orderButtonClicked(View view){
-		Intent intent = new Intent(this, OrderActivity.class);
+	public void loginButtonClicked(View view){
+		Intent intent = new Intent(this, MainActivity.class);
+		OpenState os = new OpenState();
+		os.setLastUserId(8893);
+		os.setId(1);
+		try {
+			DatabaseManager.getHelper().getOpenStateDao().createOrUpdate(os);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		startActivity(intent);
 	}
 
