@@ -33,7 +33,7 @@ public class User extends BaseDaoEnabled<User, Integer>{
 	
 	public User(){
 		this.setDao(DatabaseManager.getHelper().getUserDao());
-		this.orderCollection = (Collection<Order>)  new Vector<Order>();
+		this.orderCollection = new Vector<Order>();
 	}
 	
 	public User(int id, String lastName, String firstName, String loginName) {
@@ -44,6 +44,7 @@ public class User extends BaseDaoEnabled<User, Integer>{
 		this.loginName = loginName;
 	}
 	
+	@Override
 	public int create() throws SQLException{
 		for(Order o : orderCollection){
 			o.create();
@@ -76,7 +77,7 @@ public class User extends BaseDaoEnabled<User, Integer>{
 	}
 
 	public Collection<Order> getOrderCollection() {
-		return (Collection<Order>) orderCollection;
+		return orderCollection;
 	}
 
 	public List<Order> getOrderList() {

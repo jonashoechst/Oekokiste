@@ -16,7 +16,8 @@ public class LoginActivity extends Activity {
 		
 		final Button button = (Button) findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            @Override
+			public void onClick(View v) {
             	View view = null;
 				orderButtonClicked(view);
             }

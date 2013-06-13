@@ -1,7 +1,6 @@
 package de.bosshammersch_hof.oekokiste.postgres;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +24,7 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 	@Override
 	protected boolean[] doInBackground(Login... params) {
 		
-		ConnectToDatabase con = new ConnectToDatabase();
+		DatabaseConnection con = new DatabaseConnection();
 		con.connect();
 		connection = con.getConnection();
 		if(params[0].validateUser())
@@ -34,7 +33,8 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		con.disconnect();
 		return output;
 	}
-	// Artur will es so :-)
+
+	
 	private boolean createUser(int userId){
 		
 		User user = null;
@@ -57,6 +57,9 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 			user.setLoginName(rs.getString("loginname"));
 			for(Order order : orderList)
 				user.addOrder(order);
+			
+			user.create();
+			
 		}
 		catch(SQLException e){
 			e.printStackTrace();

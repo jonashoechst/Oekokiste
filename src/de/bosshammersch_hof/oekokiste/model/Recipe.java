@@ -43,8 +43,8 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 	
 	public Recipe(){
 		this.setDao(DatabaseManager.getHelper().getRecipeDao());
-		this.ingredients = (Collection<CookingArticle>) new Vector<CookingArticle>();
-		this.cookware = (Collection<Cookware>) new Vector<Cookware>();
+		this.ingredients = new Vector<CookingArticle>();
+		this.cookware = new Vector<Cookware>();
 	}
 	
 	public Recipe(String name, String description, String instructions,
@@ -65,6 +65,7 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 		//this.hitPoints = hitPoints;
 	}
 	
+	@Override
 	public int create() throws SQLException{
 		for(Cookware c : cookware)
 			c.create();

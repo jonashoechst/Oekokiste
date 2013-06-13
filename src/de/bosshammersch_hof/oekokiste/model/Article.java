@@ -59,6 +59,7 @@ public class Article  extends BaseDaoEnabled<Article, Integer>{
 		this.id = id;
 	}
 	
+	@Override
 	public String toString(){
 		return "Article["+name+", "+id+"]";
 	}

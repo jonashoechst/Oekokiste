@@ -25,7 +25,7 @@ public class ArticleGroup extends BaseDaoEnabled<ArticleGroup, String>{
 
 	public ArticleGroup(){
 		this.setDao(DatabaseManager.getHelper().getArticleGroupDao());
-		this.articles = (Collection<Article> ) new Vector<Article>();
+		this.articles = new Vector<Article>();
 	}
 	
 	public ArticleGroup(String name){
@@ -33,6 +33,7 @@ public class ArticleGroup extends BaseDaoEnabled<ArticleGroup, String>{
 		this.name = name;
 	}
 	
+	@Override
 	public int create() throws SQLException{
 		for(Article a : articles)
 			a.create();

@@ -37,8 +37,8 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 	
 	public Order(){
 		this.setDao(DatabaseManager.getHelper().getOrderDao());
-		articleCollection = (Collection<OrderedArticle>) new Vector<OrderedArticle>();
-		barcodeList = (Collection<Barcode>) new Vector<Barcode>();
+		articleCollection = new Vector<OrderedArticle>();
+		barcodeList = new Vector<Barcode>();
 	}
 	
 	public Order(int id, Date date, String name) {
@@ -48,6 +48,7 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 		this.name = name;
 	}
 	
+	@Override
 	public int create() throws SQLException{
 		for(OrderedArticle oa : articleCollection)
 			oa.create();

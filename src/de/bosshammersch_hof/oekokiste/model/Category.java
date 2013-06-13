@@ -22,7 +22,7 @@ public class Category extends BaseDaoEnabled<Category, String>{
 	
 	public Category(){
 		this.setDao(DatabaseManager.getHelper().getCategoryDao());
-		articleGroups = (Collection<ArticleGroup>) new Vector<ArticleGroup>();
+		articleGroups = new Vector<ArticleGroup>();
 	}
 	
 	public Category(String name){
@@ -30,6 +30,7 @@ public class Category extends BaseDaoEnabled<Category, String>{
 		this.name = name;
 	}
 	
+	@Override
 	public int create() throws SQLException{
 		for(ArticleGroup ag : articleGroups)
 			ag.create();

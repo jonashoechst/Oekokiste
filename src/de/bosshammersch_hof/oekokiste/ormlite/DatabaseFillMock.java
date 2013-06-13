@@ -2,8 +2,6 @@ package de.bosshammersch_hof.oekokiste.ormlite;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.LinkedList;
-
 import de.bosshammersch_hof.oekokiste.model.*;
 
 public class DatabaseFillMock {
