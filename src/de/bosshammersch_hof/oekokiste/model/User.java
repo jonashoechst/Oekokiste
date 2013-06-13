@@ -1,5 +1,6 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,13 @@ public class User extends BaseDaoEnabled<User, Integer>{
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.loginName = loginName;
+	}
+	
+	public int create() throws SQLException{
+		for(Order o : orderCollection){
+			o.create();
+		}
+		return super.create();
 	}
 
 	public int getId() {

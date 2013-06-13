@@ -1,5 +1,6 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -27,6 +28,12 @@ public class Category extends BaseDaoEnabled<Category, String>{
 	public Category(String name){
 		this();
 		this.name = name;
+	}
+	
+	public int create() throws SQLException{
+		for(ArticleGroup ag : articleGroups)
+			ag.create();
+		return super.create();
 	}
 	
 	public void addArticleGroup(ArticleGroup ag){

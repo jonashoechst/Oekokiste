@@ -48,11 +48,11 @@ public class DatabaseFillMock {
 		
 		try {
 			u.create();
-			o.create();
+			/*o.create();
 			oa.create();
 			a.create();
 			c.create();
-			ag.create();
+			ag.create();*/
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
