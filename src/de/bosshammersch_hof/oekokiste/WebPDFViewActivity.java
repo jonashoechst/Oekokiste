@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
-public class WebPDFViewActivity extends Activity {
+public class WebPDFViewActivity extends Activity{
 	
 	/** 
 	 *   creats a webview to show a pdf in the app

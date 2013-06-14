@@ -18,7 +18,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class RecipeDetailActivity extends Activity {
+public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	
 	Recipe recipe;
 	
@@ -70,7 +70,7 @@ public class RecipeDetailActivity extends Activity {
 		cookingArticleListView.setAdapter(adapter);
 	}
 
-	private void updateUi() {
+	public void updateUi() {
 		// Fill the Recipe Activity
 		setTitle(recipe.getName());
 		

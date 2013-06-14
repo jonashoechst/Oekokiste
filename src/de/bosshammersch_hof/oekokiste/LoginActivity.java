@@ -21,14 +21,8 @@ public class LoginActivity extends Activity {
 	
 	public void loginButtonClicked(View view){
 		Intent intent = new Intent(this, MainActivity.class);
-		OpenState os = new OpenState();
-		os.setLastUserId(8893);
-		os.setId(1);
-		try {
-			DatabaseManager.getHelper().getOpenStateDao().createOrUpdate(os);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		intent.putExtra(Constants.keyLoginName, "a-dur1990");
+		intent.putExtra(Constants.keyLoginPassword, "c98fa615f3eb3aa13aab4d607bb03deaedee9c254409ea6929661b1905dcb260");
 		startActivity(intent);
 	}
 

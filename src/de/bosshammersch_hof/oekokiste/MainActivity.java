@@ -36,35 +36,46 @@ public class MainActivity extends Activity {
 		
 		// Try to fill the DB
 		//DatabaseFillMock.main(new String[0]);
-		
-		int artursUserId = 8893;
-		String arturPasswordSha = "c98fa615f3eb3aa13aab4d607bb03deaedee9c254409ea6929661b1905dcb260";
-		
-		Login login = new Login(artursUserId, arturPasswordSha);
-		
-		Login[] lArr = {login};
-		//new FillDatabase().doInBackground(lArr);
 
-		/*try {
-			DatabaseManager.getHelper().getOpenStateDao().delete(DatabaseManager.getHelper().getOpenStateDao().queryForAll());
+		// 1. Versuch: letzten Status šffnen
+		OpenState lastOpenState = null;
+		
+		try {
+			lastOpenState = DatabaseManager.getLastOpenState();
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}*/
-
-		OpenState lastOpenState = DatabaseManager.getLastOpenState();
+			// LastOpenState == null;
+		}
 		
 		if(lastOpenState != null) {
 			Log.i("Main Activity", "last Open State found.");
-			setupUser(8893);
-			updateUi();
+			user = DatabaseManager.getUser(lastOpenState.getLastUserId());
+			updateUiWithUser();
+			return;
 		}
-		else {
-			Intent intent = new Intent(this, LoginActivity.class);
-			startActivity(intent);
+
+		// 2. Versuch: Kommen wir von der LoginActivity?
+		String loginName = getIntent().getStringExtra(Constants.keyLoginName);
+		String password = getIntent().getStringExtra(Constants.keyLoginPassword);
+		
+		if(loginName != null || password != null){
+			Login login = new Login(loginName, password);
+			Login[] lArr = {login};
+			
+			Log.i("Main", "login ("+login.getLoginname()+", "+login.getPassword()+") validated: "+login.validateUser());
+			
+			new FillDatabase().doInBackground(lArr);
+			
+			Log.i("Main", "Database synced.");
+			
+			user = DatabaseManager.getUser(login.getUserId());
+			updateUiWithUser();
+			return;
 		}
 		
+		updateUiNoUser();
+		
 	}
-	
+
 	/**
 	 * Sends an intent if orderButton is clicked.
 	 * Starts OrderActivity which shows the orderlist  
@@ -105,14 +116,16 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	private void setupUser(int id){	
-		user = DatabaseManager.getUser(id);	
-	}
-	
-	private void updateUi(){
+	private void updateUiWithUser(){
 		// Do stuff to update the UI
 		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
 		welcomeTextView.setText(welcomeTextView.getText()+user.getFirstName()+" "+user.getLastName()+"!");
+	}
+	
+	private void updateUiNoUser() {
+
+		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
+		welcomeTextView.setText(welcomeTextView.getText()+" sie sind nicht eingeloggt.");
 	}
 	
 }

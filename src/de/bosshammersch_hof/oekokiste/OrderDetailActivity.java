@@ -30,7 +30,7 @@ import android.widget.Toast;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
 
-public class OrderDetailActivity extends Activity {
+public class OrderDetailActivity extends Activity implements UpdatableActivity{
 	
 	private Order order;
 	
@@ -47,10 +47,10 @@ public class OrderDetailActivity extends Activity {
 		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
 		order = DatabaseManager.getOrder(orderId);
 		
-		updateUI();
+		updateUi();
 	}
 
-	private void updateUI() {
+	public void updateUi() {
 		// update UI
 		ListView orderDetailArticleListView = (ListView) findViewById(R.id.orderDetailArticleListView);
 		

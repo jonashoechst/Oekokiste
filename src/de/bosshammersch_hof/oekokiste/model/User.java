@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
@@ -16,7 +18,7 @@ import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 @DatabaseTable
 public class User extends BaseDaoEnabled<User, Integer>{
 
-	@DatabaseField(generatedId = true)
+	@DatabaseField(id = true)
 	private int id;
 	
 	@DatabaseField
@@ -46,6 +48,7 @@ public class User extends BaseDaoEnabled<User, Integer>{
 	
 	@Override
 	public int create() throws SQLException{
+		Log.i("User","created User("+loginName+", "+id+")");
 		for(Order o : orderCollection){
 			o.create();
 		}

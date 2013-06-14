@@ -1,7 +1,6 @@
 package de.bosshammersch_hof.oekokiste.postgres;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +9,6 @@ import java.util.List;
 
 import de.bosshammersch_hof.oekokiste.model.Article;
 import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
-import de.bosshammersch_hof.oekokiste.model.Barcode;
 import de.bosshammersch_hof.oekokiste.model.Category;
 import de.bosshammersch_hof.oekokiste.model.Order;
 import de.bosshammersch_hof.oekokiste.model.OrderedArticle;

@@ -32,29 +32,27 @@ public class DatabaseManager {
         return helper;
     }
     
-    public static OpenState getLastOpenState(){
+    public static OpenState getLastOpenState() throws SQLException{
     	
-    	// get the last State of the app
-    	
-    	OpenState lastOpenState = null;
-		try {
-			List<OpenState> stateList = getHelper().getOpenStateDao().queryForAll();
+		return getHelper().getOpenStateDao().queryForId(1);
 	    	
-	    	for(OpenState state : stateList){
-	    		if(lastOpenState == null) lastOpenState = state;
-	    		else if(lastOpenState.getId() < state.getId()) lastOpenState = state;
-	    		
-	    	}
-		} catch (SQLException e) {
-			Log.e(Constants.errorName, "No OpenState could be found.");
-		}
-    	
-    	return lastOpenState;
     }
     
     public static User getUser(int id){
     	try {
 			return helper.getUserDao().queryForId(id);
+		} catch (SQLException e) {
+			Log.e(Constants.errorName, "No User could be found.");
+			return null;
+		}
+    }
+    
+    public static User getUserWithLoginName(String loginname){
+    	try {
+    		List<User> userList = helper.getUserDao().queryForAll();
+    		for(User u : userList)
+    			if(u.getLoginName().equals(loginname)) return u;
+			return null;
 		} catch (SQLException e) {
 			Log.e(Constants.errorName, "No User could be found.");
 			return null;

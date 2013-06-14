@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class RecipeActivity extends Activity {
+public class RecipeActivity extends Activity implements UpdatableActivity{
 	
 	LinkedList<Recipe> recipeList;
 	
@@ -38,7 +38,7 @@ public class RecipeActivity extends Activity {
 		
 	}
 
-	private void updateUi() {
+	public void updateUi() {
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
 	
 		ListAdapter adapter = new ArrayAdapter<Recipe>(this, R.layout.listview_item_recipe, recipeList){
