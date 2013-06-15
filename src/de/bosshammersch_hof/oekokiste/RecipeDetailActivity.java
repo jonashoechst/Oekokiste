@@ -33,7 +33,8 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		getActionBar().setHomeButtonEnabled(true);
 		
 		setupRecipe();
-		
+		if(recipe == null)
+			recipe = new Recipe();
 		updateUi();
 		
 	}
@@ -121,9 +122,8 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	}
 	
 	private void setupRecipe() {
-		// get User Id and matching User 
 		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 1);
-		Log.i(OrderActivity.class.getName(), "userId found: "+recipeId);
+		Log.i(OrderActivity.class.getName(), "recipeId found: "+recipeId);
 		recipe = DatabaseManager.getRecipe(recipeId);
 	}
 	

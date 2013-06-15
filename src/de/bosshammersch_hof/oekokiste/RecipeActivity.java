@@ -3,6 +3,7 @@ package de.bosshammersch_hof.oekokiste;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.LinkedList;
 
 import de.bosshammersch_hof.oekokiste.model.Article;
@@ -47,7 +48,7 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 		getActionBar().setHomeButtonEnabled(true);
 		setupArticle();
 		if(tmpArticle == null)
-			recipeList = getDummyRecipeList();
+			recipeList = getRecipeListAll();
 		else
 			recipeList = getRecipeList(tmpArticle.getId());
 		
@@ -220,7 +221,8 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 				for(CookingArticle tmp : getIngredientForRecipe(rs.getInt("recipe_id"), connection))
 					tmpRecipe.addIngredient(tmp);
 				
-				tmpRecipe.create();
+				//tut nicht warum auch immer ?!
+				//tmpRecipe.create();
 				tmpList.add(tmpRecipe);
 				Log.i("RecipeActivity", "SqlQuery done");
 			}
@@ -239,5 +241,52 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 	}
 	
 	
+	
+	private LinkedList<Recipe> getRecipeListAll(){
+		Recipe tmpRecipe = null;
+		LinkedList<Recipe> tmpList = new LinkedList();
+		DatabaseConnection con = new DatabaseConnection();
+		
+		try{
+			Connection connection = null;
+			con.connect();
+			connection = con.getConnection();
+		
+		
+			Statement st = connection.createStatement();
+			
+			ResultSet rs = st.executeQuery("SELECT DISTINCT * FROM Recipes JOIN Cookware using(recipe_id)");
+			
+			while(rs.next()){
+				tmpRecipe = new Recipe();
+				tmpRecipe.setName(rs.getString("recipe_name"));
+				tmpRecipe.setDifficulty(rs.getInt("recipe_difficulty"));
+				tmpRecipe.setId(rs.getInt("recipe_id"));
+				tmpRecipe.setDescription(rs.getString("recipe_description"));
+				tmpRecipe.setInstructions(rs.getString("recipe_instructions"));
+				tmpRecipe.addCookware(new Cookware(rs.getString("cookware_name")));
+				tmpRecipe.setServings(rs.getInt("recipe_servings"));
+				tmpRecipe.setCookingTimeInMin(rs.getInt("recipe_timeinmin"));
+				
+				for(CookingArticle tmp : getIngredientForRecipe(rs.getInt("recipe_id"), connection))
+					tmpRecipe.addIngredient(tmp);
+				
+				tmpRecipe.create();
+				tmpList.add(tmpRecipe);
+				Log.i("RecipeActivity", "SqlQuery RecipeAll done");
+			}
+			rs.close();
+			st.close();
+			
+		}catch(Exception e){
+			Log.i("RecipeActivity", "SqlQuery RecipeAll failt");
+			e.printStackTrace();
+		}finally{
+			con.disconnect();
+		}
+		
+		
+		return tmpList;
+	}
 	
 }

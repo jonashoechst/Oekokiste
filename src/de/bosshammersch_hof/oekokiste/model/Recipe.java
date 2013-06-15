@@ -70,10 +70,15 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 	
 	@Override
 	public int create() throws SQLException{
-		for(Cookware c : cookware)
-			c.create();
-		for(CookingArticle ca : ingredients)
-			ca.create();
+		super.delete();
+		for(Cookware c : cookware){
+			c.delete();
+			c.create();	
+		}
+		for(CookingArticle ca : ingredients){
+			ca.delete();
+			ca.create();	
+		}
 		return super.create();
 	}
 	
