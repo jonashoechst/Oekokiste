@@ -109,7 +109,7 @@ public class OrderDetailActivity extends Activity implements UpdatableActivity{
 			@Override
 			public void onClick(View v){
 				Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
-				//intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(location))
+				intent.putExtra(Constants.keyOrderedArticle, 0);
 				startActivity(intent);
 			}
 		});

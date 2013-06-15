@@ -31,7 +31,7 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private Recipe recipe;
 
-	private CookingArticle(){
+	public CookingArticle(){
 		this.setDao(DatabaseManager.getHelper().getCookingArticleDao());
 	}
 	

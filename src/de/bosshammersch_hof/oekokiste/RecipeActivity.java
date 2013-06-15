@@ -1,12 +1,25 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.LinkedList;
 
+import de.bosshammersch_hof.oekokiste.model.Article;
+import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
+import de.bosshammersch_hof.oekokiste.model.CookingArticle;
+import de.bosshammersch_hof.oekokiste.model.Cookware;
+import de.bosshammersch_hof.oekokiste.model.Order;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
+import de.bosshammersch_hof.oekokiste.model.User;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+import de.bosshammersch_hof.oekokiste.postgres.DatabaseConnection;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.SQLException;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +34,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class RecipeActivity extends Activity implements UpdatableActivity{
 	
 	LinkedList<Recipe> recipeList;
+	Article tmpArticle = null;
 	
 	/** 
 	 *   creats the hole list of recipe
@@ -31,13 +45,23 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe);
 		getActionBar().setHomeButtonEnabled(true);
-		
-		recipeList = getDummyRecipeList();
+		setupArticle();
+		if(tmpArticle == null)
+			recipeList = getDummyRecipeList();
+		else
+			recipeList = getRecipeList(tmpArticle.getId());
 		
 		updateUi();
 		
 	}
-
+	
+	private void setupArticle() {
+		// get User Id and matching User 
+		int articleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 1);
+		Log.i(OrderActivity.class.getName(), "Article found: "+articleId);
+		tmpArticle = DatabaseManager.getArticle(articleId);
+	}
+	
 	public void updateUi() {
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
 	
@@ -128,6 +152,92 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 		recipeList.add(new Recipe("Sangria-Eis-Charlotte", "", "", null, null, 1, 30, 0, 16, null, 1));
 		
 		return recipeList;
-		
 	}
+	
+	/**
+	 *   creats a list of cookingArticle from the extern database 
+	 *   @return  LinkedList<CookingArticle>
+	 */
+	private LinkedList<CookingArticle> getIngredientForRecipe(int id, Connection con){
+		LinkedList<CookingArticle> tmpList = new LinkedList<CookingArticle>();
+		CookingArticle tmpCA = null;
+		try{
+			PreparedStatement pst = con.prepareStatement("SELECT * FROM Ingredients " +
+				"WHERE  recipe_id = ?");
+		pst.setInt(1, id); 
+
+		ResultSet rs = pst.executeQuery();
+		while(rs.next()){
+			tmpCA = new CookingArticle();
+			tmpCA.setAmount(rs.getInt("amount"));
+			tmpCA.setAmountType(rs.getString("amount_type"));
+			//tmpCA.setIsStandartIngredient(rs.getBoolean("is_standart_ingredient"));
+			tmpCA.setArticleGroup(new ArticleGroup(rs.getString("articlegroup_name")));
+			tmpCA.create();
+		}
+			
+		
+		}catch(Exception e){
+			Log.i("RecipeActivity", "SqlQuery for CookingArticle failt");
+			e.printStackTrace();
+		}
+		return tmpList;
+	}
+	
+	/**
+	 *   creats a list of Recipes from the extern database 
+	 *   @return  LinkedList<CookingArticle>
+	 */
+	private LinkedList<Recipe> getRecipeList(int articleId){
+		Recipe tmpRecipe = null;
+		LinkedList<Recipe> tmpList = new LinkedList();
+		DatabaseConnection con = new DatabaseConnection();
+		
+		try{
+			Connection connection = null;
+			con.connect();
+			connection = con.getConnection();
+		
+		
+			PreparedStatement pst = connection.prepareStatement("SELECT * FROM Recipes JOIN Cookware using(recipe_id) JOIN  Ingredients using(recipe_id) "+ 
+																"WHERE ArticleGroup_name IN "+
+																"(SELECT ArticleGroup_name FROM Article WHERE Article_id = ?)");
+			pst.setInt(1, articleId); 
+			
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()){
+				tmpRecipe = new Recipe();
+				tmpRecipe.setName(rs.getString("recipe_name"));
+				tmpRecipe.setDifficulty(rs.getInt("recipe_difficulty"));
+				tmpRecipe.setId(rs.getInt("recipe_id"));
+				tmpRecipe.setDescription(rs.getString("recipe_description"));
+				tmpRecipe.setInstructions(rs.getString("recipe_instructions"));
+				tmpRecipe.addCookware(new Cookware(rs.getString("cookware_name")));
+				tmpRecipe.setServings(rs.getInt("recipe_servings"));
+				tmpRecipe.setCookingTimeInMin(rs.getInt("recipe_timeinmin"));
+				
+				for(CookingArticle tmp : getIngredientForRecipe(rs.getInt("recipe_id"), connection))
+					tmpRecipe.addIngredient(tmp);
+				
+				tmpRecipe.create();
+				tmpList.add(tmpRecipe);
+				Log.i("RecipeActivity", "SqlQuery done");
+			}
+			rs.close();
+			pst.close();
+			
+		}catch(Exception e){
+			Log.i("RecipeActivity", "SqlQuery failt");
+			e.printStackTrace();
+		}finally{
+			con.disconnect();
+		}
+		
+		
+		return tmpList;
+	}
+	
+	
+	
 }

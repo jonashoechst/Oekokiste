@@ -23,6 +23,10 @@ public class LoginActivity extends Activity {
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra(Constants.keyLoginName, "a-dur1990");
 		intent.putExtra(Constants.keyLoginPassword, "c98fa615f3eb3aa13aab4d607bb03deaedee9c254409ea6929661b1905dcb260");
+		// scheint nicht so zu funktionieren wie gedacht
+		//OpenState tmpOpenState = new OpenState();
+		//tmpOpenState.setLastUserId(8893);
+		//DatabaseManager.saveOpenState(tmpOpenState);
 		startActivity(intent);
 	}
 

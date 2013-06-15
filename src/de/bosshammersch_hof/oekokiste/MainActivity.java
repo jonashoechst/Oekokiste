@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 		OpenState lastOpenState = null;
 		
 		try {
-			lastOpenState = DatabaseManager.getLastOpenState();
+			lastOpenState = DatabaseManager.getLastOpenState();// gibt leider null zurück...
 		} catch (SQLException e) {
 			// LastOpenState == null;
 		}
@@ -82,9 +82,15 @@ public class MainActivity extends Activity {
 	 * @param  view The clicked View.
 	 */
 	public void orderButtonClicked(View view){
-		Intent intent = new Intent(this, OrderActivity.class);
-		intent.putExtra(Constants.keyUser, user.getId());
-		Log.i("MainActivity", "Order Activity Intent created, UserId: "+intent.getIntExtra(Constants.keyUser, 0));
+		Intent intent = null;
+		if(user != null){
+			intent = new Intent(this, OrderActivity.class);
+			intent.putExtra(Constants.keyUser, user.getId());
+			Log.i("MainActivity", "Order Activity Intent created, UserId: "+intent.getIntExtra(Constants.keyUser, 0));
+		}
+		else{
+			intent = new Intent(this, LoginActivity.class);
+		}
 		startActivity(intent);
 	}
 	
