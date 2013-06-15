@@ -49,11 +49,12 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 		this.cookware = new Vector<Cookware>();
 	}
 	
-	public Recipe(String name, String description, String instructions,
+	public Recipe(int id, String name, String description, String instructions,
 			Collection<Cookware> cookware, Bitmap image, int difficulty,
 			int workingTimeInMin, int cookingTimeInMin, int servings,
 			Collection<CookingArticle> ingredients, int hitPoints) {
 		this();
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.instructions = instructions;
@@ -107,6 +108,14 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 	public void addCookware(Cookware inCookware) {
 		inCookware.setRecipe(this);
 		this.cookware.add(inCookware);
+	}
+	
+	public void setCookware(LinkedList<Cookware> cw){
+		this.cookware = cw;
+	}
+	
+	public void setArticleList(LinkedList<CookingArticle> ca){
+		this.ingredients = ca;
 	}
 	
 	public int getDifficulty() {
