@@ -32,8 +32,7 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		setContentView(R.layout.activity_recipe_detail);
 		getActionBar().setHomeButtonEnabled(true);
 		
-		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
-		recipe = DatabaseManager.getRecipe(recipeId);
+		setupRecipe();
 		
 		updateUi();
 		
@@ -132,7 +131,7 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	 *   supplies dummy data for testing the app
 	 *   @return Recipe with dummy data
 	 */
-	private Recipe getDummyRecipe(){
+	/*private Recipe getDummyRecipe(){
 		
 		String description = "Flammkuchen, Flammenkuchen oder Flammekueche (frz. Tarte flambée) ist ein herzhafter Kuchen aus dem Elsass (frz. Alsace) in Frankreich. Ursprünglich war Flammkuchen ein bäuerliches Essen, mit dem am Backtag getestet wurde, ob der dörfliche Backofen heiß genug war, bevor die Brote für die Woche gebacken wurden. Da der Backtag im dörflichen Arbeitsrhythmus ein Gemeinschaftsereignis war und der Backofen im Backhaus auch vor Feiertagen angeheizt wurde, entwickelte sich der Flammkuchen mit der Zeit zum Festtagsessen. Als Teig benutzte man Brotteig.";
 		String instruction = "Den Brotteig in 45 Stücke zerteilen, mit einem Küchentuch abdecken und die Teigstücke 30 Minuten ruhen lassen. Den Quark (mit oder ohne Crème fraîche, siehe Varianten) mit Salz und Pfeffer verrühren. Zwiebel in dünne Ringe schneiden oder hobeln. Den Frühstücksspeck in Streifen schneiden. Den Teig auf einer bemehlten Arbeitsfläche so dünn wie möglich auswellen und mit dem Quark gleichmäßig dünn bestreichen. Mit Frühstücksspeck, Zwiebelringen (und Käse, siehe Varianten) belegen.";
@@ -172,5 +171,5 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		return recipeFlammkuchen;
 		
 		
-	}
+	}*/
 }
