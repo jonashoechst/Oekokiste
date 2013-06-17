@@ -7,27 +7,27 @@
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="Artikel Name ghjkl fghjkl kjhg fghjkl lkjh "
         android:gravity="center_vertical|left"
-   		android:padding="5sp"
+        android:padding="5sp"
+        android:text="Artikel Name ghjkl fghjkl kjhg fghjkl lkjh "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/amountTextView"
-        android:layout_width="35sp"
+        android:layout_width="75sp"
         android:layout_height="match_parent"
         android:gravity="center_vertical|right"
+        android:padding="5sp"
         android:text="12"
-   		android:padding="5sp"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/priceTextView"
-        android:layout_width="80sp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical|right"
-        android:text="12,95€"
-   		android:padding="5sp"
+        android:padding="5sp"
+        android:text="112,95€"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

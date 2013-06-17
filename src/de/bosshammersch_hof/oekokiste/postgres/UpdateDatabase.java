@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -15,7 +13,7 @@ import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class UpdateDatabase extends AsyncTask<Login, Integer, boolean[]> {
+public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 	
 	private Connection connection = null;
 	
@@ -24,10 +22,9 @@ public class UpdateDatabase extends AsyncTask<Login, Integer, boolean[]> {
 	private boolean[] output;
 
 	@Override
-	public boolean[] doInBackground(Login... params) {
+	public boolean[] doInBackground(User... params) {
 		
 		DatabaseConnection con = new DatabaseConnection();
-		con.connect();
 		connection = con.getConnection();
 		
 		try {
@@ -37,16 +34,21 @@ public class UpdateDatabase extends AsyncTask<Login, Integer, boolean[]> {
 			Log.e("UpdateDatabase", "Could not sync general Data.");
 			e.printStackTrace();
 		}
-		if(params[0].validateUser()){
-			Log.i("FillDatabase", "User was validated!");
-			try {
-				updateUserForId(params[0].getUserId());
-				Log.i("UpdataDatabase", "User data was synced.");
-			} catch (SQLException e) {
-				Log.e("UpdateDatabase", "Could not sync user data.");
-				e.printStackTrace();
+		try {
+			if(this.validateUser(params[0]) != null){
+				Log.i("FillDatabase", "User was validated!");
+				try {
+					updateUserForId(params[0].getId());
+					Log.i("UpdataDatabase", "User data was synced.");
+				} catch (SQLException e) {
+					Log.e("UpdateDatabase", "Could not sync user data.");
+					e.printStackTrace();
+				}
+				
 			}
-			
+		} catch (SQLException e) {
+			Log.e("UpdateDatabase", "User could not be validated. Somethings's wrong with the connection");
+			e.printStackTrace();
 		}
 		
 		con.disconnect();
@@ -323,6 +325,41 @@ public class UpdateDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		}
 	}
 	
-	
+
+	public User validateUser(User user) throws SQLException{
+		DatabaseConnection con = new DatabaseConnection();
+		connection = con.getConnection();
+
+		PreparedStatement pst;
+		ResultSet rs;
+		
+		if(user.getLoginName() == null){
+			pst = connection.prepareStatement("select * from users where user_id = ?");
+			pst.setInt(1, user.getId()); 
+		} else {
+			pst = connection.prepareStatement("select * from users where loginname = ?");
+			pst.setString(1, user.getLoginName()); 
+		}
+		
+		rs = pst.executeQuery();
+		rs.next();
+		
+		String passwordFromServer = rs.getString("password_sha256");
+		
+		boolean validated = false;
+		if(user.getPasswordSha().equals(passwordFromServer)) {
+			user.setFirstName(rs.getString("firstname"));
+			user.setLastName(rs.getString("lastname"));
+			user.setLoginName(rs.getString("loginname"));
+			user.setId(rs.getInt("user_id"));
+			user.createOrUpdate();
+			validated = true;
+		}
+		rs.close();
+		pst.close();
+		
+		if(validated) return user;
+		else return null;
+	}
 
 }

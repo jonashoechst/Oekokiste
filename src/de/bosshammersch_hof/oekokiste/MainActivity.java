@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,12 +37,15 @@ public class MainActivity extends Activity {
 		// 1. Versuch: letzten Status �ffnen
 		OpenState lastOpenState = null;
 		
+		UpdateDatabase updater = new UpdateDatabase();
+		
 		try {
 			lastOpenState = DatabaseManager.getHelper().getOpenStateDao().queryForId(1);
 			
 			if(lastOpenState != null) {
 				Log.i("Main Activity", "last Open State found.");
 				user = lastOpenState.getUser();
+				updater.execute(user);
 				updateUiWithUser();
 				new UpdateDatabase().execute(login);
 				return;
@@ -56,19 +60,38 @@ public class MainActivity extends Activity {
 		String password = getIntent().getStringExtra(Constants.keyLoginPassword);
 		
 		if(loginName != null || password != null){
-			Login login = new Login(loginName, password);
+			User loginUser = new User();
+			loginUser.setLoginName(loginName);
+			loginUser.setPassword(password);
 			//Login[] lArr = {login};
 			
-			if(!login.validateUser()){
+			try {
+				loginUser = updater.validateUser(loginUser);
+				
+			} catch (SQLException e) {
+				loginUser = null;
+				e.printStackTrace();
+			}
+			
+			if(loginUser == null){
 				Toast.makeText(this, "Login fehlgeschlagen. Ist das eingegebene Passwort korrekt?", 20).show();
 				updateUiNoUser();
-				Log.i("Main", "login ("+login.getLoginname()+", "+login.getPassword()+") could not be validated!");
 			} else {
-				new UpdateDatabase().execute(login);
-				user = login.getUser();
+				updater.execute(loginUser);
+				user = loginUser;
 				updateUiWithUser();
+				OpenState os = new OpenState();
+				os.setUser(loginUser);
+				try {
+					os.create();
+				} catch (SQLException e) {
+					Log.e("MainActivity", "Open State could not be saved.");
+					e.printStackTrace();
+				}
 			}
 			return;
+		} else {
+			updateUiNoUser();
 		}
 		
 	}
@@ -100,9 +123,12 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, LoginActivity.class);
 		try {
 			DatabaseManager.getHelper().getOpenStateDao().deleteById(1);
+			user = null;
+			DatabaseManager.clearUserData();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 	
@@ -121,12 +147,23 @@ public class MainActivity extends Activity {
 	
 	private void updateUiWithUser(){
 		// Do stuff to update the UI
+		Button orderButton = (Button) findViewById(R.id.orderButton);
+		orderButton.setEnabled(true);
+		
+		Button logoutButton = (Button) findViewById(R.id.logoutButton);
+		logoutButton.setText("Abmelden...");
+		
 		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
 		welcomeTextView.setText(welcomeTextView.getText()+user.getFirstName()+" "+user.getLastName()+"!");
 	}
 	
 	private void updateUiNoUser() {
-
+		Button orderButton = (Button) findViewById(R.id.orderButton);
+		orderButton.setEnabled(false);
+		
+		Button logoutButton = (Button) findViewById(R.id.logoutButton);
+		logoutButton.setText("Anmelden...");
+		
 		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
 		welcomeTextView.setText(welcomeTextView.getText()+" sie sind nicht eingeloggt.");
 	}
