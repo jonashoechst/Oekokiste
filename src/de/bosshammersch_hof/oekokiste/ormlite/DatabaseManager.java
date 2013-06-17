@@ -124,6 +124,23 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void clearUserData() throws SQLException{
+		List<User> userList = helper.getUserDao().queryForAll();
+		for(User user : userList){
+			for(Order order : user.getOrderCollection()){
+				for(OrderedArticle oa : order.getArticleCollection()){
+					oa.delete();
+				}
+				for(Barcode b : order.getBarcodeCollection()){
+					b.delete();
+				}
+				order.delete();
+			}
+			user.delete();
+		}
+		
+	}
 
     /*public List<WishList> getAllWishLists() {
         List<WishList> wishLists = null;

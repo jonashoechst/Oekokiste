@@ -1,9 +1,8 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import android.net.Uri;
@@ -72,9 +71,10 @@ public class OrderDetailActivity extends Activity implements UpdatableActivity{
 		        	TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
 		        
 		        	nameTextView.setText(orderedArticleList.get(position).getArticle().getName());
-		        	amountTextView.setText(orderedArticleList.get(position).getAmount()+"");
-		        	double price = orderedArticleList.get(position).getTotalPrice();
-		        	priceTextView.setText((price/100)+","+(price%100)+"€");
+		    		DecimalFormat df = new DecimalFormat("##0.##");
+		    		df.setDecimalSeparatorAlwaysShown(false);
+		        	amountTextView.setText(df.format(orderedArticleList.get(position).getAmount())+" "+orderedArticleList.get(position).getAmountType());
+		        	priceTextView.setText(orderedArticleList.get(position).getTotalPriceString());
 		        
 		        	return row;
 			}
@@ -84,16 +84,11 @@ public class OrderDetailActivity extends Activity implements UpdatableActivity{
 		LayoutInflater inflater = getLayoutInflater();
       	  	View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
-        	int finalPrice = 0;
-        	for(OrderedArticle article : orderedArticleList){
-        		finalPrice += article.getTotalPrice(); 
-        	}
-        
         	TextView nameTextView = (TextView) sumRow.findViewById(R.id.nameTextView);
         	TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
 
         	nameTextView.setText("Summe: ");
-        	finalPriceTextView.setText((finalPrice/100)+","+(finalPrice%100)+"€");
+        	finalPriceTextView.setText(order.getTotalOrderValueString());
         
         	orderDetailArticleListView.addFooterView(sumRow);
 

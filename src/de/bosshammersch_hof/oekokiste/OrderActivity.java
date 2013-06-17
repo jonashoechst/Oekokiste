@@ -66,7 +66,7 @@ public class OrderActivity extends Activity {
 			        boxnameTextView.setText(user.getOrderList().get(position).getName());
 		        
 			        TextView priceTextView = (TextView) row.findViewById(R.id.priceTextView);
-			        priceTextView.setText(user.getOrderList().get(position).getTotalOrderValue());
+			        priceTextView.setText(user.getOrderList().get(position).getTotalOrderValueString());
 		        
 			        return row;
 		    	}

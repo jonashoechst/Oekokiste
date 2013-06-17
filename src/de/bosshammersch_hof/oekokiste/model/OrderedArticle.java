@@ -1,6 +1,7 @@
-package de.bosshammersch_hof.oekokiste.model;
+ package de.bosshammersch_hof.oekokiste.model;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
@@ -61,12 +62,13 @@ public class OrderedArticle extends BaseDaoEnabled<OrderedArticle, Integer>{
 		this.amountType = amountType;
 	}
 
-	public int getPrice() {
-		return price;
+	public double getPrice() {
+		return (double) price / 100;
 	}
-
-	public double getTotalPrice() {
-		return price*amount;
+	
+	public String getTotalPriceString(){
+		DecimalFormat df = new DecimalFormat("#0.00");
+		return df.format(getPrice())+"Û";
 	}
 
 	public void setPrice(int price) {

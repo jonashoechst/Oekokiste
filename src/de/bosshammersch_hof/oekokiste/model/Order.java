@@ -1,6 +1,7 @@
 package de.bosshammersch_hof.oekokiste.model;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -78,18 +79,10 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 			articleList.add(oa);
 		return articleList;
 	}
-/*
-	public void setArticleCollection(Collection<OrderedArticle> articleCollection) {
-		this.articleCollection = articleCollection;
-	}*/
 	
 	public Collection<Barcode> getBarcodeCollection() {
 		return barcodeCollection;
 	}
-/*
-	public void setBarcodeList(Collection<Barcode> barcodeList) {
-		this.barcodeList = barcodeList;
-	}*/
 
 	public void addBarcode(Barcode barcode) {
 		barcode.setOrder(this);
@@ -109,13 +102,16 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 		this.user = user;
 	}
 
-	public String getTotalOrderValue(){
-		int totalValue = 0;
-		totalValue = (int) (Math.random()*10000);
-		/* For later use.
-		for(OrderedArticle article : articleList){
-			totalValue += article.getTotalPrice();
-		}*/
-		return String.format("%d,%2d€", (totalValue/100), (totalValue%100));
+	public double getTotalOrderVaule(){
+		double totalValue = 0;
+		for(OrderedArticle oa : articleCollection)
+			totalValue += oa.getPrice();
+		
+		return totalValue;
+	}
+	
+	public String getTotalOrderValueString(){
+		DecimalFormat df = new DecimalFormat("#0.00");
+		return df.format(getTotalOrderVaule())+"€";
 	}
 }

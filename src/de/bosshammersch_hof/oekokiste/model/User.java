@@ -1,11 +1,16 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+
+import android.util.Log;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -97,8 +102,21 @@ public class User extends BaseDaoEnabled<User, Integer>{
 		return passwordSha;
 	}
 
-	public void setPasswordSha(String passwordSha) {
-		this.passwordSha = passwordSha;
+	public void setPassword(String password) {
+		this.passwordSha = password;
+		/*MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+			md.update(password.getBytes("UTF-8"));
+			byte[] digest = md.digest();
+			this.passwordSha = new String(digest, "UTF-8");
+		} catch (NoSuchAlgorithmException e) {
+			Log.e("…kokiste - Login", "Algorithm for sha-256 is not present.");
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			Log.e("…kokiste - Login", "Encoding in password conversion is not supported.");
+			e.printStackTrace();
+		}*/
 	}
 	
 }
