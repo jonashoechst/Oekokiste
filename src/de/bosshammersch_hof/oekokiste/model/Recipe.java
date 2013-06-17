@@ -12,8 +12,6 @@ import com.j256.ormlite.misc.BaseDaoEnabled;
 
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
-import android.graphics.Bitmap;
-
 public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 
 	@DatabaseField(id = true)
@@ -34,8 +32,6 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 	@DatabaseField
 	private int difficulty;
 	@DatabaseField
-	private int workingTimeInMin;
-	@DatabaseField
 	private int cookingTimeInMin;
 	@DatabaseField
 	private int servings;
@@ -49,37 +45,8 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 		this.cookware = new Vector<Cookware>();
 	}
 	
-	public Recipe(int id, String name, String description, String instructions,
-			Collection<Cookware> cookware, Bitmap image, int difficulty,
-			int workingTimeInMin, int cookingTimeInMin, int servings,
-			Collection<CookingArticle> ingredients, int hitPoints) {
-		this();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.instructions = instructions;
-		this.cookware = cookware;
-		//this.image = image;
-		this.difficulty = difficulty;
-		this.workingTimeInMin = workingTimeInMin;
-		this.cookingTimeInMin = cookingTimeInMin;
-		this.servings = servings;
-		this.ingredients = ingredients;
-		//this.hitPoints = hitPoints;
-	}
-	
-	@Override
-	public int create() throws SQLException{
-		super.delete();
-		for(Cookware c : cookware){
-			c.delete();
-			c.create();	
-		}
-		for(CookingArticle ca : ingredients){
-			ca.delete();
-			ca.create();	
-		}
-		return super.create();
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getRecipeDao().createOrUpdate(this);
 	}
 	
 	public String getName() {
@@ -131,14 +98,6 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 		this.difficulty = difficulty;
 	}
 	
-	public int getWorkingTimeInMin() {
-		return workingTimeInMin;
-	}
-	
-	public void setWorkingTimeInMin(int workingTimeInMin) {
-		this.workingTimeInMin = workingTimeInMin;
-	}
-	
 	public int getCookingTimeInMin() {
 		return cookingTimeInMin;
 	}
@@ -159,18 +118,13 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 		return ingredients;
 	}
 	
-	public List<CookingArticle> collectionToList(Collection<CookingArticle> ca){
-		List<CookingArticle> lca = new LinkedList<CookingArticle>();
-		for(CookingArticle cafor : ca){
-			lca.add(cafor);
+	public List<CookingArticle> getIngredientsList(){
+		List<CookingArticle> caList = new LinkedList<CookingArticle>();
+		for(CookingArticle ca : ingredients){
+			caList.add(ca);
 		}
-		return lca;
+		return caList;
 	}
-	
-	/*
-	public void setIngredients(Collection<CookingArticle> ingredients){
-		this.ingredients = ingredients;
-	}*/
 	
 	public void addIngredient(CookingArticle article){
 		article.setRecipe(this);
@@ -184,4 +138,7 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	
+	
 }

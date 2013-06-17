@@ -1,5 +1,7 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -31,12 +33,8 @@ public class OrderedArticle extends BaseDaoEnabled<OrderedArticle, Integer>{
 		this.setDao(DatabaseManager.getHelper().getOrderedArticleDao());
 	}
 	
-	public OrderedArticle(Article article, double amount, String amountType, int price) {
-		this();
-		this.article = article;
-		this.amountType = amountType;
-		this.amount = amount;
-		this.price = price;
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getOrderedArticleDao().createOrUpdate(this);
 	}
 	
 	public Article getArticle() {

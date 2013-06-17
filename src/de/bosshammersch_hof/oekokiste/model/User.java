@@ -38,21 +38,8 @@ public class User extends BaseDaoEnabled<User, Integer>{
 		this.orderCollection = new Vector<Order>();
 	}
 	
-	public User(int id, String lastName, String firstName, String loginName) {
-		this();
-		this.id = id;
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.loginName = loginName;
-	}
-	
-	@Override
-	public int create() throws SQLException{
-		Log.i("User","created User("+loginName+", "+id+")");
-		for(Order o : orderCollection){
-			o.create();
-		}
-		return super.create();
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getUserDao().createOrUpdate(this);
 	}
 
 	public int getId() {

@@ -18,46 +18,32 @@ public class Category extends BaseDaoEnabled<Category, String>{
 	private String name;
 	
 	@ForeignCollectionField(eager = false)
-	private Collection<ArticleGroup> articleGroups;
+	private Collection<Article> articles;
 	
 	public Category(){
 		this.setDao(DatabaseManager.getHelper().getCategoryDao());
-		articleGroups = new Vector<ArticleGroup>();
+		articles = new Vector<Article>();
 	}
 	
-	public Category(String name){
-		this();
-		this.name = name;
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getCategoryDao().createOrUpdate(this);
 	}
 	
-	@Override
-	public int create() throws SQLException{
-		for(ArticleGroup ag : articleGroups)
-			ag.create();
-		return super.create();
-	}
-	
-	public void addArticleGroup(ArticleGroup ag){
-		ag.setCategory(this);
-		articleGroups.add(ag);
+	public void addArticle(Article a){
+		a.setCategory(this);
+		articles.add(a);
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public Collection<ArticleGroup> getArticleGroups() {
-		return articleGroups;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public void setArticleGroups(Collection<ArticleGroup> articleGroups) {
-		this.articleGroups = articleGroups;
+	public Collection<Article> getArticles() {
+		return articles;
 	}
-	
-	
 	
 }

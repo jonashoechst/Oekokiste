@@ -1,5 +1,7 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -19,9 +21,8 @@ public class Barcode extends BaseDaoEnabled<Barcode, String>{
 		this.setDao(DatabaseManager.getHelper().getBarcodeDao());
 	}
 	
-	public Barcode(String barcodeString){
-		this();
-		this.barcodeString = barcodeString;
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getBarcodeDao().createOrUpdate(this);
 	}
 	
 	public String getBarcodeString() {

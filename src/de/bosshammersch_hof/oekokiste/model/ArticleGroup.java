@@ -17,9 +17,6 @@ public class ArticleGroup extends BaseDaoEnabled<ArticleGroup, String>{
 	@DatabaseField(id = true)
 	private String name;
 	
-	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
-	private Category category;
-	
 	@ForeignCollectionField(eager = false)
 	private Collection<Article> articles;
 
@@ -28,16 +25,8 @@ public class ArticleGroup extends BaseDaoEnabled<ArticleGroup, String>{
 		this.articles = new Vector<Article>();
 	}
 	
-	public ArticleGroup(String name){
-		this();
-		this.name = name;
-	}
-	
-	@Override
-	public int create() throws SQLException{
-		for(Article a : articles)
-			a.create();
-		return super.create();
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getArticleGroupDao().createOrUpdate(this);
 	}
 
 	public Collection<Article> getArticles() {
@@ -55,14 +44,6 @@ public class ArticleGroup extends BaseDaoEnabled<ArticleGroup, String>{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
 	}
 	
 }

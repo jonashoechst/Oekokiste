@@ -1,5 +1,7 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -12,9 +14,6 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 	
 	@DatabaseField(generatedId = true)
 	private int generatedId;
-	
-	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
-	private Article article;
 
 	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private ArticleGroup articleGroup;
@@ -26,7 +25,10 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 	private String amountType;
 	
 	@DatabaseField
-	private boolean isStandartIngredient;
+	private boolean standartIngredient;
+	
+	@DatabaseField
+	private boolean primaryIngredient;
 	
 	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private Recipe recipe;
@@ -35,20 +37,8 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 		this.setDao(DatabaseManager.getHelper().getCookingArticleDao());
 	}
 	
-	public CookingArticle(Article article, double amount, String amountType, boolean isStandartIngredient) {
-		this();
-		this.article = article;
-		this.amountType = amountType;
-		this.amount = amount;
-		this.isStandartIngredient = isStandartIngredient;
-	}
-	
-	public Article getArticle() {
-		return article;
-	}
-
-	public void setArticle(Article article) {
-		this.article = article;
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getCookingArticleDao().createOrUpdate(this);
 	}
 
 	public double getAmount() {
@@ -67,12 +57,12 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 		this.amountType = amountType;
 	}
 
-	public boolean getIsStandartIngredient() {
-		return isStandartIngredient;
+	public boolean isStandartIngredient() {
+		return standartIngredient;
 	}
 
-	public void setIsStandartIngredient(boolean isStandartIngredient) {
-		this.isStandartIngredient = isStandartIngredient;
+	public void setStandartIngredient(boolean in) {
+		this.standartIngredient = in;
 	}
 
 	public ArticleGroup getArticleGroup() {
@@ -87,14 +77,16 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 		return recipe;
 	}
 
-	public void setStandartIngredient(boolean isStandartIngredient) {
-		this.isStandartIngredient = isStandartIngredient;
-	}
-
 	public void setRecipe(Recipe recipe) {
 		this.recipe = recipe;
 	}
-	
-	
+
+	public boolean isPrimaryIngredient() {
+		return primaryIngredient;
+	}
+
+	public void setPrimaryIngredient(boolean primaryIngredient) {
+		this.primaryIngredient = primaryIngredient;
+	}
 	
 }

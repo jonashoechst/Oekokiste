@@ -3,7 +3,6 @@ package de.bosshammersch_hof.oekokiste;
 import java.sql.SQLException;
 
 import de.bosshammersch_hof.oekokiste.model.*;
-import de.bosshammersch_hof.oekokiste.ormlite.DatabaseFillMock;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import de.bosshammersch_hof.oekokiste.postgres.*;
 
@@ -33,22 +32,20 @@ public class MainActivity extends Activity {
 		
 		// Init the Databasemanager
 		DatabaseManager.init(this);
-		
-		// Try to fill the DB
-		//DatabaseFillMock.main(new String[0]);
 
 		// 1. Versuch: letzten Status öffnen
 		OpenState lastOpenState = null;
 		
 		try {
-			lastOpenState = DatabaseManager.getLastOpenState();// gibt leider null zurück...
+			lastOpenState = DatabaseManager.getHelper().getOpenStateDao().queryForId(1);
 		} catch (SQLException e) {
-			// LastOpenState == null;
+			Log.i("Oekokiste: Main Actitvity","SQL Exception finding the last OpenState");
+			e.printStackTrace();
 		}
 		
 		if(lastOpenState != null) {
 			Log.i("Main Activity", "last Open State found.");
-			user = DatabaseManager.getUser(lastOpenState.getLastUserId());
+			user = lastOpenState.getUser();
 			updateUiWithUser();
 			return;
 		}
@@ -59,20 +56,19 @@ public class MainActivity extends Activity {
 		
 		if(loginName != null || password != null){
 			Login login = new Login(loginName, password);
-			Login[] lArr = {login};
+			//Login[] lArr = {login};
 			
-			Log.i("Main", "login ("+login.getLoginname()+", "+login.getPassword()+") validated: "+login.validateUser());
-			
-			new FillDatabase().doInBackground(lArr);
-			
-			Log.i("Main", "Database synced.");
-			
-			user = DatabaseManager.getUser(login.getUserId());
-			updateUiWithUser();
+			if(!login.validateUser()){
+				Toast.makeText(this, "Login fehlgeschlagen. Ist das eingegebene Passwort korrekt?", 20).show();
+				updateUiNoUser();
+				Log.i("Main", "login ("+login.getLoginname()+", "+login.getPassword()+") could not be validated!");
+			} else {
+				new UpdateDatabase().execute(login);
+				user = login.getUser();
+				updateUiWithUser();
+			}
 			return;
 		}
-		
-		updateUiNoUser();
 		
 	}
 

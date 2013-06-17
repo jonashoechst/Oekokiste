@@ -1,5 +1,7 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -22,9 +24,8 @@ public class Cookware extends BaseDaoEnabled<Cookware, Integer>{
 		this.setDao(DatabaseManager.getHelper().getCookwareDao());
 	}
 	
-	public Cookware(String name){
-		this();
-		this.name = name;
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getCookwareDao().createOrUpdate(this);
 	}
 
 	public String getName() {

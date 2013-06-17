@@ -1,8 +1,6 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.Locale;
 
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -110,31 +108,5 @@ public class OrderActivity extends Activity {
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
-	}
-	
-	/**
-	 *   creats a list of orders with dummy data
-	 *   and creats a new User with this list of orders
-	 *   @return returns dummy User
-	 */
-	private User getDummyUser(){
-		
-		LinkedList<Order> orderList = new LinkedList<Order>();
-		orderList.add(new Order(0, new Date(), "Speedykiste"));
-		orderList.add(new Order(0, new Date(), "Obstkiste"));
-		orderList.add(new Order(0, new Date(), "Schonkostkiste"));
-		orderList.add(new Order(0, new Date(), "Regianlkiste"));
-		orderList.add(new Order(0, new Date(), "Fruchtjoghurt-Karussel"));
-		orderList.add(new Order(0, new Date(), "Käsepaket"));
-		orderList.add(new Order(0, new Date(), "Single"));
-		orderList.add(new Order(0, new Date(), "Vollsortiment"));
-		orderList.add(new Order(0, new Date(), "Gemüsekiste"));
-
-		User artur = new User(0, "Sterz", "Artur", "a-dur1990");
-		
-		//artur.setOrderCollection(orderList);
-
-		return artur;
-			
 	}
 }

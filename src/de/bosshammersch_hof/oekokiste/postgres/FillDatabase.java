@@ -4,21 +4,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.bosshammersch_hof.oekokiste.model.Article;
-import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
-import de.bosshammersch_hof.oekokiste.model.Category;
-import de.bosshammersch_hof.oekokiste.model.Order;
-import de.bosshammersch_hof.oekokiste.model.OrderedArticle;
-import de.bosshammersch_hof.oekokiste.model.User;
+import com.j256.ormlite.dao.Dao;
+
+import de.bosshammersch_hof.oekokiste.model.*;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 	
 	private Connection connection = null;
+	
+	Dao<Article, Integer> articleDao = DatabaseManager.getHelper().getArticleDao();
 	
 	private boolean[] output;
 
@@ -101,10 +102,38 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		order.setDate(rs.getDate("order_date"));
 		for(OrderedArticle oa : getOrderedArticlesForOrderId(order.getId()))
 			order.addOrderedArticle(oa);
+		for(Barcode b : getBarcodesForOrderId(order.getId()))
+			order.addBarcode(b);
 			
 		return order;
 	}
 	
+	private List<Barcode> getBarcodesForOrderId(int id) throws SQLException {
+		
+		LinkedList<Barcode> barcodeList = new LinkedList<Barcode>(); 
+		
+		PreparedStatement pst = connection.prepareStatement("select * from barcodes where order_id = ?");
+		pst.setInt(1, id);
+		
+		ResultSet rs = pst.executeQuery();
+		
+		while(rs.next())
+			barcodeList.add(getBarcodeFromResultSet(rs));
+		
+		return barcodeList;
+	}
+
+
+	private Barcode getBarcodeFromResultSet(ResultSet rs) throws SQLException {
+		
+		Barcode barcode = new Barcode();
+		
+		barcode.setBarcodeString(rs.getString("barcode_string"));
+		
+		return barcode;
+	}
+
+
 	private List<OrderedArticle> getOrderedArticlesForOrderId(int orderId) throws SQLException{
 		List<OrderedArticle> orderedArticleList = new LinkedList<OrderedArticle>();
 		
@@ -125,12 +154,15 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 
 		orderedArticle.setAmount(rs.getDouble("amount"));
 		orderedArticle.setAmountType(rs.getString("amount_type"));
-		orderedArticle.setPrice((int) rs.getDouble("price"));
-		orderedArticle.setArticle(getArticle(rs.getInt("article_id")));
+		double price = rs.getDouble("price")*100;
+		orderedArticle.setPrice((int) price);
+		orderedArticle.setArticle(getArticleWithId(rs.getInt("article_id")));
+		
+		
 		
 		return orderedArticle;
 	}
-	
+	/*
 	private Article getArticle(int articleId) throws SQLException{
 		
 		Article article = new Article();
@@ -141,6 +173,7 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		rs.next();
 		
 		article.setId(articleId);
+		// TODO get a description of the article
 		article.setDescription("");
 		article.setName(rs.getString("article_name"));
 		article.setOrigin(rs.getString("article_origin"));
@@ -149,7 +182,7 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		pst.close();
 		
 		return article;
-	}
+	}*/
 	
 	private List<Category> getCategories() throws SQLException{
 		
@@ -170,28 +203,28 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		Category category = new Category();
 		category.setName(rs.getString("category_name"));
 		
-		for(ArticleGroup ag : getArticleGroups(category.getName()))
-			category.addArticleGroup(ag);
+		for(Article a : getArticlesForCategoryName(category.getName()))
+			category.addArticle(a);
 		return category;
 	}
 	
-	private List<ArticleGroup> getArticleGroups(String categoryName) throws SQLException{
-		List<ArticleGroup> articleGroupList = new LinkedList<ArticleGroup>();
+	private List<Article> getArticlesForCategoryName(String categoryName) throws SQLException{
+		List<Article> articleList = new LinkedList<Article>();
 		
-		PreparedStatement pst = connection.prepareStatement("select * from articlegroup where category_name = ?");
+		PreparedStatement pst = connection.prepareStatement("select article_id from article where category_name = ?");
 		pst.setString(1, categoryName);
 		
 		ResultSet rs = pst.executeQuery();
 		while(rs.next())
-			articleGroupList.add(getArticleGroupFromResultSet(rs));
+			articleList.add(getArticleWithId(rs.getInt("article_id")));
 
 		rs.close();
 		pst.close();
 		
-		return articleGroupList;
+		return articleList;
 	}
-
-	private ArticleGroup getArticleGroupFromResultSet(ResultSet rs) throws SQLException {
+/*
+	private ArticleGroup getArticleFromResultSet(ResultSet rs) throws SQLException {
 		ArticleGroup ag = new ArticleGroup();
 		
 		ag.setName(rs.getString("articlegroup_name"));
@@ -199,8 +232,8 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 			ag.addArticle(a);
 		
 		return ag;
-	}
-	
+	}*/
+	/*
 	private List<Article> getArticlesForArticleGroupName(String articleGroupName) throws SQLException{
 		
 		List<Article> articleList = new LinkedList<Article>();
@@ -216,9 +249,31 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		pst.close();
 		
 		return articleList;		
-	}
+	}*/
 	
-	private Article getArticleFromResultSet(ResultSet rs) throws SQLException{
+	private Article getArticleWithId(int id){
+		Article article = null;
+		try {
+			article = articleDao.queryForId(id);
+		} catch (SQLException e) {
+			// Article not created yet.
+			PreparedStatement pst;
+			try {
+				pst = connection.prepareStatement("select * from article where article_id = ?");
+				pst.setInt(1, id);
+				ResultSet rs = pst.executeQuery();
+				rs.next();
+				article = createArticleFromResultSet(rs);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		
+		return article;
+	}
+
+	private Article createArticleFromResultSet(ResultSet rs) throws SQLException{
 		Article article = new Article();
 		
 		article.setId(rs.getInt("article_id"));
@@ -227,125 +282,4 @@ public class FillDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		
 		return article;
 	}
-	
-	
-	/*
-	private LinkedList<Order> createOrderList(int userId){
-		LinkedList<Order> output = null;
-		
-		try{
-			PreparedStatement ordersStatement = null;
-			PreparedStatement barcodeStatement = null;
-			PreparedStatement articelStatement = null;
-			PreparedStatement articleGroupStatement = null;
-			PreparedStatement categoryStatement = null;
-			PreparedStatement orderedArticelStatement = null;
-			
-			ordersStatement = connection.prepareStatement("SELECT *"+
-											   			 " FROM Orders"+
-											   			 " WHERE user_id = ?");
-			ordersStatement.setInt(1, userId); 
-			
-			barcodeStatement = connection.prepareStatement("SELECT *"+
-											   			 " FROM Barcodes"+
-											   			 " WHERE order_id = ?");
-			
-			articelStatement = connection.prepareStatement("SELECT *"+
-											   			 " FROM Articel"+
-											   			 " WHERE user_id = ?");
-			
-			articleGroupStatement = connection.prepareStatement("SELECT * " +
-																"FROM Articlegroup " +
-																"WHERE articlegroup_name = ?");
-			
-			categoryStatement = connection.prepareStatement("SELECT * " +
-															"FROM Category " +
-															"WHERE articlegroup_name = ?");
-			
-			orderedArticelStatement = connection.prepareStatement("SELECT * " +
-																  "FROM Ordered_Articles " +
-															      "WHERE order_id = ?");
-			
-			ResultSet ordersRS = ordersStatement.executeQuery();
-			
-			Order tmpOrder = null;
-			Barcode tmpBarcode = null;
-			Article tmpArticle = null;
-			OrderedArticle tmpOrderedArticle = null;
-			LinkedList<Barcode> tmpBarcodeList = null;
-			LinkedList<OrderedArticle> tmpOrderedArticleList = null;
-			
-			
-			while(ordersRS.next()){
-				tmpOrder = new Order() ;
-				//ordersRS.getInt("user_id") gibt es das nicht mehr???
-				tmpOrder.setId(ordersRS.getInt("order_id"));
-				tmpOrder.setName(ordersRS.getString("order_name"));
-				tmpOrder.setDate(ordersRS.getDate("order_date"));
-				
-				barcodeStatement.setInt(1, ordersRS.getInt("order_id"));
-				articelStatement.setInt(1, ordersRS.getInt("order_id"));
-				orderedArticelStatement.setInt(1, ordersRS.getInt("order_id"));
-				
-				ResultSet barcodeRS = barcodeStatement.executeQuery();
-				ResultSet articleRS = articelStatement.executeQuery();
-				ResultSet orderedArticleRS = articelStatement.executeQuery();
-				
-				//build list of barcodes per order
-				while(barcodeRS.next()){
-					tmpBarcode = new Barcode(barcodeRS.getString("barcode_string"));
-					tmpBarcodeList.add(tmpBarcode);
-				}// done
-				
-				//build list of articels per order
-				while(articleRS.next()){
-					tmpOrderedArticle = new OrderedArticle();
-					tmpOrderedArticle.setAmount(articleRS.getInt("amount"));
-					tmpOrderedArticle.setAmountType(articleRS.getString("amount_type"));
-					//tmpOrderedArticle.setId(articleRS.getInt("")); brauchen wir das wirklich nicht mehr ??
-					tmpOrderedArticle.setPrice(orderedArticleRS.getInt("price"));
-					
-					tmpArticle = new Article();
-					tmpArticle.setId(articleRS.getInt("article_id"));
-					tmpArticle.setName(articleRS.getString("article_name"));
-					tmpArticle.setDescription(articleRS.getString("article_description"));// hei§t das so?? ist im ER-Modell nicht enthalten
-					tmpArticle.setOrigin(articleRS.getString("article_origin"));
-					// Article bis auf ArticleGroup fertig zusammen gebaut...
-					
-					articleGroupStatement.setString(1, articleRS.getString("article_name")); 
-					ResultSet articleGroupRS = articleGroupStatement.executeQuery();
-					ArticleGroup tmpArticleGroup = new ArticleGroup();
-					tmpArticleGroup.setName(articleGroupRS.getString("articlegroup_name"));
-					//ArticleGroup bis auf Category zusammen gebaut...
-					
-					categoryStatement.setString(1, articleGroupRS.getString("articlegroup_name"));
-					ResultSet categoryRS = categoryStatement.executeQuery();
-					Category tmpCategory = new Category(categoryRS.getString("category_name"));
-					//Category bis auf einer Liste von ArticleGroups zusammen gebaut...
-					
-					//Bis jetzt nicht in Category nicht implementiert
-					//LinkedList<ArticleGroup> tmpArticleGroupList = buildArticleGroupListForArticelGroup(tmpArticleGroup.getName());
-					
-					//alles wieder zusammenbauen!!
-					tmpArticleGroup.setCategory(tmpCategory);
-					tmpArticle.setArticleGroup(tmpArticleGroup);
-					tmpOrderedArticle.setArticle(tmpArticle);
-					tmpOrderedArticleList.add(tmpOrderedArticle);
-				}
-			
-			for(OrderedArticle articel : tmpOrderedArticleList)
-				tmpOrder.addOrderedArticle(articel);
-			for(Barcode barcode : tmpBarcodeList)
-				tmpOrder.addBarcode(barcode);
-			output.add(tmpOrder);
-			}
-			return output;
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
-		return output;
-		
-	}*/
-	
 }

@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import de.bosshammersch_hof.oekokiste.model.User;
+
 import android.util.Log;
 
 public class Login {
@@ -16,6 +18,7 @@ public class Login {
 	private String loginname;
 	private String password;
 	private Connection connection = null;
+	private User user = null;
 
 	public Login(int id, String pss){
 		this.userId = id;
@@ -34,12 +37,14 @@ public class Login {
 	}
 	
 	public boolean validateUser(){
+
+		PreparedStatement pst;
+		ResultSet rs;
+		
 		try{
 
 			DatabaseConnection con = new DatabaseConnection();
 			connection = con.getConnection();
-			PreparedStatement pst;
-			ResultSet rs;
 			String passwordInSha;
 			
 			if(loginname == null){
@@ -64,16 +69,28 @@ public class Login {
 			userId = rs.getInt("user_id");
 			loginname = rs.getString("loginname");
 			
+			
+			boolean result = false;
+			
+			if(passwordInSha.equals(passwordFromServer)) {
+				user = new User();
+				user.setFirstName(rs.getString("firstname"));
+				user.setLastName(rs.getString("lastname"));
+				user.setLoginName(rs.getString("loginname"));
+				user.setId(rs.getInt("user_id"));
+				
+				result = true;
+			}
+			
 			rs.close();
 			pst.close();
 			connection.close();
-			
-			if(passwordInSha.equals(passwordFromServer)) return true;
+			return result;
 			
 		}catch(SQLException e){
 			Log.e("Login.validateUser()", "Login could not be checked.");
 			e.printStackTrace();
-		}
+		} 
 		
 		return false;
 	}
@@ -92,7 +109,12 @@ public class Login {
 	public String getPassword() {
 		return password;
 	}
+
+	public User getUser() {
+		return user;
+	}
 	
+	 
 	
 	
 }

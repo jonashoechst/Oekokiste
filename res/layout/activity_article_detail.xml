@@ -8,6 +8,7 @@
         android:id="@+id/recipeFindByArticleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="findRecipeButtonClicked"
        	android:text="@string/detailOrderActivity_findRecipeButtonByArticle" />
             
     <View

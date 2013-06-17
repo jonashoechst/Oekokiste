@@ -1,5 +1,7 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.sql.SQLException;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -23,16 +25,16 @@ public class Article  extends BaseDaoEnabled<Article, Integer>{
 	
 	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private ArticleGroup articleGroup;
+	
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
+	private Category category;
 
 	public Article(){
 		this.setDao(DatabaseManager.getHelper().getArticleDao());
 	}
 	
-	public Article(int id, String name, String description){
-		this();
-		this.id = id;
-		this.name = name;
-		this.description = description;
+	public void createOrUpdate() throws SQLException{
+		this.getDao().createOrUpdate(this);
 	}
 
 	public String getName() {
@@ -80,5 +82,14 @@ public class Article  extends BaseDaoEnabled<Article, Integer>{
 		this.articleGroup = articleGroup;
 	}
 
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	
 	
 }

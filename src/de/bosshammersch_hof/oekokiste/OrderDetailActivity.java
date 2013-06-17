@@ -186,26 +186,5 @@ public class OrderDetailActivity extends Activity implements UpdatableActivity{
         			Toast.LENGTH_SHORT).show();
         	}
 	}
-	/**
-	 *   supplies dummy data for testing the app
-	 *   @return Order returns a new Order
-	 */
-	private Order getDummyOrder(){
-		
-		LinkedList<OrderedArticle> articleList = new LinkedList<OrderedArticle>();
-		
-		
-		Article article1 = new Article(1, "Gouda", "");
-		articleList.add(new OrderedArticle(article1, 2.2, "100g", 245));
-		Article article2 = new Article(2, "Blattsalat", "");
-		articleList.add(new OrderedArticle(article2, 2, "Kopf", 120));
-		
-		@SuppressWarnings("deprecation")
-		Order order = new Order(0, new Date(112, 3, 24), "Beispielkiste");
-		
-		//order.setArticleCollection(articleList);
-		
-		return order;
-		
-	}
+
 }

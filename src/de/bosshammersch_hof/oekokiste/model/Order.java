@@ -26,37 +26,24 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 	@DatabaseField
 	private String name;
 	
-	@DatabaseField(foreign = true)
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private User user;
 	
 	@ForeignCollectionField(eager = false)
 	private Collection<OrderedArticle> articleCollection;
 	
 	@ForeignCollectionField(eager = false)
-	private Collection<Barcode> barcodeList;
+	private Collection<Barcode> barcodeCollection;
 	
 	public Order(){
 		this.setDao(DatabaseManager.getHelper().getOrderDao());
 		articleCollection = new Vector<OrderedArticle>();
-		barcodeList = new Vector<Barcode>();
+		barcodeCollection = new Vector<Barcode>();
 	}
 	
-	public Order(int id, Date date, String name) {
-		this();
-		this.id = id;
-		this.date = date;
-		this.name = name;
+	public void createOrUpdate() throws SQLException{
+		DatabaseManager.getHelper().getOrderDao().createOrUpdate(this);
 	}
-	
-	@Override
-	public int create() throws SQLException{
-		for(OrderedArticle oa : articleCollection)
-			oa.create();
-		for(Barcode b : barcodeList)
-			b.create();
-		return super.create();
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -96,8 +83,8 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 		this.articleCollection = articleCollection;
 	}*/
 	
-	public Collection<Barcode> getBarcodeList() {
-		return barcodeList;
+	public Collection<Barcode> getBarcodeCollection() {
+		return barcodeCollection;
 	}
 /*
 	public void setBarcodeList(Collection<Barcode> barcodeList) {
@@ -106,7 +93,7 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 
 	public void addBarcode(Barcode barcode) {
 		barcode.setOrder(this);
-		this.barcodeList.add(barcode);
+		this.barcodeCollection.add(barcode);
 	}
 
 	public void addOrderedArticle(OrderedArticle oa) {

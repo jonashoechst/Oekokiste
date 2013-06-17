@@ -1,6 +1,6 @@
-package de.bosshammersch_hof.oekokiste;
+ package de.bosshammersch_hof.oekokiste;
 
-import java.util.LinkedList;
+import java.sql.SQLException;
 import java.util.List;
 
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -42,7 +42,7 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	private void fillIngeridends(){
 		ListView cookingArticleListView = (ListView) findViewById(R.id.articleListView);
 		
-		final List<CookingArticle> cookingArticleList = recipe.collectionToList(recipe.getIngredients());
+		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
 		
 		ListAdapter adapter = new ArrayAdapter<CookingArticle>(this, R.layout.listview_item_recipe_ingrediends, cookingArticleList){
 			
@@ -61,7 +61,7 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		        
 		        	amountTextView.setText(cookingArticleList.get(position).getAmount()+"");
 		        	unitTextView.setText(cookingArticleList.get(position).getAmountType());
-		        	nameTextView.setText(cookingArticleList.get(position).getArticle().getName());
+		        	//nameTextView.setText(cookingArticleList.get(position).getArticle().getName());
 		        
 		        	return row;
 			}
@@ -78,7 +78,7 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		recipeNameTextView.setText(recipe.getName());
 		
 		TextView recipeTimeTextView    			= (TextView) findViewById(R.id.recipeTimeTextView);
-		recipeTimeTextView.setText((recipe.getCookingTimeInMin()+recipe.getWorkingTimeInMin())+" Min.");
+		recipeTimeTextView.setText((recipe.getCookingTimeInMin())+" Min.");
 		
 		TextView recipeNumberOfPersonTextView   = (TextView) findViewById(R.id.recipeNumberOfPersonTextView);
 		recipeNumberOfPersonTextView.setText(recipe.getServings()+" Personen");
@@ -122,9 +122,22 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	}
 	
 	private void setupRecipe() {
-		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 1);
-		Log.i(OrderActivity.class.getName(), "recipeId found: "+recipeId);
-		recipe = DatabaseManager.getRecipe(recipeId);
+		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
+		if(recipeId == 0) Log.e("RecipeDetail","Recipe was not found.");
+		else Log.i(OrderActivity.class.getName(), "recipeId found: "+recipeId);
+		try {
+			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
+			Log.i("RecipeDetail", "Printing Ingredients:");
+			for(CookingArticle ca : recipe.getIngredientsList()){
+				Log.i("RecipeDetail", "Ingredient: "+ca.getArticleGroup().getName());
+			}
+			
+			
+		} catch (SQLException e) {
+			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
+			e.printStackTrace();
+		}
+		//recipe = DatabaseManager.getRecipe(recipeId);
 	}
 	
 	/** 
