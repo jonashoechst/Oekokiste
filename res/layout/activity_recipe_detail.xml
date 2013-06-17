@@ -68,12 +68,9 @@
             android:background="@android:color/darker_gray" />
 
         <ListView
-            android:id="@+id/articleListView"
+            android:id="@+id/ingredientListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-            
-            
-            
             
         </ListView>
 
