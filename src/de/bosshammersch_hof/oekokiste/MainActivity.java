@@ -43,6 +43,7 @@ public class MainActivity extends Activity {
 				Log.i("Main Activity", "last Open State found.");
 				user = lastOpenState.getUser();
 				updateUiWithUser();
+				new UpdateDatabase().execute(login);
 				return;
 			}
 		} catch (SQLException e) {

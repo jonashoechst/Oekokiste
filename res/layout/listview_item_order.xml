@@ -6,7 +6,7 @@
     android:padding="@dimen/header_padding" >
 
     <TextView
-        android:id="@+id/boxnameTextView"
+        android:id="@+id/orderDateTextView"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
@@ -30,7 +30,7 @@
         
 
     	<TextView
-        	android:id="@+id/orderDateTextView"
+        	android:id="@+id/boxnameTextView"
         	android:layout_width="match_parent"
         	android:layout_height="wrap_content"
         	android:gravity="right"

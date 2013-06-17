@@ -111,11 +111,10 @@ public class Order extends BaseDaoEnabled<Order, Integer>{
 
 	public String getTotalOrderValue(){
 		int totalValue = 0;
-		totalValue = (int) (Math.random()*10000);
-		/* For later use.
-		for(OrderedArticle article : articleList){
-			totalValue += article.getTotalPrice();
-		}*/
+		
+		for(OrderedArticle article : articleCollection){
+			totalValue += article.getPrice();
+		}
 		return String.format("%d,%2d€", (totalValue/100), (totalValue%100));
 	}
 }

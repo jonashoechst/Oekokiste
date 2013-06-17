@@ -73,7 +73,7 @@ public class OrderDetailActivity extends Activity implements UpdatableActivity{
 		        
 		        	nameTextView.setText(orderedArticleList.get(position).getArticle().getName());
 		        	amountTextView.setText(orderedArticleList.get(position).getAmount()+"");
-		        	double price = orderedArticleList.get(position).getTotalPrice();
+		        	double price = orderedArticleList.get(position).getPrice();
 		        	priceTextView.setText((price/100)+","+(price%100)+"€");
 		        
 		        	return row;
