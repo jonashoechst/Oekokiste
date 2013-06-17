@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class RecipeDetailActivity extends Activity implements UpdatableActivity{
@@ -41,35 +42,28 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	}
 	
 	private void fillIngeridents(){
-		ListView ingredientListView = (ListView) findViewById(R.id.ingredientListView);
+		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
 		
 		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
 		
-		ListAdapter adapter = new ArrayAdapter<CookingArticle>(this, R.layout.listview_item_recipe_ingrediends, cookingArticleList){
+		for(int i = 0; i < cookingArticleList.size(); i++){
+			CookingArticle ca = cookingArticleList.get(i);
+			Log.i("CookingArticle", "Art.: "+ca.getArticleGroup().getName());
+			LayoutInflater inflater = ((Activity) this).getLayoutInflater();
+    	    View row = inflater.inflate(R.layout.listview_item_recipe_ingrediends, ingredientTableLayout, false);
+    	    
+    	    TextView nameTextView = (TextView) row.findViewById(R.id.ingrediendName);
+        	TextView amountTextView = (TextView) row.findViewById(R.id.ingredientAmount);
+        	TextView unitTextView = (TextView) row.findViewById(R.id.ingredientUnit);
+        
+        	amountTextView.setText(cookingArticleList.get(i).getAmount()+"");
+        	unitTextView.setText(cookingArticleList.get(i).getAmountType());
+        	nameTextView.setText(cookingArticleList.get(i).getArticleGroup().getName());
 			
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				
-		       	 	View row = convertView;
-		        
-		        	if(row == null){
-		            	    LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
-		        	    row = inflater.inflate(R.layout.listview_item_recipe_ingrediends, parent, false);
-		        	}
- 
-		        	TextView nameTextView = (TextView) row.findViewById(R.id.ingrediendName);
-		        	TextView amountTextView = (TextView) row.findViewById(R.id.ingredientAmount);
-		        	TextView unitTextView = (TextView) row.findViewById(R.id.ingredientUnit);
-		        
-		        	amountTextView.setText(cookingArticleList.get(position).getAmount()+"");
-		        	unitTextView.setText(cookingArticleList.get(position).getAmountType());
-		        	//nameTextView.setText(cookingArticleList.get(position).getArticle().getName());
-		        
-		        	return row;
-			}
-		};
+        	ingredientTableLayout.addView(row);
+        	
+		}
 		
-		ingredientListView.setAdapter(adapter);
 	}
 
 	public void updateUi() {
@@ -129,16 +123,10 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		else Log.i(OrderActivity.class.getName(), "recipeId found: "+recipeId);
 		try {
 			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
-			Log.i("RecipeDetail", "Printing Ingredients:");
-			for(CookingArticle ca : recipe.getIngredientsList()){
-				Log.i("RecipeDetail", "Ingredient: "+ca.getArticleGroup().getName());
-			}
-			
 			
 		} catch (SQLException e) {
 			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
 			e.printStackTrace();
 		}
-		//recipe = DatabaseManager.getRecipe(recipeId);
 	}
 }

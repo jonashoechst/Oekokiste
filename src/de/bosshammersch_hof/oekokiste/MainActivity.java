@@ -33,21 +33,21 @@ public class MainActivity extends Activity {
 		// Init the Databasemanager
 		DatabaseManager.init(this);
 
-		// 1. Versuch: letzten Status šffnen
+		// 1. Versuch: letzten Status ï¿½ffnen
 		OpenState lastOpenState = null;
 		
 		try {
 			lastOpenState = DatabaseManager.getHelper().getOpenStateDao().queryForId(1);
+			
+			if(lastOpenState != null) {
+				Log.i("Main Activity", "last Open State found.");
+				user = lastOpenState.getUser();
+				updateUiWithUser();
+				return;
+			}
 		} catch (SQLException e) {
 			Log.i("Oekokiste: Main Actitvity","SQL Exception finding the last OpenState");
 			e.printStackTrace();
-		}
-		
-		if(lastOpenState != null) {
-			Log.i("Main Activity", "last Open State found.");
-			user = lastOpenState.getUser();
-			updateUiWithUser();
-			return;
 		}
 
 		// 2. Versuch: Kommen wir von der LoginActivity?

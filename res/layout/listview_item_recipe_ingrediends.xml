@@ -15,7 +15,7 @@
         android:id="@+id/ingredientUnit"
         android:layout_width="80sp"
         android:layout_height="match_parent"
-        android:gravity="center_vertical|right"
+        android:gravity="center_vertical|left"
         android:padding="5sp"
         android:text="Einheit"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -25,7 +25,7 @@
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center_vertical|right"
+        android:gravity="center_vertical|left"
         android:padding="5sp"
         android:text="Artikelname"
         android:textAppearance="?android:attr/textAppearanceMedium" />

@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import android.util.Log;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -29,6 +28,9 @@ public class User extends BaseDaoEnabled<User, Integer>{
 	
 	@DatabaseField
 	private String loginName;
+	
+	@DatabaseField
+	private String passwordSha;
 
 	@ForeignCollectionField(eager = true)
 	private Collection<Order> orderCollection;
@@ -90,4 +92,13 @@ public class User extends BaseDaoEnabled<User, Integer>{
 	public void setLoginName(String loginName) {
 		this.loginName = loginName;
 	}
+
+	public String getPasswordSha() {
+		return passwordSha;
+	}
+
+	public void setPasswordSha(String passwordSha) {
+		this.passwordSha = passwordSha;
+	}
+	
 }

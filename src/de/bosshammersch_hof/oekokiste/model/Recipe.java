@@ -82,14 +82,6 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 		this.cookware.add(inCookware);
 	}
 	
-	public void setCookware(LinkedList<Cookware> cw){
-		this.cookware = cw;
-	}
-	
-	public void setArticleList(LinkedList<CookingArticle> ca){
-		this.ingredients = ca;
-	}
-	
 	public int getDifficulty() {
 		return difficulty;
 	}
@@ -124,11 +116,6 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 			caList.add(ca);
 		}
 		return caList;
-	}
-	
-	public void addIngredient(CookingArticle article){
-		article.setRecipe(this);
-		ingredients.add(article);
 	}
 
 	public int getId() {

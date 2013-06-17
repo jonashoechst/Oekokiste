@@ -64,14 +64,7 @@ public class UpdateDatabase extends AsyncTask<Login, Integer, boolean[]> {
 		PreparedStatement pst = connection.prepareStatement("select * from article");
 		ResultSet rs = pst.executeQuery();
 		while(rs.next()){
-			Article a = null;
-			try {
-				a = DatabaseManager.getHelper().getArticleDao().queryForId(rs.getInt("article_id"));
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (a == null) a = new Article();
-			}
+			Article a = new Article();
 			// TODO Get a description from anywhere
 			a.setDescription("");
 			a.setId(rs.getInt("article_id"));
@@ -103,6 +96,8 @@ public class UpdateDatabase extends AsyncTask<Login, Integer, boolean[]> {
 			while (rs2.next()){
 				int article_id = rs2.getInt("article_id");
 				Article a = DatabaseManager.getHelper().getArticleDao().queryForId(article_id);
+				Log.i("updateDatabase", "Article:"+a);
+				if(a == null) continue;
 				a.setCategory(c);
 				a.createOrUpdate();
 			}
@@ -327,5 +322,7 @@ public class UpdateDatabase extends AsyncTask<Login, Integer, boolean[]> {
 			c.createOrUpdate();
 		}
 	}
+	
+	
 
 }
