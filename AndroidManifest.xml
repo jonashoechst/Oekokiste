@@ -42,8 +42,8 @@
             android:label="Artikelübersicht" >
         </activity>
         <activity
-            android:name="de.bosshammersch_hof.oekokiste.WebPDFViewActivity"
-            android:label="Rechnung (Web)" >
+            android:name="de.bosshammersch_hof.oekokiste.WebViewActivity"
+            android:label="Ökokiste: Website" >
         </activity>
         <activity
             android:name="de.bosshammersch_hof.oekokiste.RecipeActivity"

@@ -3,13 +3,29 @@
     android:layout_height="fill_parent"
     android:background="#FFFFFF"
     android:orientation="vertical" >
-    
-    <Button
-        android:id="@+id/recipeFindByArticleButton"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="findRecipeButtonClicked"
-       	android:text="@string/detailOrderActivity_findRecipeButtonByArticle" />
+    	android:orientation="horizontal"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/findRecipeButton"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:onClick="findRecipeButtonClicked"
+            android:text="@string/detailArticleActivity_findRecipe" />
+
+        <Button
+            android:id="@+id/goToStoreButton"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:onClick="goToStoreButtonClicked"
+            android:text="@string/detailArticleActivity_goToShop" />
+
+    </LinearLayout>
             
     <View
     	android:layout_width="fill_parent"
@@ -32,8 +48,8 @@
 
                 <LinearLayout
                     android:layout_width="0dip"
-                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:padding="@dimen/header_padding" >
 
                     <TextView

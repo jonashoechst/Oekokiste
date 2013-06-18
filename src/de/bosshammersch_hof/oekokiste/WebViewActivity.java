@@ -1,6 +1,5 @@
 package de.bosshammersch_hof.oekokiste;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,7 +7,7 @@ import android.content.Intent;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
-public class WebPDFViewActivity extends Activity{
+public class WebViewActivity extends Activity{
 	
 	/** 
 	 *   creats a webview to show a pdf in the app
@@ -19,11 +18,11 @@ public class WebPDFViewActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Uri uri = getIntent().getData();
+		String url = getIntent().getStringExtra(Constants.keyUrl);
 		
-		WebView mWebView=new WebView(WebPDFViewActivity.this);
-	    mWebView.loadUrl("https://docs.google.com/gview?embedded=true&url="+uri);
-	    mWebView.getSettings().setJavaScriptEnabled(true);
+		WebView mWebView=new WebView(WebViewActivity.this);
+	    mWebView.loadUrl(url);
+	    //mWebView.getSettings().setJavaScriptEnabled(true);
 	    setContentView(mWebView);
 		
 	    getActionBar().setHomeButtonEnabled(true);

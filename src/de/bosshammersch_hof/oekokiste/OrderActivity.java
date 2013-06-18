@@ -39,10 +39,6 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order);
 		getActionBar().setHomeButtonEnabled(true);
-		
-		Constants.refreshableActivity = this;
-		
-		refreshData();
 	}
 	
 	@Override

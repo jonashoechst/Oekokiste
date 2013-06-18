@@ -33,10 +33,6 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe);
 		getActionBar().setHomeButtonEnabled(true);
-		
-		Constants.refreshableActivity = this;
-		
-		refreshData();
 	}
 	
 	@Override

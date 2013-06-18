@@ -23,7 +23,8 @@
     <string name="detailOrderActivity_findRecipeButton">Rezepte finden.</string>
     <string name="detailOrderActivity_totalValue">Summe:</string>
     
-    <string name="detailOrderActivity_findRecipeButtonByArticle">Rezepte zu diesem Artikel finden.</string>
+    <string name="detailArticleActivity_findRecipe">Rezepte...</string>
+    <string name="detailArticleActivity_goToShop">Online Shop...</string>
     <string name="detailArticleActivity_oldPrice">alter Preis</string>
     <string name="detailArticleActivity_newPrice">neuer Preis</string>
     

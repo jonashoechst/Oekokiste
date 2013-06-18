@@ -26,11 +26,6 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_article_detail);
 		getActionBar().setHomeButtonEnabled(true);
-		
-		Constants.refreshableActivity = this;
-		
-		refreshData();
-		
 	}
 	
 	@Override
@@ -75,6 +70,13 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		String[] articleGroupNames = {article.getArticleGroup().getName()};
 		
 		intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNames);
+		startActivity(intent);
+	}
+	
+	public void goToStoreButtonClicked(View view){
+		Intent intent = new Intent(this, WebViewActivity.class);
+		
+		intent.putExtra(Constants.keyUrl, "http://oekobox-online.de/v3/shop/bosshamerschhof/s2/C5.0.108C/item.jsp?id="+article.getId());
 		startActivity(intent);
 	}
 	

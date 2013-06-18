@@ -42,10 +42,6 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_detail);
 		
-		Constants.refreshableActivity = this;
-		
-		refreshData();
-		
 	}
 	
 	@Override
@@ -98,32 +94,32 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		
 		// creating and filling the sum line
 		LayoutInflater inflater = getLayoutInflater();
-      	  	View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
+		View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
         
-        	TextView nameTextView = (TextView) sumRow.findViewById(R.id.nameTextView);
-        	TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
+    	TextView nameTextView = (TextView) sumRow.findViewById(R.id.nameTextView);
+    	TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
 
-        	nameTextView.setText("Summe: ");
-        	finalPriceTextView.setText(order.getTotalOrderValueString());
-        
-        	orderDetailArticleListView.addFooterView(sumRow);
+    	nameTextView.setText("Summe: ");
+    	finalPriceTextView.setText(order.getTotalOrderValueString());
+    
+    	orderDetailArticleListView.addFooterView(sumRow);
 
-        	// creating and filling the recipe finder line
-        	View recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
-        
-        	Button recipeFindButton = (Button) recipeFindRow.findViewById(R.id.recipeFindButton);
-        
-        	// temporary disbale button
-        	//recipeFindButton.setEnabled(false);
-        	
-        	recipeFindButton.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v){
-				Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
-				intent.putExtra(Constants.keyOrderedArticle, 0);
-				startActivity(intent);
-			}
-		});
+    	// creating and filling the recipe finder line
+    	View recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
+    
+    	Button recipeFindButton = (Button) recipeFindRow.findViewById(R.id.recipeFindButton);
+    
+    	// temporary disbale button
+    	//recipeFindButton.setEnabled(false);
+    	
+    	recipeFindButton.setOnClickListener(new OnClickListener(){
+    		@Override
+    		public void onClick(View v){
+    			Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
+    			intent.putExtra(Constants.keyOrderedArticle, 0);
+    			startActivity(intent);
+    		}
+    	});
         
 		orderDetailArticleListView.addFooterView(recipeFindRow);
 
