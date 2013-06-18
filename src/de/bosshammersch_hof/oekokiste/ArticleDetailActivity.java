@@ -45,18 +45,21 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		try {
 			int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
 			orderedArticle = DatabaseManager.getHelper().getOrderedArticleDao().queryForId(orderedArticleId);
-			article = orderedArticle.getArticle();
 		} catch (SQLException e) {
-			orderedArticle = null;
-			int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
+			Log.e("Artikel Details", "kein bestellter Artikel gefunden...");
+			e.printStackTrace();
+		}
+
+		if( orderedArticle != null ) article = orderedArticle.getArticle();
+		else {
 			try {
+				int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
 				article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
-			} catch (SQLException e1) {
+			} catch (SQLException e) {
 				Log.e("Artikel Details:", "Weder ein Bestellter, noch ein normaler Artikel konnten gefunden werden.");
-				e1.printStackTrace();
+				e.printStackTrace();
 			}
 		}
-		
 		updateUi();
 	}
 

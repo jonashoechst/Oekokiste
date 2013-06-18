@@ -79,19 +79,14 @@ public class FindArticleActivity extends Activity{
 		
 		findArticleListView.setAdapter(adapter);
 		
-		/*findArticleListView.setOnItemClickListener(new OnItemClickListener(){
+		findArticleListView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				
-				if (arg2 >= order.getArticleList().size()){
-					return;
-				}
-
-				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
-				intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(arg2).getId());
+				Intent intent = new Intent(FindArticleActivity.this, ArticleDetailActivity.class);
+				intent.putExtra(Constants.keyArticleId, findArticleList.get(arg2).getId());
 				startActivity(intent);
 			}
-		});*/
+		});
 		
 		getActionBar().setHomeButtonEnabled(true);
 	}
