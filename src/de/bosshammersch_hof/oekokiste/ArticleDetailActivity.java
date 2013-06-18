@@ -1,11 +1,14 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.SQLException;
+
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -39,13 +42,19 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	@Override
 	public void refreshData() {
 		
-		int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
-		orderedArticle = DatabaseManager.getOrderedArticle(orderedArticleId);
-		
-		if(orderedArticle != null) article = orderedArticle.getArticle();
-		else {
+		try {
+			int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
+			orderedArticle = DatabaseManager.getHelper().getOrderedArticleDao().queryForId(orderedArticleId);
+			article = orderedArticle.getArticle();
+		} catch (SQLException e) {
+			orderedArticle = null;
 			int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
-			article = DatabaseManager.getArticle(articleId);
+			try {
+				article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
+			} catch (SQLException e1) {
+				Log.e("Artikel Details:", "Weder ein Bestellter, noch ein normaler Artikel konnten gefunden werden.");
+				e1.printStackTrace();
+			}
 		}
 		
 		updateUi();
@@ -62,8 +71,10 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		//ImageView articleImageView = (ImageView) findViewById(R.id.articleImageView);
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
 		
-		TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
-		oldPriceTextView.setText(orderedArticle.getPrice()+"€");
+		if(orderedArticle!=null){
+			TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
+			oldPriceTextView.setText(orderedArticle.getPrice()+"€");
+		}
 		
 		articleDescriptionView.setText(article.getDescription());
 	}
@@ -79,7 +90,7 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	public void goToStoreButtonClicked(View view){
 		Intent intent = new Intent(this, WebViewActivity.class);
 		
-		intent.putExtra(Constants.keyUrl, "http://oekobox-online.de/v3/shop/bosshamerschhof/s2/C5.0.108C/item.jsp?id="+article.getId());
+		intent.putExtra(Constants.keyUrl, Constants.pathToArticleDescription+article.getId());
 		startActivity(intent);
 	}
 	

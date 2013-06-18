@@ -1,42 +1,27 @@
  package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.MotionEvent;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.PopupWindow;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class RecipeDetailActivity extends Activity implements UpdatableActivity{
+public class RecipeDetailActivity extends Activity implements RefreshableActivity{
 	
 	Recipe recipe;
-	
-	private PopupWindow popUp;
 	
 	/** 
 	 *   creats the detail-view of recipe
@@ -46,15 +31,30 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_detail);
-		getActionBar().setHomeButtonEnabled(true);
-		
-		setupRecipe();
-		if(recipe == null)
-			recipe = new Recipe();
-				
-		updateUi();
-		
+		getActionBar().setHomeButtonEnabled(true);	
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
+	}
+
+	@Override
+	public void refreshData() {
+		// TODO Auto-generated method stub
+		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
+		try {
+			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
+		} catch (SQLException e) {
+			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
+			e.printStackTrace();
+		}
+
+		updateUi();
+	}
+	
 	
 	private void fillIngeridents(){
 		
@@ -148,18 +148,5 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	        default:
 	            return super.onOptionsItemSelected(item);  
 	    }
-	}
-	
-	private void setupRecipe() {
-		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
-		if(recipeId == 0) Log.e("RecipeDetail","Recipe was not found.");
-		else Log.i(OrderActivity.class.getName(), "recipeId found: "+recipeId);
-		try {
-			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
-			
-		} catch (SQLException e) {
-			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
-			e.printStackTrace();
-		}
 	}
 }

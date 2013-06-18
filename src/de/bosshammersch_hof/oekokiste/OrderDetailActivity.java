@@ -1,6 +1,7 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -54,7 +55,12 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 	@Override
 	public void refreshData() {
 		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
-		order = DatabaseManager.getOrder(orderId);
+		try {
+			order = DatabaseManager.getHelper().getOrderDao().queryForId(orderId);
+		} catch (SQLException e) {
+			order = null;
+			e.printStackTrace();
+		}
 
 		updateUi();
 	}
