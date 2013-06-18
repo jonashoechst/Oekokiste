@@ -47,6 +47,8 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_detail);
 		getActionBar().setHomeButtonEnabled(true);
+<<<<<<< HEAD
+=======
 		
 		setupRecipe();
 		if(recipe == null)
@@ -54,6 +56,7 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 				
 		updateUi();
 		
+>>>>>>> b08d05487ceb9d9329ca3bd15b8bb4aa36e16dc3
 	}
 	
 	private void fillIngeridents(){

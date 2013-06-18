@@ -2,6 +2,8 @@ package de.bosshammersch_hof.oekokiste.model;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -31,6 +33,14 @@ public class ArticleGroup extends BaseDaoEnabled<ArticleGroup, String>{
 
 	public Collection<Article> getArticles() {
 		return articles;
+	}
+	
+	public List<Article> getArticleList(){
+		List<Article> article = new LinkedList<Article>();
+		for(Article a : articles){
+			article.add(a);
+		}
+		return article;
 	}
 
 	public void addArticle(Article article) {
