@@ -52,6 +52,7 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 	public void refreshData() {
 
 		int userId = getIntent().getIntExtra(Constants.keyUser, 0);
+		Log.i("OrderActivity", "userId: "+userId);
 		try {
 			user = DatabaseManager.getHelper().getUserDao().queryForId(userId);
 		} catch (SQLException e) {

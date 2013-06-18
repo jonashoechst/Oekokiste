@@ -14,7 +14,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 @DatabaseTable
-public class ArticleGroup extends BaseDaoEnabled<ArticleGroup, String>{
+public class ArticleGroup extends BaseDaoEnabled<ArticleGroup, String> implements CreateOrUpdateable{
 
 	@DatabaseField(id = true)
 	private String name;

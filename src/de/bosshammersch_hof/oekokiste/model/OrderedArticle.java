@@ -10,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 @DatabaseTable
-public class OrderedArticle extends BaseDaoEnabled<OrderedArticle, Integer>{
+public class OrderedArticle extends BaseDaoEnabled<OrderedArticle, Integer> implements CreateOrUpdateable{
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -91,6 +91,10 @@ public class OrderedArticle extends BaseDaoEnabled<OrderedArticle, Integer>{
 		this.order = order;
 	}
 	
-	
+	@Override
+	public boolean equals(Object o){
+		OrderedArticle oa = (OrderedArticle) o;
+		return oa.getArticle().getId() == this.getArticle().getId() && oa.getOrder().getId() == this.getOrder().getId();
+	}
 	
 }
