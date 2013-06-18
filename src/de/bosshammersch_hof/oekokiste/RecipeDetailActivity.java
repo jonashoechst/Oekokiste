@@ -12,14 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-public class RecipeDetailActivity extends Activity implements UpdatableActivity{
+public class RecipeDetailActivity extends Activity implements RefreshableActivity{
 	
 	Recipe recipe;
 	
@@ -33,37 +29,23 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		setContentView(R.layout.activity_recipe_detail);
 		getActionBar().setHomeButtonEnabled(true);
 		
-		setupRecipe();
-		if(recipe == null)
-			recipe = new Recipe();
-				
-		updateUi();
-		
+		refreshData();
 	}
-	
-	private void fillIngeridents(){
-		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
+
+	@Override
+	public void refreshData() {
 		
-		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
+		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
+		if(recipeId == 0) Log.e("RecipeDetail","Recipe was not found.");
 		
-		for(int i = 0; i < cookingArticleList.size(); i++){
-			CookingArticle ca = cookingArticleList.get(i);
-			Log.i("CookingArticle", "Art.: "+ca.getArticleGroup().getName());
-			LayoutInflater inflater = ((Activity) this).getLayoutInflater();
-    	    View row = inflater.inflate(R.layout.listview_item_recipe_ingrediends, ingredientTableLayout, false);
-    	    
-    	    TextView nameTextView = (TextView) row.findViewById(R.id.ingrediendName);
-        	TextView amountTextView = (TextView) row.findViewById(R.id.ingredientAmount);
-        	TextView unitTextView = (TextView) row.findViewById(R.id.ingredientUnit);
-        
-        	amountTextView.setText(cookingArticleList.get(i).getAmount()+"");
-        	unitTextView.setText(cookingArticleList.get(i).getAmountType());
-        	nameTextView.setText(cookingArticleList.get(i).getArticleGroup().getName());
-			
-        	ingredientTableLayout.addView(row);
-        	
+		try {
+			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
+		} catch (SQLException e) {
+			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
+			e.printStackTrace();
 		}
-		
+
+		updateUi();
 	}
 
 	public void updateUi() {
@@ -98,6 +80,31 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		recipeInstructionsTextView.setText(recipe.getInstructions());
 	}
 	
+	private void fillIngeridents(){
+		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
+		
+		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
+		
+		for(int i = 0; i < cookingArticleList.size(); i++){
+			CookingArticle ca = cookingArticleList.get(i);
+			Log.i("CookingArticle", "Art.: "+ca.getArticleGroup().getName());
+			LayoutInflater inflater = ((Activity) this).getLayoutInflater();
+    	    View row = inflater.inflate(R.layout.listview_item_recipe_ingrediends, ingredientTableLayout, false);
+    	    
+    	    TextView nameTextView = (TextView) row.findViewById(R.id.ingrediendName);
+        	TextView amountTextView = (TextView) row.findViewById(R.id.ingredientAmount);
+        	TextView unitTextView = (TextView) row.findViewById(R.id.ingredientUnit);
+        
+        	amountTextView.setText(cookingArticleList.get(i).getAmount()+"");
+        	unitTextView.setText(cookingArticleList.get(i).getAmountType());
+        	nameTextView.setText(cookingArticleList.get(i).getArticleGroup().getName());
+			
+        	ingredientTableLayout.addView(row);
+        	
+		}
+		
+	}
+	
 	/**
 	 *   if the app icon in action bar is clicked => go home
 	 *   else the super constructor of the function is called
@@ -115,18 +122,5 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	        default:
 	            return super.onOptionsItemSelected(item);  
 	    }
-	}
-	
-	private void setupRecipe() {
-		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
-		if(recipeId == 0) Log.e("RecipeDetail","Recipe was not found.");
-		else Log.i(OrderActivity.class.getName(), "recipeId found: "+recipeId);
-		try {
-			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
-			
-		} catch (SQLException e) {
-			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
-			e.printStackTrace();
-		}
 	}
 }

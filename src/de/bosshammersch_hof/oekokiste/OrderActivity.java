@@ -1,5 +1,6 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -17,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class OrderActivity extends Activity {
+public class OrderActivity extends Activity implements RefreshableActivity{
 	
 	
 	/*TextView orderDateTextView;
@@ -38,11 +39,24 @@ public class OrderActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order);
 		
-		setupUser();
-		
-		updateUi();
+		refreshData();
 		
 		getActionBar().setHomeButtonEnabled(true);
+	}
+
+	@Override
+	public void refreshData() {
+
+		int userId = getIntent().getIntExtra(Constants.keyUser, 0);
+		Log.i(OrderActivity.class.getName(), "userId found: "+userId);
+		try {
+			user = DatabaseManager.getHelper().getUserDao().queryForId(userId);
+		} catch (SQLException e) {
+			user = null;
+			Log.e("Ökokiste: Bestellübersicht", "Konnte den User nicht in der Datenbank finden.");
+		}
+
+		updateUi();
 	}
 
 	private void updateUi() {
@@ -82,13 +96,6 @@ public class OrderActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-	}
-
-	private void setupUser() {
-		// get User Id and matching User 
-		int userId = getIntent().getIntExtra(Constants.keyUser, 1);
-		Log.i(OrderActivity.class.getName(), "userId found: "+userId);
-		user = DatabaseManager.getUser(userId);
 	}
 	
 	/**
