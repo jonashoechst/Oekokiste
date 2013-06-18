@@ -1,13 +1,8 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.sql.SQLException;
-
-import de.bosshammersch_hof.oekokiste.model.OpenState;
-import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.View;
 
 public class LoginActivity extends Activity {
@@ -20,6 +15,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
+		Constants.refreshableActivity = null;
 	}
 	
 	/** 

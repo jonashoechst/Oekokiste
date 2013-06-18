@@ -29,6 +29,15 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		setContentView(R.layout.activity_recipe_detail);
 		getActionBar().setHomeButtonEnabled(true);
 		
+		Constants.refreshableActivity = this;
+		
+		refreshData();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Constants.refreshableActivity = this;
 		refreshData();
 	}
 
@@ -98,7 +107,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
         	TextView amountTextView = (TextView) row.findViewById(R.id.ingredientAmount);
         	TextView unitTextView = (TextView) row.findViewById(R.id.ingredientUnit);
         
-        	amountTextView.setText(cookingArticleList.get(i).getAmount()+"");
+        	amountTextView.setText(cookingArticleList.get(i).getAmountString()	);
         	unitTextView.setText(cookingArticleList.get(i).getAmountType());
         	nameTextView.setText(cookingArticleList.get(i).getArticleGroup().getName());
 			

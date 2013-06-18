@@ -1,5 +1,6 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -37,10 +38,18 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order);
+		getActionBar().setHomeButtonEnabled(true);
+		
+		Constants.refreshableActivity = this;
 		
 		refreshData();
-		
-		getActionBar().setHomeButtonEnabled(true);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
 	}
 
 	@Override

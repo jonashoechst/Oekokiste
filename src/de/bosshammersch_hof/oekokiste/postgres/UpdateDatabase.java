@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.j256.ormlite.dao.Dao;
 
+import de.bosshammersch_hof.oekokiste.Constants;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.AsyncTask;
@@ -50,6 +51,8 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 			Log.e("UpdateDatabase", "User could not be validated. Somethings's wrong with the connection");
 			e.printStackTrace();
 		}
+		
+		this.publishProgress(0);
 		
 		con.disconnect();
 		return output;
@@ -98,7 +101,6 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 			while (rs2.next()){
 				int article_id = rs2.getInt("article_id");
 				Article a = DatabaseManager.getHelper().getArticleDao().queryForId(article_id);
-				Log.i("updateDatabase", "Article:"+a);
 				if(a == null) continue;
 				a.setCategory(c);
 				a.createOrUpdate();
@@ -360,6 +362,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		
 		if(validated) return user;
 		else return null;
+	}
+	
+	protected void onProgressUpdate(Integer... progress){
+		if(Constants.refreshableActivity != null) Constants.refreshableActivity.refreshData();
 	}
 
 }

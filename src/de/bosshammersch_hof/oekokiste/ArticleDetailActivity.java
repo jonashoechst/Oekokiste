@@ -27,8 +27,17 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		setContentView(R.layout.activity_article_detail);
 		getActionBar().setHomeButtonEnabled(true);
 		
+		Constants.refreshableActivity = this;
+		
 		refreshData();
 		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
 	}
 
 

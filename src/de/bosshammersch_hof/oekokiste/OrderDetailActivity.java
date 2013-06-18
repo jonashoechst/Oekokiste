@@ -42,6 +42,17 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_detail);
 		
+		Constants.refreshableActivity = this;
+		
+		refreshData();
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
 	}
 
 	@Override

@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		Constants.refreshableActivity = null;
 		
 		// Init the Databasemanager
 		DatabaseManager.init(this);
@@ -158,7 +159,7 @@ public class MainActivity extends Activity {
 		logoutButton.setText("Abmelden...");
 		
 		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
-		welcomeTextView.setText(welcomeTextView.getText()+user.getFirstName()+" "+user.getLastName()+"!");
+		welcomeTextView.setText(welcomeTextView.getText()+" "+user.getFirstName()+" "+user.getLastName()+"!");
 	}
 	
 	/**
