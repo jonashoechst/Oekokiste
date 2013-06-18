@@ -42,13 +42,13 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	@Override
 	protected void onResume() {
 		super.onResume();
+		setContentView(R.layout.activity_recipe_detail);
 		Constants.refreshableActivity = this;
 		refreshData();
 	}
 
 	@Override
 	public void refreshData() {
-		// TODO Auto-generated method stub
 		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
 		try {
 			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
@@ -63,7 +63,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	
 	private void fillIngeridents(){
 		
-		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
+		final TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
 		
 		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
 		
@@ -95,9 +95,11 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
         	
         	row.setOnTouchListener(new OnTouchListener() {
         		public boolean onTouch(View arg0, MotionEvent arg1) {
-        		    arg0.requestFocus();
-        		    arg0.setBackgroundColor(Color.parseColor("#6FEEFC"));
-        		    return false;
+        			if(arg1.getAction() == arg1.ACTION_UP){
+        				arg0.requestFocus();
+        				arg0.setBackgroundColor(Color.parseColor("#6FEEFC"));
+        			}
+        			return false;
         		}});
         	
         	ingredientTableLayout.addView(row);
