@@ -1,11 +1,8 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import android.net.Uri;
@@ -32,7 +29,7 @@ import android.widget.Toast;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
 
-public class OrderDetailActivity extends Activity implements UpdatableActivity{
+public class OrderDetailActivity extends Activity implements RefreshableActivity{
 	
 	private Order order;
 	
@@ -45,20 +42,31 @@ public class OrderDetailActivity extends Activity implements UpdatableActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_detail);
 		
-		// setup order
-		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
-		try {
-			order = DatabaseManager.getHelper().getOrderDao().queryForId(orderId);
-		} catch (SQLException e) {
-			order = null;
-			e.printStackTrace();
-		}
+		Constants.refreshableActivity = this;
 		
-		updateUi();
+		refreshData();
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
 	}
 
+	@Override
+	public void refreshData() {
+		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
+		order = DatabaseManager.getOrder(orderId);
+
+		updateUi();
+	}
+	
+	/**
+	 *  update the Ui 
+	 */
 	public void updateUi() {
-		// update UI
 		ListView orderDetailArticleListView = (ListView) findViewById(R.id.orderDetailArticleListView);
 		
 		final List<OrderedArticle> orderedArticleList = order.getArticleList();

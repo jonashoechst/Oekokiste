@@ -6,13 +6,12 @@ import de.bosshammersch_hof.oekokiste.ormlite.*;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 
-public class ArticleDetailActivity extends Activity {
+public class ArticleDetailActivity extends Activity implements RefreshableActivity{
 	
 	private OrderedArticle orderedArticle;
 	
@@ -28,6 +27,23 @@ public class ArticleDetailActivity extends Activity {
 		setContentView(R.layout.activity_article_detail);
 		getActionBar().setHomeButtonEnabled(true);
 		
+		Constants.refreshableActivity = this;
+		
+		refreshData();
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
+	}
+
+
+	@Override
+	public void refreshData() {
+		
 		int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
 		orderedArticle = DatabaseManager.getOrderedArticle(orderedArticleId);
 		
@@ -38,19 +54,12 @@ public class ArticleDetailActivity extends Activity {
 		}
 		
 		updateUi();
-		
-	}
-	
-	public void findRecipeButtonClicked(View view){
-		Log.i("ArticleDetailActivity", "find Recipe clicked.");
-		Intent intent = new Intent(this, RecipeActivity.class);
-		String[] articleGroupNames = {article.getArticleGroup().getName()};
-		for(String agName : articleGroupNames)
-			Log.i("ArcticleDetailActivity", "articleGroupName added: "+agName);
-		intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNames);
-		startActivity(intent);
 	}
 
+	/**
+	 *  update the Ui 
+	 *  an set the title to the name of the articlename
+	 */
 	private void updateUi() {
 		// Fill the Article Activity
 		setTitle(article.getName());
@@ -62,6 +71,14 @@ public class ArticleDetailActivity extends Activity {
 		oldPriceTextView.setText(orderedArticle.getPrice()+"€");
 		
 		articleDescriptionView.setText(article.getDescription());
+	}
+	
+	public void findRecipeButtonClicked(View view){
+		Intent intent = new Intent(this, RecipeActivity.class);
+		String[] articleGroupNames = {article.getArticleGroup().getName()};
+		
+		intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNames);
+		startActivity(intent);
 	}
 	
 	/**

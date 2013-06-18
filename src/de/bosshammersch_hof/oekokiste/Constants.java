@@ -15,4 +15,6 @@ public class Constants {
 	
 	public static final String errorName = "…kokiste Error";
 	public static final String keyArticleGroupNameArray = "keyArticleGroupNameArray";
+	
+	public static RefreshableActivity refreshableActivity = null;
 }

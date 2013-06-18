@@ -1,27 +1,12 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
-
-import de.bosshammersch_hof.oekokiste.model.Article;
-import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
-import de.bosshammersch_hof.oekokiste.model.CookingArticle;
-import de.bosshammersch_hof.oekokiste.model.Cookware;
-import de.bosshammersch_hof.oekokiste.model.Order;
-import de.bosshammersch_hof.oekokiste.model.OrderedArticle;
-import de.bosshammersch_hof.oekokiste.model.Recipe;
-import de.bosshammersch_hof.oekokiste.model.User;
+import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
-import de.bosshammersch_hof.oekokiste.postgres.DatabaseConnection;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.SQLException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,7 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class RecipeActivity extends Activity implements UpdatableActivity{
+public class RecipeActivity extends Activity implements RefreshableActivity{
 	
 	LinkedList<Recipe> recipeList;
 	List<ArticleGroup> articleGroups;
@@ -49,7 +34,23 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 		setContentView(R.layout.activity_recipe);
 		getActionBar().setHomeButtonEnabled(true);
 		
+		Constants.refreshableActivity = this;
+		
+		refreshData();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
+	}
+	
+	@Override
+	public void refreshData() {
+
 		String[] articleGroupIdArray = this.getIntent().getStringArrayExtra(Constants.keyArticleGroupNameArray);
+		
 		articleGroups = new LinkedList<ArticleGroup>();
 		for(String articleGroupName : articleGroupIdArray){
 			try {
@@ -63,12 +64,13 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 		
 		ArticleGroup ag = articleGroups.get(0);
 		
+		// Create a Query Example
 		CookingArticle ca = new CookingArticle();
 		ca.setArticleGroup(ag);
-
-		Log.i("Recipe Activity", "Article Group: "+ag);
+		
 		List<CookingArticle> caList;
 		
+		// Try to look for Cooking Articles Matching the Example
 		try {
 			caList = DatabaseManager.getHelper().getCookingArticleDao().queryForMatching(ca);
 		} catch (java.sql.SQLException e) {
@@ -76,53 +78,12 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 			e.printStackTrace();
 		}
 		
+		// Get Recipes from the Cooking Articles.
 		recipeList = new LinkedList<Recipe>();
 		for(CookingArticle cal : caList) {
 			Log.i("Recipe Activity", "Recipe added: "+cal.getRecipe().getName());
 			recipeList.add(cal.getRecipe());
 		}
-		
-		
-		/*
-		int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
-		Log.i("Recipe Activity", "ArticleId found: "+orderedArticleId);
-		
-		try {
-			OrderedArticle oa = DatabaseManager.getHelper().getOrderedArticleDao().queryForId(orderedArticleId);
-			article = oa.getArticle();
-		} catch (java.sql.SQLException e) {
-			article = null;
-		}
-
-		Log.i("Recipe Activity", "Article found: "+article);
-		if(article == null) return;
-		
-		try {
-			article = DatabaseManager.getHelper().getArticleDao().queryForId(article.getId());
-		} catch (java.sql.SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		CookingArticle ca = new CookingArticle();
-		ca.setArticleGroup(article.getArticleGroup());
-
-		Log.i("Recipe Activity", "Article Group: "+article.getArticleGroup());
-		List<CookingArticle> caList;
-		
-		try {
-			caList = DatabaseManager.getHelper().getCookingArticleDao().queryForMatching(ca);
-		} catch (java.sql.SQLException e) {
-			caList = new LinkedList<CookingArticle>();
-			e.printStackTrace();
-		}
-		
-		recipeList = new LinkedList<Recipe>();
-		for(CookingArticle cal : caList) {
-			Log.i("Recipe Activity", "Recipe added: "+cal.getRecipe().getName());
-			recipeList.add(cal.getRecipe());
-		}
-		*/
 		
 		updateUi();
 		
@@ -188,7 +149,4 @@ public class RecipeActivity extends Activity implements UpdatableActivity{
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	
-
-	
 }

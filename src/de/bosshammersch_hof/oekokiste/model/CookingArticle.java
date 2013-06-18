@@ -1,6 +1,7 @@
 package de.bosshammersch_hof.oekokiste.model;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
@@ -43,6 +44,11 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 
 	public double getAmount() {
 		return amount;
+	}
+
+	public String getAmountString() {
+		DecimalFormat df = new DecimalFormat("#0.##");
+		return df.format(getAmount());
 	}
 
 	public void setAmount(double amount) {
