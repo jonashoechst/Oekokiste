@@ -47,6 +47,7 @@ public class MainActivity extends Activity {
 				user = lastOpenState.getUser();
 				updater.execute(user);
 				updateUiWithUser();
+				new UpdateDatabase().execute(login);
 				return;
 			}
 		} catch (SQLException e) {
