@@ -41,6 +41,9 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		
 	}
 	
+	/** 
+	 *   fill the ingeridents in the tableview of this activity 
+	 */
 	private void fillIngeridents(){
 		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
 		
@@ -65,7 +68,10 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 		}
 		
 	}
-
+	
+	/** 
+	 *   udate the ui an writts the data in the view
+	 */
 	public void updateUi() {
 		// Fill the Recipe Activity
 		setTitle(recipe.getName());
@@ -117,6 +123,9 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	    }
 	}
 	
+	/** 
+	 *   creats a recipe for the class
+	 */
 	private void setupRecipe() {
 		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
 		if(recipeId == 0) Log.e("RecipeDetail","Recipe was not found.");

@@ -41,6 +41,10 @@ public class ArticleDetailActivity extends Activity {
 		
 	}
 	
+	/**
+	 *  set the extra data  to the intent to the recipeActivity 
+	 *  so the recipeActivity get an articleGroupName 
+	 */
 	public void findRecipeButtonClicked(View view){
 		Log.i("ArticleDetailActivity", "find Recipe clicked.");
 		Intent intent = new Intent(this, RecipeActivity.class);
@@ -51,6 +55,10 @@ public class ArticleDetailActivity extends Activity {
 		startActivity(intent);
 	}
 
+	/**
+	 *  update the Ui 
+	 *  an set the title to the name of the articlename
+	 */
 	private void updateUi() {
 		// Fill the Article Activity
 		setTitle(article.getName());

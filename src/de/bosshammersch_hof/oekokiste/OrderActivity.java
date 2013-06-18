@@ -44,7 +44,10 @@ public class OrderActivity extends Activity {
 		
 		getActionBar().setHomeButtonEnabled(true);
 	}
-
+	
+	/**
+	 *  update the Ui 
+	 */
 	private void updateUi() {
 		orderListView = (ListView) findViewById(R.id.orderListView);
 		 
@@ -83,7 +86,12 @@ public class OrderActivity extends Activity {
 			}
 		});
 	}
-
+	
+	/**
+	 *   creats an user 
+	 *   with the userId from the intent
+	 *   set this user to the defined user in this class so the hole class get this user.
+	 */
 	private void setupUser() {
 		// get User Id and matching User 
 		int userId = getIntent().getIntExtra(Constants.keyUser, 1);

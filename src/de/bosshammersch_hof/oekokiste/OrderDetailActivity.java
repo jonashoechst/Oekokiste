@@ -50,9 +50,11 @@ public class OrderDetailActivity extends Activity implements UpdatableActivity{
 		
 		updateUi();
 	}
-
+	
+	/**
+	 *  update the Ui 
+	 */
 	public void updateUi() {
-		// update UI
 		ListView orderDetailArticleListView = (ListView) findViewById(R.id.orderDetailArticleListView);
 		
 		final List<OrderedArticle> orderedArticleList = order.getArticleList();
