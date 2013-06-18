@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 	/**
 	 *   calls the super Constructor
 	 *   and set the Contentview 
+	 *   and checks the login state so the user can work without login again
 	 *   @param  Bundle saved Instance State
 	 */
 	@Override
@@ -144,6 +145,10 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	/**
+	 *  update the Ui 
+	 *  with an User 
+	 */
 	private void updateUiWithUser(){
 		// Do stuff to update the UI
 		Button orderButton = (Button) findViewById(R.id.orderButton);
@@ -156,6 +161,10 @@ public class MainActivity extends Activity {
 		welcomeTextView.setText(welcomeTextView.getText()+user.getFirstName()+" "+user.getLastName()+"!");
 	}
 	
+	/**
+	 *  update the Ui 
+	 *  with no User 
+	 */
 	private void updateUiNoUser() {
 		Button orderButton = (Button) findViewById(R.id.orderButton);
 		orderButton.setEnabled(false);

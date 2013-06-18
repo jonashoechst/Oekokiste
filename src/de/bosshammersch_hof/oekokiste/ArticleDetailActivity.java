@@ -47,6 +47,10 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		updateUi();
 	}
 
+	/**
+	 *  update the Ui 
+	 *  an set the title to the name of the articlename
+	 */
 	private void updateUi() {
 		// Fill the Article Activity
 		setTitle(article.getName());

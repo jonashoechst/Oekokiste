@@ -1,6 +1,5 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
