@@ -1,27 +1,42 @@
  package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.MotionEvent;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.PopupWindow;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	
 	Recipe recipe;
+	
+	private PopupWindow popUp;
 	
 	/** 
 	 *   creats the detail-view of recipe
@@ -42,6 +57,7 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
 	}
 	
 	private void fillIngeridents(){
+		
 		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
 		
 		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
@@ -59,11 +75,28 @@ public class RecipeDetailActivity extends Activity implements UpdatableActivity{
         	amountTextView.setText(cookingArticleList.get(i).getAmount()+"");
         	unitTextView.setText(cookingArticleList.get(i).getAmountType());
         	nameTextView.setText(cookingArticleList.get(i).getArticleGroup().getName());
-			
-        	ingredientTableLayout.addView(row);
         	
+        	row.setClickable(true);
+        	
+        	final int position = i;
+        	
+        	row.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                	Intent intent = new Intent(RecipeDetailActivity.this, FindArticleActivity.class);
+                	intent.putExtra(Constants.keyArticleGroupId, cookingArticleList.get(position).getArticleGroup().getName());
+    				startActivity(intent);
+                }
+            });
+        	
+        	row.setOnTouchListener(new OnTouchListener() {
+        		public boolean onTouch(View arg0, MotionEvent arg1) {
+        		    arg0.requestFocus();
+        		    arg0.setBackgroundColor(Color.parseColor("#6FEEFC"));
+        		    return false;
+        		}});
+        	
+        	ingredientTableLayout.addView(row);
 		}
-		
 	}
 
 	public void updateUi() {

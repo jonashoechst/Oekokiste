@@ -58,6 +58,9 @@ public class ArticleDetailActivity extends Activity {
 		//ImageView articleImageView = (ImageView) findViewById(R.id.articleImageView);
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
 		
+		TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
+		oldPriceTextView.setText(orderedArticle.getPrice()+"€");
+		
 		articleDescriptionView.setText(article.getDescription());
 	}
 	

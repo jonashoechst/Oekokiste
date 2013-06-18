@@ -53,6 +53,10 @@
             android:name="de.bosshammersch_hof.oekokiste.LoginActivity"
             android:label="Anmelden" >
         </activity>
+        <activity
+            android:name="de.bosshammersch_hof.oekokiste.FindArticleActivity"
+            android:label="Artikel auswählen" >
+        </activity>
     </application>
 
 </manifest>
