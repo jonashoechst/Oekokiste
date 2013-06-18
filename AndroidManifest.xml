@@ -57,6 +57,16 @@
             android:name="de.bosshammersch_hof.oekokiste.FindArticleActivity"
             android:label="Artikel auswählen" >
         </activity>
+        
+        <uses-library 
+            android:name="android.test.runner" 
+        />
+        
     </application>
 
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+    		android:targetPackage="de.bosshammersch_hof.oekokiste"
+    		android:label="TestLabel" 	   
+    />
+    
 </manifest>
