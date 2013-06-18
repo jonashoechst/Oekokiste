@@ -32,6 +32,9 @@ import de.bosshammersch_hof.oekokiste.ormlite.*;
 
 public class OrderDetailActivity extends Activity implements RefreshableActivity{
 	
+	private View sumRow;
+	private View recipeFindRow;
+	
 	private Order order;
 	
 	/** 
@@ -100,34 +103,38 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		
 		// creating and filling the sum line
 		LayoutInflater inflater = getLayoutInflater();
-		View sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
+		if(sumRow == null){
+			sumRow = inflater.inflate(R.layout.listview_item_order_detail_sum, null);
+	    	orderDetailArticleListView.addFooterView(sumRow);
+		}
         
     	TextView nameTextView = (TextView) sumRow.findViewById(R.id.nameTextView);
     	TextView finalPriceTextView = (TextView) sumRow.findViewById(R.id.finalPriceTextView);
 
     	nameTextView.setText("Summe: ");
     	finalPriceTextView.setText(order.getTotalOrderValueString());
-    
-    	orderDetailArticleListView.addFooterView(sumRow);
 
     	// creating and filling the recipe finder line
-    	View recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
-    
+    	if(recipeFindRow == null){
+    		recipeFindRow = inflater.inflate(R.layout.listview_item_order_detail_recipe_button, null);
+    		orderDetailArticleListView.addFooterView(recipeFindRow);
+    	}
+    	
     	Button recipeFindButton = (Button) recipeFindRow.findViewById(R.id.recipeFindButton);
     
-    	// temporary disbale button
-    	//recipeFindButton.setEnabled(false);
-    	
     	recipeFindButton.setOnClickListener(new OnClickListener(){
     		@Override
     		public void onClick(View v){
     			Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
-    			intent.putExtra(Constants.keyOrderedArticle, 0);
+    			
+    			String[] articleGroupNameArray = new String[order.getArticleList().size()];
+    			for(int i = 0; i < order.getArticleList().size(); i++){
+    				articleGroupNameArray[i] = order.getArticleList().get(i).getArticle().getArticleGroup().getName();
+    			}
+    			intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNameArray);
     			startActivity(intent);
     		}
     	});
-        
-		orderDetailArticleListView.addFooterView(recipeFindRow);
 
 		orderDetailArticleListView.setAdapter(adapter);
 		

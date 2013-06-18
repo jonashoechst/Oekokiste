@@ -126,6 +126,14 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
 		this.id = id;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		return this.getId() == ((Recipe) o).getId();
+	}
 	
+	@Override
+	public int hashCode(){
+		return id;
+	}
 	
 }
