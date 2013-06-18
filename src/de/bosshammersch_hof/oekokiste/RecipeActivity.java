@@ -1,13 +1,15 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,8 +23,16 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class RecipeActivity extends Activity implements RefreshableActivity{
 	
-	LinkedList<Recipe> recipeList;
-	List<ArticleGroup> articleGroups;
+	Map<Recipe, Integer> recipeMap;
+	
+	private class RecipeWithHits{
+		public Recipe recipe;
+		public int hits;
+		public RecipeWithHits(Recipe r, int hits){
+			this.recipe = r;
+			this.hits = hits;
+		}
+	}
 	
 	/** 
 	 *   creats the hole list of recipe
@@ -47,7 +57,7 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 
 		String[] articleGroupIdArray = this.getIntent().getStringArrayExtra(Constants.keyArticleGroupNameArray);
 		
-		articleGroups = new LinkedList<ArticleGroup>();
+		List<ArticleGroup> articleGroups = new LinkedList<ArticleGroup>();
 		for(String articleGroupName : articleGroupIdArray){
 			try {
 				articleGroups.add(DatabaseManager.getHelper().getArticleGroupDao().queryForId(articleGroupName));
@@ -56,29 +66,29 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 			}
 		}
 		
-		// Find Recipies only for one Articlegroup
+		recipeMap = new HashMap<Recipe, Integer>();
 		
-		ArticleGroup ag = articleGroups.get(0);
-		
-		// Create a Query Example
-		CookingArticle ca = new CookingArticle();
-		ca.setArticleGroup(ag);
-		
-		List<CookingArticle> caList;
-		
-		// Try to look for Cooking Articles Matching the Example
-		try {
-			caList = DatabaseManager.getHelper().getCookingArticleDao().queryForMatching(ca);
-		} catch (java.sql.SQLException e) {
-			caList = new LinkedList<CookingArticle>();
-			e.printStackTrace();
-		}
-		
-		// Get Recipes from the Cooking Articles.
-		recipeList = new LinkedList<Recipe>();
-		for(CookingArticle cal : caList) {
-			Log.i("Recipe Activity", "Recipe added: "+cal.getRecipe().getName());
-			recipeList.add(cal.getRecipe());
+		for(ArticleGroup ag : articleGroups){
+			// Create a Query Example
+			CookingArticle example = new CookingArticle();
+			example.setArticleGroup(ag);
+			List<CookingArticle> caList;
+			// excecute Query with example
+			try {
+				caList = DatabaseManager.getHelper().getCookingArticleDao().queryForMatching(example);
+			} catch (java.sql.SQLException e) {
+				caList = new LinkedList<CookingArticle>();
+			}
+			
+			if(caList == null) continue;
+			
+			for(CookingArticle ca : caList){
+				Recipe r = ca.getRecipe();
+				if(recipeMap.containsKey(r))
+					recipeMap.put(r, recipeMap.get(r)+1);
+				else
+					recipeMap.put(r, 1);
+			}
 		}
 		
 		updateUi();
@@ -88,8 +98,25 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 	
 	public void updateUi() {
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
+		
+		final List<RecipeWithHits> recipeList = new LinkedList<RecipeWithHits>();
+		
+		while(!recipeMap.isEmpty()){
+			
+			Recipe bestRecipe = null;
+			
+			for (Recipe key : recipeMap.keySet()) {
+				if(bestRecipe == null) bestRecipe = key;
+				if(recipeMap.get(bestRecipe) < recipeMap.get(key)) bestRecipe = key;
+			}
+			
+			recipeList.add(new RecipeWithHits(bestRecipe, recipeMap.get(bestRecipe)));
+			recipeMap.remove(bestRecipe);
+		}
+		
+		//List<Pair<>>
 	
-		ListAdapter adapter = new ArrayAdapter<Recipe>(this, R.layout.listview_item_recipe, recipeList){
+		ListAdapter adapter = new ArrayAdapter<RecipeWithHits>(this, R.layout.listview_item_recipe, recipeList){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -102,13 +129,13 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 		        	}
 		        
 		        	TextView recipeNameTextView = (TextView) row.findViewById(R.id.recipeName);
-		        	recipeNameTextView.setText(recipeList.get(position).getName());
+		        	recipeNameTextView.setText(recipeList.get(position).recipe.getName());
 		        
 		        	TextView recipeDifficultyTextView = (TextView) row.findViewById(R.id.recipeDifficulty);
-		        	recipeDifficultyTextView.setText("" + recipeList.get(position).getDifficulty());
+		        	recipeDifficultyTextView.setText("" + recipeList.get(position).recipe.getDifficulty());
 		        
 		        	TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
-		        	hitRateTextView.setText("");
+		        	hitRateTextView.setText(recipeList.get(position).hits+"");
 		       
 		        	return row;
 		    	}
@@ -120,7 +147,7 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(RecipeActivity.this, RecipeDetailActivity.class);
-				intent.putExtra(Constants.keyRecipe, recipeList.get(arg2).getId());
+				intent.putExtra(Constants.keyRecipe, recipeList.get(arg2).recipe.getId());
 				startActivity(intent);
 			}
 		});

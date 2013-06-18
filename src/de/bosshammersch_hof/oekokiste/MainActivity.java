@@ -7,10 +7,10 @@ import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import de.bosshammersch_hof.oekokiste.postgres.*;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,6 +19,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 	
 	User user;
+	
+	UpdateDatabase updater;
 	
 	/**
 	 *   calls the super Constructor
@@ -31,28 +33,34 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Constants.refreshableActivity = null;
-		
 		// Init the Databasemanager
 		DatabaseManager.init(this);
+		updater = new UpdateDatabase();
+		
+		
+		Constants.refreshableActivity = null;
+
+		
+	}
+	
+	@SuppressLint("ShowToast")
+	public void onResume(){
+		super.onResume();
 
 		// 1. Versuch: letzten Status �ffnen
 		OpenState lastOpenState = null;
-		
-		UpdateDatabase updater = new UpdateDatabase();
 		
 		try {
 			lastOpenState = DatabaseManager.getHelper().getOpenStateDao().queryForId(1);
 			
 			if(lastOpenState != null) {
-				Log.i("Main Activity", "last Open State found.");
 				user = lastOpenState.getUser();
 				updater.execute(user);
 				updateUiWithUser();
 				return;
 			}
 		} catch (SQLException e) {
-			Log.i("Oekokiste: Main Actitvity","SQL Exception finding the last OpenState");
+			Log.e("Ökokiste: Main Actitvity","SQL Exception finding the last OpenState");
 			e.printStackTrace();
 		}
 
@@ -64,7 +72,6 @@ public class MainActivity extends Activity {
 			User loginUser = new User();
 			loginUser.setLoginName(loginName);
 			loginUser.setPassword(password);
-			//Login[] lArr = {login};
 			
 			try {
 				loginUser = updater.validateUser(loginUser);
@@ -107,7 +114,6 @@ public class MainActivity extends Activity {
 		if(user != null){
 			intent = new Intent(this, OrderActivity.class);
 			intent.putExtra(Constants.keyUser, user.getId());
-			Log.i("MainActivity", "Order Activity Intent created, UserId: "+intent.getIntExtra(Constants.keyUser, 0));
 		}
 		else{
 			intent = new Intent(this, LoginActivity.class);
@@ -131,19 +137,6 @@ public class MainActivity extends Activity {
 		}
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
-	}
-	
-	
-	/**
-	 *   Inflate the menu; 
-	 *   this adds items to the action bar if it is present.
-	 *   @param  Menu 
-	 *   @return returns true
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 	
 	/**

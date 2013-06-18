@@ -27,7 +27,7 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		
 		DatabaseConnection con = new DatabaseConnection();
 		connection = con.getConnection();
-		
+		Log.i("UpdataDatabase", "Sync initiated...");
 		try {
 			update();
 			Log.i("UpdataDatabase", "General data was synced.");
