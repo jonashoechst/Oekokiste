@@ -1,5 +1,8 @@
  package de.bosshammersch_hof.oekokiste;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -9,6 +12,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,6 +22,7 @@ import android.view.View.OnTouchListener;
 import android.view.MotionEvent;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 public class RecipeDetailActivity extends Activity implements RefreshableActivity{
 	
@@ -99,7 +104,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		}
 	}
 
-	public void updateUi() {
+	public void updateUi() throws IOException {
 		// Fill the Recipe Activity
 		setTitle(recipe.getName());
 		
@@ -113,7 +118,14 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		recipeNumberOfPersonTextView.setText(recipe.getServings()+" Personen");
 		
 		// not yet used.
-		// ImageView recipeImageView              	= (ImageView) findViewById(R.id.recipeImageView);
+		URL url = new URL ("http://2.bp.blogspot.com/-QVb-8Ec3rAc/Tc5_W6_lLVI/AAAAAAAAEGE/pEPdeot9GXs/s1600/Obatzter.jpg");
+		InputStream is = (InputStream)url.getContent();
+		Drawable d = Drawable.createFromStream(is, "src");
+		
+		ImageView recipeImageView = null; 
+		recipeImageView.setImageDrawable(d);
+		
+		
 		
 		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
 		recipeLongDescriptionTextView.setText(recipe.getDescription());
