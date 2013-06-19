@@ -1,5 +1,7 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.SQLException;
 
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -8,13 +10,15 @@ import de.bosshammersch_hof.oekokiste.ormlite.*;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class ArticleDetailActivity extends Activity implements RefreshableActivity{
+public class ArticleDetailActivity extends Activity implements RefreshableActivity, ImageUpdatable{
 	
 	private OrderedArticle orderedArticle;
 	
@@ -114,5 +118,11 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	}
+
+	@Override
+	public void updateImage(Drawable d) {
+		ImageView imageView = (ImageView) findViewById(R.id.recipeImageView);
+		if( d != null) imageView.setImageDrawable(d);
 	}
 }
