@@ -16,7 +16,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 @DatabaseTable
-public class Order extends BaseDaoEnabled<Order, Integer>{
+public class Order extends BaseDaoEnabled<Order, Integer> implements CreateOrUpdateable{
 	
 	@DatabaseField(id = true)
 	private int id;

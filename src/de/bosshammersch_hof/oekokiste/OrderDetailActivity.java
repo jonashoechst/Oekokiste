@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,6 +65,8 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 			order = null;
 			e.printStackTrace();
 		}
+		
+		Log.i("OrderDetail", "order:"+order);
 
 		updateUi();
 	}

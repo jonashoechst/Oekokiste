@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 @DatabaseTable
-public class Barcode extends BaseDaoEnabled<Barcode, String>{
+public class Barcode extends BaseDaoEnabled<Barcode, String> implements CreateOrUpdateable{
 
 	@DatabaseField(id = true)
 	private String barcodeString;

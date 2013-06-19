@@ -12,7 +12,7 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 @DatabaseTable
-public class Category extends BaseDaoEnabled<Category, String>{
+public class Category extends BaseDaoEnabled<Category, String> implements CreateOrUpdateable{
 
 	@DatabaseField(id = true)
 	private String name;

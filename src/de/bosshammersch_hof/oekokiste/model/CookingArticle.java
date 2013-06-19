@@ -10,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 @DatabaseTable
-public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
+public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer> implements CreateOrUpdateable{
 
 	
 	@DatabaseField(generatedId = true)
@@ -93,6 +93,12 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer>{
 
 	public void setPrimaryIngredient(boolean primaryIngredient) {
 		this.primaryIngredient = primaryIngredient;
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		CookingArticle ca = (CookingArticle) o;
+		return ca.getArticleGroup().getName() == this.getArticleGroup().getName() && ca.getRecipe().getId() == this.getRecipe().getId();
 	}
 	
 }

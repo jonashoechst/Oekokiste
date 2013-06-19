@@ -12,7 +12,7 @@ import com.j256.ormlite.misc.BaseDaoEnabled;
 
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
-public class Recipe extends BaseDaoEnabled<Recipe, Integer>{
+public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrUpdateable{
 
 	@DatabaseField(id = true)
 	private int id;
