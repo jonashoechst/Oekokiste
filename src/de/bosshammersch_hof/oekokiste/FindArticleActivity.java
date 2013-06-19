@@ -1,36 +1,24 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
+
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
-
-
-import de.bosshammersch_hof.oekokiste.model.*;
-import de.bosshammersch_hof.oekokiste.ormlite.*;
+import de.bosshammersch_hof.oekokiste.model.Article;
+import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 public class FindArticleActivity extends Activity{
 	
@@ -52,6 +40,9 @@ public class FindArticleActivity extends Activity{
 		updateUi();
 	}
 
+	/**
+	 * Aktualisiert die UI.
+	 */
 	public void updateUi() {
 		// update UI
 		ListView findArticleListView = (ListView) findViewById(R.id.findArticleListView);

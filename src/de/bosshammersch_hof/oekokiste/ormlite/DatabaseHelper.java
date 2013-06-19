@@ -39,6 +39,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Datenbank wird erstellt.
+     */
     @Override
     public void onCreate(SQLiteDatabase database,ConnectionSource connectionSource) {
         try {
@@ -62,6 +65,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         
     }
 
+    /**
+     * Datenbank wird verändert (nur bei Bedarf)
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db,ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
@@ -82,6 +88,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         
     }
 
+    /**
+     * Liefert einen ArticleDao
+     * 
+     * @return ArticleDao
+     */
     public Dao<Article, Integer> getArticleDao() {
         if (null == articleDao) {
             try {
@@ -93,6 +104,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return articleDao;
     }
 
+    /**
+     * Liefert einen CookingArticleDao
+     * 
+     * @return CookingArticleDao
+     */
     public Dao<CookingArticle, Integer> getCookingArticleDao() {
         if (null == cookingArticleDao) {
             try {
@@ -104,6 +120,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return cookingArticleDao;
     }
 
+    /**
+     * Liefert einen UserDao
+     * 
+     * @return UserDao
+     */
 	public Dao<User, Integer> getUserDao() {
 		if (null == userDao) {
             try {
@@ -115,6 +136,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return userDao;
 	}
 
+	/**
+     * Liefert einen OrderDao
+     * 
+     * @return OrderDao
+     */
 	public Dao<Order, Integer> getOrderDao() {
 		if (null == orderDao) {
             try {
@@ -126,6 +152,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return orderDao;
 	}
 
+	/**
+     * Liefert einen BarcodeDao
+     * 
+     * @return BarcodeDao
+     */
 	public Dao<Barcode, String> getBarcodeDao() {
 		if (null == barcodeDao) {
             try {
@@ -137,6 +168,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return barcodeDao;
 	}
 
+	/**
+     * Liefert einen OrderedArticleDao
+     * 
+     * @return OrderedArticleDao
+     */
 	public Dao<OrderedArticle, Integer> getOrderedArticleDao() {
 		if (null == orderedArticleDao) {
             try {
@@ -148,6 +184,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return orderedArticleDao;
 	}
 
+	/**
+     * Liefert einen ArticleGroupDao
+     * 
+     * @return ArticleGroupDao
+     */
 	public Dao<ArticleGroup, String> getArticleGroupDao() {
 		if (null == articleGroupDao) {
             try {
@@ -159,6 +200,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return articleGroupDao;
 	}
 
+	/**
+     * Liefert einen CategoryDao
+     * 
+     * @return CategoryDao
+     */
 	public Dao<Category, String> getCategoryDao() {
 		if (null == categoryDao) {
             try {
@@ -170,6 +216,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return categoryDao;
 	}
 
+	/**
+     * Liefert einen RecipeDao
+     * 
+     * @return RecipeDao
+     */
 	public Dao<Recipe, Integer> getRecipeDao() {
 		if (null == recipeDao) {
             try {
@@ -181,6 +232,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return recipeDao;
 	}
 
+	/**
+     * Liefert einen OpenStateDao
+     * 
+     * @return OpenStateDao
+     */
 	public Dao<OpenState, Integer> getOpenStateDao() {
 		if (null == openStateDao) {
             try {
@@ -192,6 +248,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return openStateDao;
 	}
 
+	/**
+     * Liefert einen CookwareDao
+     * 
+     * @return CookwareDao
+     */
 	public Dao<Cookware, Integer> getCookwareDao() {
 		if (null == cookwareDao) {
             try {

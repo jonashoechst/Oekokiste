@@ -31,8 +31,10 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 	
 	@DatabaseField
 	private int difficulty;
+	
 	@DatabaseField
 	private int cookingTimeInMin;
+	
 	@DatabaseField
 	private int servings;
 	

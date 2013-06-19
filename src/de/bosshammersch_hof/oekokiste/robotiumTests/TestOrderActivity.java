@@ -1,12 +1,12 @@
 package de.bosshammersch_hof.oekokiste.robotiumTests;
 
-import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
-import de.bosshammersch_hof.oekokiste.LoginActivity;
+import android.test.ActivityInstrumentationTestCase2;
+
+import com.jayway.android.robotium.solo.Solo;
+
 import de.bosshammersch_hof.oekokiste.MainActivity;
 import de.bosshammersch_hof.oekokiste.OrderActivity;
 import de.bosshammersch_hof.oekokiste.OrderDetailActivity;
-import android.test.ActivityInstrumentationTestCase2;
-import com.jayway.android.robotium.solo.*;
 
 
 public class TestOrderActivity extends ActivityInstrumentationTestCase2<OrderActivity> {

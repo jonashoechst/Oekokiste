@@ -24,6 +24,9 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 	
 	private boolean[] output;
 
+	/**
+	 * Alle Daten werden synchronisiert.
+	 */
 	@Override
 	public boolean[] doInBackground(User... params) {
 		
@@ -52,8 +55,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		return output;
 	}
 	
-	// general data updates
-	
+	/**
+	 * General Dataupdates.
+	 * @throws SQLException
+	 */
 	private void updateGeneralData() throws SQLException{
 		updateCategories();
 		updateRecipes();
@@ -63,6 +68,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		updateArticles();
 	}
 
+	/**
+	 * Kategorien werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateCategories() throws SQLException{
 		
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -84,6 +93,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Rezepte werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateRecipes() throws SQLException{
 
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -111,6 +124,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Cookware wird aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateCookware() throws SQLException{
 
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -134,7 +151,11 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		
 		this.publishProgress(0);
 	}
-
+	
+	/**
+	 * ArticleGroups werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateArticleGroups() throws SQLException{
 
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -155,6 +176,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 
+	/**
+	 * CookingArticles werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateCookingArticles() throws SQLException {
 		
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -186,6 +211,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Articles werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateArticles() throws SQLException {
 
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -213,9 +242,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
-	
-	// User specific data updates
-	
+	/**
+	 * Nutzerdaten werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateUserDataForId(int userId) throws SQLException{
 		updateUserForId(userId);
 		updateOrdersForUserId(userId);
@@ -227,6 +257,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		updateOrderedArticlesForOrderIds(orderIdList);
 	}
 	
+	/**
+	 *  Nutzer wird aktualisiert.
+	 * @throws SQLException
+	 */
 	private User updateUserForId(int id) throws SQLException{
 		
 		User user = new User();
@@ -249,6 +283,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		return user;
 	}
 	
+	/**
+	 * Nutzerbestellungen werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateOrdersForUserId(int userId) throws SQLException {
 		
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -275,6 +313,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Barcodes werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateBarcodesForOrderIds(List<Integer> orderIds) throws SQLException {
 		
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -300,6 +342,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Vom Nutzer bestellte Artikel werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateOrderedArticlesForOrderIds(List<Integer> orderIds) throws SQLException {
 		
 		// Get all old OrderedArticles
@@ -348,6 +394,13 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 
+	/**
+	 * Checkt, ob die vom Nutzer eingegebenen Daten korrrekt sind.
+	 * 
+	 * @param user
+	 * @return user
+	 * @throws SQLException
+	 */
 	public User validateUser(User user) throws SQLException{
 		DatabaseConnection con = new DatabaseConnection();
 		connection = con.getConnection();
@@ -376,9 +429,12 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		return user;
 	}
 	
+	/**
+	 * Automatische aktualisierung.
+	 */
 	protected void onProgressUpdate(Integer... progress){
 		if(Constants.refreshableActivity != null) {
-			Log.i("…kokiste: UpdateDatabase", "Updating View...");
+			Log.i("Ã–kokiste: UpdateDatabase", "Updating View...");
 			Constants.refreshableActivity.refreshData();
 		}
 	}

@@ -63,6 +63,9 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 		updateUi();
 	}
 
+	/**
+	 * Aktualisert die UI.
+	 */
 	private void updateUi() {
 		orderListView = (ListView) findViewById(R.id.orderListView);
 		 

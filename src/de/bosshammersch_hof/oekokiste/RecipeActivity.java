@@ -25,6 +25,10 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 	
 	Map<Recipe, Integer> recipeMap;
 	
+	/**
+	 * Rezepte werden bei Bedarf mit Trefferquote erweitert.
+	 *
+	 */
 	private class RecipeWithHits{
 		public Recipe recipe;
 		public int hits;
@@ -52,6 +56,9 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 		refreshData();
 	}
 	
+	/**
+	 * Daten werden aktualisiert.
+	 */
 	@Override
 	public void refreshData() {
 
@@ -95,7 +102,9 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 		
 	}
 	
-	
+	/**
+	 * Aktualisiert die UI.
+	 */
 	public void updateUi() {
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
 		
@@ -113,8 +122,6 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 			recipeList.add(new RecipeWithHits(bestRecipe, recipeMap.get(bestRecipe)));
 			recipeMap.remove(bestRecipe);
 		}
-		
-		//List<Pair<>>
 	
 		ListAdapter adapter = new ArrayAdapter<RecipeWithHits>(this, R.layout.listview_item_recipe, recipeList){
 			

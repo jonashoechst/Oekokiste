@@ -1,7 +1,5 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.SQLException;
 
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -24,10 +22,6 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	
 	private Article article;
 	
-	/** 
-	 *   creats the detail-view for articles
-	 *   @param Bundle saved Instance State
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,7 +36,9 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		refreshData();
 	}
 
-
+	/**
+	 * Daten werden akutalisiert.
+	 */
 	@Override
 	public void refreshData() {
 		
@@ -130,7 +126,12 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-
+	
+	/**
+	 * Bild wird nachgeladen.
+	 * 
+	 * @params Drawable d Das zu ladene Bild.
+	 */
 	@Override
 	public void updateImage(Drawable d) {
 		ImageView imageView = (ImageView) findViewById(R.id.recipeImageView);

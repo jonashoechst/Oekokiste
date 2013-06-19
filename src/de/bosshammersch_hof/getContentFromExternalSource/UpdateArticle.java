@@ -13,13 +13,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import de.bosshammersch_hof.oekokiste.Constants;
 import de.bosshammersch_hof.oekokiste.model.*;
 
 public class UpdateArticle extends AsyncTask<Article, Integer, String[]> {
 
+	/**
+	 * 
+	 */
 	public String[] doInBackground(Article... params) {
 		
 		String[] html;
@@ -48,6 +50,7 @@ public class UpdateArticle extends AsyncTask<Article, Integer, String[]> {
 		 // hier sollte was sinnvolles passieren!!!!
 	 }
 	
+	@SuppressWarnings("null")
 	public String[] executeHttpGet(String url) throws Exception {
         BufferedReader in = null;
         try {

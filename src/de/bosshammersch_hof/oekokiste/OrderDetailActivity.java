@@ -56,6 +56,9 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		refreshData();
 	}
 
+	/**
+	 * Daten werden aktualisiert.
+	 */
 	@Override
 	public void refreshData() {
 		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
