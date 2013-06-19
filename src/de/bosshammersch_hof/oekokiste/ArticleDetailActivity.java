@@ -46,6 +46,8 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	@Override
 	public void refreshData() {
 		
+		// 1. Möglichkeit: OrderedArticle wird übergeben
+		
 		try {
 			int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
 			orderedArticle = DatabaseManager.getHelper().getOrderedArticleDao().queryForId(orderedArticleId);
@@ -54,17 +56,26 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 			e.printStackTrace();
 		}
 
-		if( orderedArticle != null ) article = orderedArticle.getArticle();
-		else {
-			try {
-				int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
-				article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
-			} catch (SQLException e) {
-				Log.e("Artikel Details:", "Weder ein Bestellter, noch ein normaler Artikel konnten gefunden werden.");
-				e.printStackTrace();
-			}
+		if( orderedArticle != null ) {
+			article = orderedArticle.getArticle();
+			updateUi();
+			return;
 		}
-		updateUi();
+		
+		// 2. Möglichkeit: Aricle wird übergeben
+		
+		try {
+			int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
+			article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if(article != null) {
+			updateUi();
+			return;
+		}
+		Log.e("Artikel Details:", "Weder ein Bestellter, noch ein normaler Artikel konnten gefunden werden.");
 	}
 
 	/**

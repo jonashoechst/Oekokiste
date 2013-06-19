@@ -35,17 +35,15 @@ public class MainActivity extends Activity {
 		
 		// Init the Databasemanager
 		DatabaseManager.init(this);
-		updater = new UpdateDatabase();
-		
 		
 		Constants.refreshableActivity = null;
-
-		
 	}
 	
 	@SuppressLint("ShowToast")
 	public void onResume(){
 		super.onResume();
+
+		updater = new UpdateDatabase();
 
 		// 1. Versuch: letzten Status �ffnen
 		OpenState lastOpenState = null;
@@ -75,7 +73,6 @@ public class MainActivity extends Activity {
 			
 			try {
 				loginUser = updater.validateUser(loginUser);
-				
 			} catch (SQLException e) {
 				loginUser = null;
 				e.printStackTrace();

@@ -20,7 +20,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 @DatabaseTable
-public class User extends BaseDaoEnabled<User, Integer>{
+public class User extends BaseDaoEnabled<User, Integer> implements CreateOrUpdateable{
 
 	@DatabaseField(id = true)
 	private int id;
