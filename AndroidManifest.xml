@@ -27,6 +27,7 @@
         </activity>
         <activity
             android:name="de.bosshammersch_hof.oekokiste.RecipeDetailActivity"
+            android:configChanges="orientation|screenSize">
             android:label="Rezept" >
         </activity>
         <activity

@@ -52,7 +52,7 @@
             android:layout_weight="0.01"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/flammkuchen" />
+            android:src="@drawable/logo"/>
 
         <TextView
             android:id="@+id/recipeLongDescriptionTextView"

@@ -1,4 +1,4 @@
-package de.bosshammersch_hof.oekokiste.postgres;
+package de.bosshammersch_hof.getContentFromExternalSource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import de.bosshammersch_hof.oekokiste.Constants;
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -43,9 +44,9 @@ public class UpdateArticle extends AsyncTask<Article, Integer, String[]> {
 		return null;
 	}
 	
-	
-	
-	
+	public void onPostExecute(String[] s) {
+		 // hier sollte was sinnvolles passieren!!!!
+	 }
 	
 	public String[] executeHttpGet(String url) throws Exception {
         BufferedReader in = null;
