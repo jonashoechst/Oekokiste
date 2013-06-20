@@ -28,6 +28,9 @@ public class Article  extends BaseDaoEnabled<Article, Integer> implements Create
 	
 	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
 	private Category category;
+	
+	@DatabaseField
+	private String imageUrl;
 
 	public Article(){
 		this.setDao(DatabaseManager.getHelper().getArticleDao());
@@ -90,6 +93,12 @@ public class Article  extends BaseDaoEnabled<Article, Integer> implements Create
 		this.category = category;
 	}
 
-	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 	
 }

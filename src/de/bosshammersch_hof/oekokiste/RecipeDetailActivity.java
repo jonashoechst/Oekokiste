@@ -18,11 +18,11 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import de.bosshammersch_hof.getContentFromExternalSource.ImageFromURL;
 import de.bosshammersch_hof.oekokiste.model.CookingArticle;
 import de.bosshammersch_hof.oekokiste.model.Cookware;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
 
 public class RecipeDetailActivity extends Activity implements RefreshableActivity, ImageUpdatable{
 	
@@ -78,8 +78,6 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
 		
 		for(int i = 0; i < cookingArticleList.size(); i++){
-			CookingArticle ca = cookingArticleList.get(i);
-			Log.i("CookingArticle", "Art.: "+ca.getArticleGroup().getName());
 			LayoutInflater inflater = ((Activity) this).getLayoutInflater();
     	    View row = inflater.inflate(R.layout.listview_item_recipe_ingrediends, ingredientTableLayout, false);
     	    
@@ -148,6 +146,11 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		
 		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
 		recipeInstructionsTextView.setText(recipe.getInstructions());
+
+		ImageFromURL imageUpdater = new ImageFromURL();
+		imageUpdater.execute(recipe.getImagerUrl());
+		imageUpdater.updateClass = this;
+		
 	}
 	
 	/**

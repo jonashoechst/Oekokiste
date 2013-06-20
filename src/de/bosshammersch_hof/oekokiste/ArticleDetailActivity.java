@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
+import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -84,13 +85,17 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		
 		//ImageView articleImageView = (ImageView) findViewById(R.id.articleImageView);
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
+		articleDescriptionView.setText(article.getOrigin());
 		
 		if(orderedArticle!=null){
 			TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
 			oldPriceTextView.setText(orderedArticle.getPrice()+"€");
 		}
 		
-		articleDescriptionView.setText(article.getDescription());
+
+		ImageFromURL imageUpdater = new ImageFromURL();
+		imageUpdater.execute(article.getImageUrl());
+		imageUpdater.updateClass = this;
 	}
 	
 	public void findRecipeButtonClicked(View view){
@@ -134,7 +139,17 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	 */
 	@Override
 	public void updateImage(Drawable d) {
-		ImageView imageView = (ImageView) findViewById(R.id.recipeImageView);
-		if( d != null) imageView.setImageDrawable(d);
+		ImageView imageView = (ImageView) findViewById(R.id.articleImageView);
+		Log.i("Article Detail", "updateImage called");
+		if( d != null) {
+			imageView.setImageDrawable(d);
+			/*
+			int imageWidth = imageView.getWidth();
+			LinearLayout.LayoutParams layout = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+			layout.height = (layout.width / imageWidth) * layout.height;
+			imageView.setLayoutParams(layout);
+			*/
+			Log.i("Article Detail", "image set");
+		}
 	}
 }

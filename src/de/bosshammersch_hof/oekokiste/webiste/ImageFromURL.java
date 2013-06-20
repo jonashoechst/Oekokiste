@@ -1,4 +1,4 @@
-package de.bosshammersch_hof.getContentFromExternalSource;
+package de.bosshammersch_hof.oekokiste.webiste;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,8 @@ public class ImageFromURL extends AsyncTask<String, Integer, Drawable> {
 		Drawable d = null;
 		URL url;
 		try {
-			url = new URL ("http://2.bp.blogspot.com/-QVb-8Ec3rAc/Tc5_W6_lLVI/AAAAAAAAEGE/pEPdeot9GXs/s1600/Obatzter.jpg");
+			Log.i("ImagefromUrl", "url: "+params[0]);
+			url = new URL (params[0]);
 			InputStream is = (InputStream)url.getContent();
 			d = Drawable.createFromStream(is, "");
 		} catch (MalformedURLException e) {

@@ -1,4 +1,4 @@
-package de.bosshammersch_hof.getContentFromExternalSource;
+package de.bosshammersch_hof.oekokiste.webiste;
 
 import java.io.BufferedReader;
 import java.io.IOException;

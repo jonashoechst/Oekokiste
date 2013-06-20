@@ -41,15 +41,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
                     android:layout_width="0dip"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:padding="@dimen/header_padding" >
 
                     <TextView
@@ -63,13 +63,12 @@
                     <TextView
                         android:id="@+id/oldPriceTextView"
                         android:layout_width="wrap_content"
-                        android:layout_weight="0"
                         android:layout_height="wrap_content"
-                        android:text="7,23€"
+                        android:layout_weight="0"
+                        android:text="7.23€"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
-                    
                 </LinearLayout>
-                
+
                 <LinearLayout
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
@@ -89,31 +88,30 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:text="5,55€"
+                        android:text="5.55€"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
-                    
                 </LinearLayout>
-                
             </LinearLayout>
-            
-    		<View
-    			android:layout_width="fill_parent"
-    			android:layout_height="1dp"
-    			android:background="@android:color/darker_gray"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
 
             <ImageView
                 android:id="@+id/articleImageView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/gouda" />
+                android:layout_height="250dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/articleDescriptionView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/lorem_ipsum"
-                android:padding="@dimen/padding_small" />
-
+                android:padding="@dimen/padding_small"
+                android:text="@string/lorem_ipsum" />
         </LinearLayout>
         
     </ScrollView>
