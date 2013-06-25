@@ -30,6 +30,11 @@ public class DatabaseManager {
         return helper;
     }
     
+    /**
+     * Wenn sich der User abmeldet, werden alle Daten des Users gelöscht (damit künftige User keine Informationen des alten Users sehen.
+     * 
+     * @throws SQLException
+     */
 	public static void clearUserData() throws SQLException{
 		List<User> userList = helper.getUserDao().queryForAll();
 		for(User user : userList){

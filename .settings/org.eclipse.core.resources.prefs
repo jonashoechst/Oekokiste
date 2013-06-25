@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/de/bosshammersch_hof/oekokiste/ArticleDetailActivity.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/Constants.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/MainActivity.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/OrderActivity.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/OrderDetailActivity.java=UTF-8
@@ -7,3 +8,8 @@ encoding//src/de/bosshammersch_hof/oekokiste/RecipeActivity.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/RecipeDetailActivity.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/model/Order.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/model/OrderedArticle.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/model/User.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/ormlite/DatabaseHelper.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/ormlite/DatabaseManager.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/postgres/UpdateDatabase.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/webiste/ImageFromURL.java=UTF-8

@@ -1,5 +1,9 @@
 package de.bosshammersch_hof.oekokiste;
 
+/**
+ * Klasse nur für Intents. Hier passiert nichts aufregendes.
+ *
+ */
 public class Constants {
 	public static final String keyArticleId = "keyArticleId";
 	public static final String keyArticleGroupId = "keyArticleGroupId";
@@ -14,7 +18,7 @@ public class Constants {
 	public static final String keyLoginPassword = "keyLoginPassword";
 	public static final String keyUrl = "keyUrl";
 	
-	public static final String errorName = "�kokiste Error";
+	public static final String errorName = "Ökokiste Error";
 	public static final String keyArticleGroupNameArray = "keyArticleGroupNameArray";
 	
 	public static final String pathToArticleDescription = "http://oekobox-online.de/v3/shop/bosshamerschhof/s2/C5.0.108C/item.jsp?id=";

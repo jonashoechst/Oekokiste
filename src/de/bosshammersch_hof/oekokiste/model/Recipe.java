@@ -31,10 +31,15 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 	
 	@DatabaseField
 	private int difficulty;
+	
 	@DatabaseField
 	private int cookingTimeInMin;
+
 	@DatabaseField
 	private int servings;
+	
+	@DatabaseField
+	private String imagerUrl;
 	
 	@ForeignCollectionField(eager = false)
 	private Collection<CookingArticle> ingredients;
@@ -135,5 +140,15 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 	public int hashCode(){
 		return id;
 	}
+
+	public String getImagerUrl() {
+		return imagerUrl;
+	}
+
+	public void setImagerUrl(String imagerUrl) {
+		this.imagerUrl = imagerUrl;
+	}
+	
+	
 	
 }

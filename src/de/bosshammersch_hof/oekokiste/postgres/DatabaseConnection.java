@@ -6,7 +6,11 @@ import java.sql.SQLException;
 
 import android.os.StrictMode;
 
-	public class DatabaseConnection {
+/**
+ * Standartklasse um zu einer Datenbank zu verbinden.
+ *
+ */
+public class DatabaseConnection {
 
 	private static final String POSTGRES = "org.postgresql.Driver";
 

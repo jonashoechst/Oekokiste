@@ -1,30 +1,28 @@
  package de.bosshammersch_hof.oekokiste;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import de.bosshammersch_hof.getContentFromExternalSource.ImageFromURL;
-import de.bosshammersch_hof.oekokiste.model.*;
-import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.ImageView;
+import de.bosshammersch_hof.oekokiste.model.CookingArticle;
+import de.bosshammersch_hof.oekokiste.model.Cookware;
+import de.bosshammersch_hof.oekokiste.model.Recipe;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
 
 public class RecipeDetailActivity extends Activity implements RefreshableActivity, ImageUpdatable{
 	
@@ -45,9 +43,13 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	protected void onResume() {
 		super.onResume();
 		Constants.refreshableActivity = this;
+		setContentView(R.layout.activity_recipe_detail);
 		refreshData();
 	}
 
+	/**
+	 * Daten werden aktualisiert.
+	 */
 	@Override
 	public void refreshData() {
 		// TODO Auto-generated method stub
@@ -66,7 +68,9 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		
 	}
 	
-	
+	/**
+	 * Die Zutaten werden in die UI geladen.
+	 */
 	private void fillIngeridents(){
 		
 		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
@@ -74,8 +78,6 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
 		
 		for(int i = 0; i < cookingArticleList.size(); i++){
-			CookingArticle ca = cookingArticleList.get(i);
-			Log.i("CookingArticle", "Art.: "+ca.getArticleGroup().getName());
 			LayoutInflater inflater = ((Activity) this).getLayoutInflater();
     	    View row = inflater.inflate(R.layout.listview_item_recipe_ingrediends, ingredientTableLayout, false);
     	    
@@ -101,8 +103,10 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
         	
         	row.setOnTouchListener(new OnTouchListener() {
         		public boolean onTouch(View arg0, MotionEvent arg1) {
-        		    arg0.requestFocus();
-        		    arg0.setBackgroundColor(Color.parseColor("#6FEEFC"));
+        			if(arg1.getAction() == MotionEvent.ACTION_UP){
+        				arg0.requestFocus();
+        				arg0.setBackgroundColor(Color.parseColor("#6FD4FC"));
+        		    }
         		    return false;
         		}});
         	
@@ -110,6 +114,9 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		}
 	}
 
+	/**
+	 * Aktualisiert die UI.
+	 */
 	public void updateUi() {
 		// Fill the Recipe Activity
 		setTitle(recipe.getName());
@@ -139,6 +146,11 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		
 		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
 		recipeInstructionsTextView.setText(recipe.getInstructions());
+
+		ImageFromURL imageUpdater = new ImageFromURL();
+		imageUpdater.execute(recipe.getImagerUrl());
+		imageUpdater.updateClass = this;
+		
 	}
 	
 	/**
@@ -160,6 +172,11 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	    }
 	}
 
+	/**
+	 * Aktualisiert das Bild.
+	 * 
+	 * @params Das zu aktualisierende Bild.
+	 */
 	@Override
 	public void updateImage(Drawable d) {
 		ImageView imageView = (ImageView) findViewById(R.id.recipeImageView);

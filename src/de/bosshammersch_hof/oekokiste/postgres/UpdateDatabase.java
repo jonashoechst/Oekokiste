@@ -1,15 +1,19 @@
 package de.bosshammersch_hof.oekokiste.postgres;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.BaseDaoEnabled;
-
 import de.bosshammersch_hof.oekokiste.Constants;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
@@ -24,6 +28,9 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 	
 	private boolean[] output;
 
+	/**
+	 * Alle Daten werden synchronisiert.
+	 */
 	@Override
 	public boolean[] doInBackground(User... params) {
 		
@@ -45,15 +52,25 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 			Log.e("UpdateDatabase", "Could not sync user data.");
 			e.printStackTrace();
 		}
-		
 
 		Log.i("UpdateDatabase", "Sync finished!");
 		con.disconnect();
+		
+		try {
+			updateImagesForAllArticles();
+			Log.i("UpdataDatabase", "Article Images updated.");
+		} catch (SQLException e) {
+			Log.i("UpdataDatabase", "Article Images could not be updated.");
+			e.printStackTrace();
+		}
+		
 		return output;
 	}
 	
-	// general data updates
-	
+	/**
+	 * General Dataupdates.
+	 * @throws SQLException
+	 */
 	private void updateGeneralData() throws SQLException{
 		updateCategories();
 		updateRecipes();
@@ -63,6 +80,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		updateArticles();
 	}
 
+	/**
+	 * Kategorien werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateCategories() throws SQLException{
 		
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -84,6 +105,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Rezepte werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateRecipes() throws SQLException{
 
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -99,6 +124,7 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 			r.setDescription(rs.getString("recipe_desc"));
 			r.setDifficulty(rs.getInt("recipe_difficulty"));
 			r.setCookingTimeInMin(rs.getInt("recipe_timeinmin"));
+			r.setImagerUrl(rs.getString("recipe_image_url"));
 			toUpdate.add(r);
 		}
 		
@@ -111,6 +137,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Cookware wird aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateCookware() throws SQLException{
 
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -134,7 +164,11 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		
 		this.publishProgress(0);
 	}
-
+	
+	/**
+	 * ArticleGroups werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateArticleGroups() throws SQLException{
 
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -155,6 +189,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 
+	/**
+	 * CookingArticles werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateCookingArticles() throws SQLException {
 		
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -186,6 +224,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Articles werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateArticles() throws SQLException {
 
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -203,7 +245,6 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 			a.setCategory(DatabaseManager.getHelper().getCategoryDao().queryForId(rs.getString("category_name")));
 			toUpdate.add(a);
 		}
-		
 		for(BaseDaoEnabled<?,?> obj : DatabaseManager.getHelper().getArticleDao().queryForAll())
 			obj.delete();
 		
@@ -213,9 +254,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
-	
-	// User specific data updates
-	
+	/**
+	 * Nutzerdaten werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateUserDataForId(int userId) throws SQLException{
 		updateUserForId(userId);
 		updateOrdersForUserId(userId);
@@ -227,6 +269,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		updateOrderedArticlesForOrderIds(orderIdList);
 	}
 	
+	/**
+	 *  Nutzer wird aktualisiert.
+	 * @throws SQLException
+	 */
 	private User updateUserForId(int id) throws SQLException{
 		
 		User user = new User();
@@ -249,6 +295,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		return user;
 	}
 	
+	/**
+	 * Nutzerbestellungen werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateOrdersForUserId(int userId) throws SQLException {
 		
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -275,6 +325,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Barcodes werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateBarcodesForOrderIds(List<Integer> orderIds) throws SQLException {
 		
 		List<CreateOrUpdateable> toUpdate = new LinkedList<CreateOrUpdateable>();
@@ -300,6 +354,10 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 	
+	/**
+	 * Vom Nutzer bestellte Artikel werden aktualisiert.
+	 * @throws SQLException
+	 */
 	private void updateOrderedArticlesForOrderIds(List<Integer> orderIds) throws SQLException {
 		
 		// Get all old OrderedArticles
@@ -348,6 +406,13 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		this.publishProgress(0);
 	}
 
+	/**
+	 * Checkt, ob die vom Nutzer eingegebenen Daten korrrekt sind.
+	 * 
+	 * @param user
+	 * @return user
+	 * @throws SQLException
+	 */
 	public User validateUser(User user) throws SQLException{
 		DatabaseConnection con = new DatabaseConnection();
 		connection = con.getConnection();
@@ -376,11 +441,69 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 		return user;
 	}
 	
+	/**
+	 * Automatische aktualisierung.
+	 */
 	protected void onProgressUpdate(Integer... progress){
 		if(Constants.refreshableActivity != null) {
-			Log.i("…kokiste: UpdateDatabase", "Updating View...");
+			Log.i("Ã–kokiste: UpdateDatabase", "Updating View...");
 			Constants.refreshableActivity.refreshData();
 		}
 	}
+	
+	private void updateImagesForAllArticles() throws SQLException{
+		for(Article a : DatabaseManager.getHelper().getArticleDao().queryForAll())
+			updateImageForArticle(a);
+	}
+	
+	private void updateImageForArticle(Article article) throws SQLException{
+		
+		try {
+			List<String> html = executeHttpGet(Constants.pathToArticleDescription + article.getId());
+			LinkedList<String> possibleLinks = new LinkedList<String>();
+			
+			Pattern pattern = Pattern.compile("\"[^\"]*.jpg");
+			for(String line : html){
+				Matcher m = pattern.matcher(line);
+				while(m.find()) {
+					String possibleLink = m.group().substring(1, m.group().length());
+					possibleLinks.add(possibleLink);
+				}
+			}
+			
+			if(possibleLinks.size() > 0) article.setImageUrl(possibleLinks.get(0));
+			else article.setImageUrl("");
+		} catch (Exception e) {
+			Log.i("UpdataDatabase", "Couldn't get Sites html");
+			e.printStackTrace();
+			article.setImageUrl("");
+		}
+		article.createOrUpdate();
+	}
+	
+	
+	/**
+	 * Helper Methods: gets the source of an html file
+	 */
+	public List<String> executeHttpGet(String urlString) {
+		List<String> lines = new LinkedList<String>();
+		
+		try {
+			URL url = new URL(urlString);
+        	URLConnection connection = url.openConnection();
+        	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
+        	String inputLine;
+
+        	while ((inputLine = in.readLine()) != null) 
+            	lines.add(inputLine);
+
+        	in.close();
+
+		} catch(Exception e) {
+			Log.e("httpGet", "Could not load Html.");
+			e.printStackTrace();
+		}
+    	return lines;
+    }
 }

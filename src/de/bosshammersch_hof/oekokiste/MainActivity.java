@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
 	 *   and checks the login state so the user can work without login again
 	 *   @param  Bundle saved Instance State
 	 */
+	@SuppressLint("ShowToast")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,14 +38,9 @@ public class MainActivity extends Activity {
 		DatabaseManager.init(this);
 		
 		Constants.refreshableActivity = null;
-	}
-	
-	@SuppressLint("ShowToast")
-	public void onResume(){
-		super.onResume();
 
 		updater = new UpdateDatabase();
-
+		
 		// 1. Versuch: letzten Status �ffnen
 		OpenState lastOpenState = null;
 		
@@ -53,7 +49,7 @@ public class MainActivity extends Activity {
 			
 			if(lastOpenState != null) {
 				user = lastOpenState.getUser();
-				updater.execute(user);
+				//updater.execute(user);
 				updateUiWithUser();
 				return;
 			}
@@ -61,29 +57,37 @@ public class MainActivity extends Activity {
 			Log.e("Ökokiste: Main Actitvity","SQL Exception finding the last OpenState");
 			e.printStackTrace();
 		}
+		
 
 		// 2. Versuch: Kommen wir von der LoginActivity?
 		String loginName = getIntent().getStringExtra(Constants.keyLoginName);
 		String password = getIntent().getStringExtra(Constants.keyLoginPassword);
 		
 		if(loginName != null || password != null){
+			// Creating a loginuser
 			User loginUser = new User();
 			loginUser.setLoginName(loginName);
 			loginUser.setPassword(password);
 			
+			// validate the user
 			try {
 				loginUser = updater.validateUser(loginUser);
 			} catch (SQLException e) {
 				loginUser = null;
-				e.printStackTrace();
+				Toast.makeText(this, "Login fehlgeschlagen. Die Datenbankverbindung konnte nicht aufgebaut werden.", 30).show();
+				updateUiNoUser();
+				return;
 			}
 			
 			if(loginUser == null){
-				Toast.makeText(this, "Login fehlgeschlagen. Ist das eingegebene Passwort korrekt?", 20).show();
+				// User could not be validated
+				Toast.makeText(this, "Login fehlgeschlagen. Ist das eingegebene Passwort korrekt?", 30).show();
 				updateUiNoUser();
+				return;
 			} else {
-				updater.execute(loginUser);
+				// Login erfolgreich!
 				user = loginUser;
+				updater.execute(loginUser);
 				updateUiWithUser();
 				OpenState os = new OpenState();
 				os.setUser(loginUser);
@@ -93,12 +97,11 @@ public class MainActivity extends Activity {
 					Log.e("MainActivity", "Open State could not be saved.");
 					e.printStackTrace();
 				}
+				return;
 			}
-			return;
 		} else {
 			updateUiNoUser();
 		}
-		
 	}
 
 	/**
