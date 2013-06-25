@@ -8,5 +8,7 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/ormlite-android-4.45.jar"/>
 	<classpathentry kind="lib" path="libs/ormlite-core-4.45.jar"/>
+	<classpathentry kind="lib" path="libs/zxingjar-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/core.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

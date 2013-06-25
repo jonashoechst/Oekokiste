@@ -2,6 +2,8 @@ package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -27,6 +29,10 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 	
 	User user;
 	
+	Order order;
+	
+	Barcode barcode;
+	
 	ListView orderListView;
 	
 	/**
@@ -50,15 +56,32 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 
 	@Override
 	public void refreshData() {
-
 		int userId = getIntent().getIntExtra(Constants.keyUser, 0);
-		Log.i("OrderActivity", "userId: "+userId);
-		try {
-			user = DatabaseManager.getHelper().getUserDao().queryForId(userId);
-		} catch (SQLException e) {
-			user = null;
-			Log.e("Ökokiste: Bestellübersicht", "Konnte den User nicht in der Datenbank finden.");
+		if(userId != 0){
+			Log.i("OrderActivity", "userId: "+userId);
+			try {
+				user = DatabaseManager.getHelper().getUserDao().queryForId(userId);
+			} catch (SQLException e) {
+				user = null;
+				Log.e("Ökokiste: Bestellübersicht", "Konnte den User nicht in der Datenbank finden.");
+			}
+		}else{
+			String scanResult = getIntent().getStringExtra(Constants.keyBarcode);
+			Log.i("ID: ", scanResult);
+			try{
+				Barcode example = new Barcode();
+				example.setBarcodeString(scanResult);
+				List<Barcode> barcodeList = new LinkedList<Barcode>();
+				barcodeList = DatabaseManager.getHelper().getBarcodeDao().queryForAll();
+				order = DatabaseManager.getHelper().getOrderDao().queryForId(barcodeList.get(1).getOrder().getId());
+				Log.i("OrderActivity", "order: "+order.getId());
+				user = DatabaseManager.getHelper().getUserDao().queryForId(order.getUser().getId());
+			} catch (SQLException e){
+				user = null;
+				Log.e("Ökokiste: Bestellübersicht", "Konnte keine Bestellungen finden.");
+			}
 		}
+		
 
 		updateUi();
 	}
