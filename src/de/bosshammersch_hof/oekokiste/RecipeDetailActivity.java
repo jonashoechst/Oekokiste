@@ -15,7 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import de.bosshammersch_hof.oekokiste.model.CookingArticle;
@@ -71,7 +75,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	/**
 	 * Die Zutaten werden in die UI geladen.
 	 */
-	private void fillIngeridents(){
+	private void fillIngeridentsDefault(){
 		
 		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
 		
@@ -127,15 +131,14 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		TextView recipeTimeTextView    			= (TextView) findViewById(R.id.recipeTimeTextView);
 		recipeTimeTextView.setText((recipe.getCookingTimeInMin())+" Min.");
 		
-		TextView recipeNumberOfPersonTextView   = (TextView) findViewById(R.id.recipeNumberOfPersonTextView);
-		recipeNumberOfPersonTextView.setText(recipe.getServings()+" Personen");
+		setServingSpinner();
 		
 		// not yet used.
 		
 		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
 		recipeLongDescriptionTextView.setText(recipe.getDescription());
 		
-		fillIngeridents();
+		fillIngeridentsDefault();
 
 		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
 		String cookwareString = "";
@@ -150,7 +153,31 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		ImageFromURL imageUpdater = new ImageFromURL();
 		imageUpdater.execute(recipe.getImagerUrl());
 		imageUpdater.updateClass = this;
+	}
+	
+	/**
+	 * Setzt den Spinner, in dem man die Personenanzahl auswählen kann.
+	 */
+	public void setServingSpinner(){
+		Spinner spinner = (Spinner) findViewById(R.id.spinner);
 		
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+		        R.array.servings, android.R.layout.simple_spinner_item);
+		
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		
+		spinner.setAdapter(adapter);
+		spinner.setSelection(recipe.getServings()-1);
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+			public void onItemSelected(AdapterView<?> parent, View view, 
+		            int pos, long id) {
+		    }
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+			}
+		});
 	}
 	
 	/**
@@ -170,6 +197,21 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	        default:
 	            return super.onOptionsItemSelected(item);  
 	    }
+	}
+	
+	public double[] calculateNewAmount(int newServings){
+		double[] oldAmount = new double[recipe.getIngredientsList().size()];
+		double[] newAmount = new double[oldAmount.length];
+		for(int i = 0; i < oldAmount.length; i++){
+			oldAmount[i] = recipe.getIngredientsList().get(i).getAmount();
+		}
+		
+		for(int i = 0; i < oldAmount.length; i++){
+			double temp = oldAmount[i];
+			temp = (temp/recipe.getServings())*newServings;
+			newAmount[i] = temp;
+		}
+		return newAmount;
 	}
 
 	/**

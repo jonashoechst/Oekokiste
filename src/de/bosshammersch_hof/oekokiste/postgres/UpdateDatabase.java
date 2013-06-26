@@ -124,6 +124,7 @@ public class UpdateDatabase extends AsyncTask<User, Integer, boolean[]> {
 			r.setDescription(rs.getString("recipe_desc"));
 			r.setDifficulty(rs.getInt("recipe_difficulty"));
 			r.setCookingTimeInMin(rs.getInt("recipe_timeinmin"));
+			r.setServings(rs.getInt("recipe_servings"));
 			r.setImagerUrl(rs.getString("recipe_image_url"));
 			toUpdate.add(r);
 		}

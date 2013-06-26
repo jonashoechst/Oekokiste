@@ -11,19 +11,22 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import de.bosshammersch_hof.oekokiste.model.Article;
 import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 public class FindRecipesByArticleActivity extends Activity {
 
 	List<ArticleGroup> articleGroup;
+	
+	List<ArticleGroup> selectedGroup;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +48,12 @@ public class FindRecipesByArticleActivity extends Activity {
 	 * Aktualisiert die UI.
 	 */
 	public void updateUi() {
-		// update UI
-		final ListView findArticleListView = (ListView) findViewById(R.id.findArticleRecipeListView);
 		
-		final List<Article> findArticleList = new LinkedList<Article>();
+		selectedGroup = new LinkedList<ArticleGroup>();
 		
-		for(int i = 0; i < articleGroup.size(); i++){
-			for(int j = 0; j < articleGroup.get(i).getArticleList().size(); j++){
-				findArticleList.add(articleGroup.get(i).getArticleList().get(j));
-			}
-		}
+		final ListView findArticleGroupListView = (ListView) findViewById(R.id.findArticleRecipeListView);
 		
-		final ListAdapter adapter = new ArrayAdapter<Article>(this, R.layout.listview_item_find_recipe_article, findArticleList){
+		final ListAdapter adapter = new ArrayAdapter<ArticleGroup>(this, R.layout.listview_item_find_recipe_article, articleGroup){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -67,24 +64,45 @@ public class FindRecipesByArticleActivity extends Activity {
 		        	    row = inflater.inflate(R.layout.listview_item_find_recipe_article, parent, false);
 		        	}
  
-		        	TextView nameTextView = (TextView) row.findViewById(R.id.itemTextView2);
+		        	CheckedTextView nameTextView = (CheckedTextView) row.findViewById(R.id.itemTextView2);
 		        
-		        	nameTextView.setText(findArticleList.get(position).getName());
+		        	nameTextView.setText(articleGroup.get(position).getName());
 		        
 		        	return row;
 			}
 		};
 		
-		findArticleListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		findArticleGroupListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		
-		findArticleListView.setAdapter(adapter);
+		findArticleGroupListView.setAdapter(adapter);
 		
-		findArticleListView.setOnItemClickListener(new OnItemClickListener() {
+		findArticleGroupListView.setOnItemClickListener(new OnItemClickListener() {
 			   public void onItemClick(AdapterView<?> parent, View view,
 			     int position, long id) {
-				   findArticleListView.setItemChecked(position, true);
+				   if(!selectedGroup.contains(articleGroup.get(position))){
+					   selectedGroup.add(articleGroup.get(position));
+				   } else {
+					   selectedGroup.remove(articleGroup.get(position));
+				   }
 			   }
 		});
+		
+		Button recipeFindButton = (Button) findViewById(R.id.findButton);
+	    
+    	recipeFindButton.setOnClickListener(new OnClickListener(){
+    		@Override
+    		public void onClick(View v){
+    			Intent intent = new Intent(FindRecipesByArticleActivity.this, RecipeActivity.class);
+    			
+    			String[] articleGroupNameArray = new String[selectedGroup.size()];
+    			for(int i = 0; i < selectedGroup.size(); i++){
+    				articleGroupNameArray[i] = selectedGroup.get(i).getName();
+    			}
+    			
+    			intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNameArray);
+    			startActivity(intent);
+    		}
+    	});
 		
 		getActionBar().setHomeButtonEnabled(true);
 	}

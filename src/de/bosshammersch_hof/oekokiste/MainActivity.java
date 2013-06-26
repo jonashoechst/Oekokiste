@@ -1,6 +1,7 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import jim.h.common.android.zxinglib.integrator.IntentIntegrator;
 import jim.h.common.android.zxinglib.integrator.IntentResult;
@@ -24,8 +25,9 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
-	private Handler handler = new Handler();
 	private String txtScanResult;
+	
+	Order order;
 	
 	User user;
 	
@@ -203,7 +205,7 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
-	 * Parsed den gescannten Code und schreibt ihn in ein Textfeld (bislang)
+	 * Parsed den gescannten Code und gibt die gefundene Order der OrderActivity zu anzeigen.
 	 */
 	@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -217,9 +219,24 @@ public class MainActivity extends Activity {
             final String result = scanResult.getContents();
             if (result != null) {
             	txtScanResult = buildCode(result);
-                
-                Intent intent = new Intent(this, OrderActivity.class);
-                intent.putExtra(Constants.keyBarcode, txtScanResult);
+            	Log.i("Barcode", txtScanResult);
+            	try{
+            		List<Barcode> bl = DatabaseManager.getHelper().getBarcodeDao().queryForAll();
+            		
+            		for(Barcode b : bl){
+            			Log.i("Barcode", b.getBarcodeString());
+            		}
+            		
+            		Barcode barcode = DatabaseManager.getHelper().getBarcodeDao().queryForId(txtScanResult);
+            		Log.i("Barcode", barcode.getBarcodeString());
+            		
+                	order = DatabaseManager.getHelper().getOrderDao().queryForId(barcode.getOrder().getId());
+            	} catch (SQLException e){
+            		Log.e("OrderDetailActivity: ", "Kein Barcode gefunden.");
+            	}
+            	
+                Intent intent = new Intent(this, OrderDetailActivity.class);
+                intent.putExtra(Constants.keyOrder, order.getId());
         		startActivity(intent);
             }
         }
