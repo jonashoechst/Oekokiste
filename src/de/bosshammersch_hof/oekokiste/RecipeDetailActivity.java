@@ -34,6 +34,8 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	
 	Recipe recipe;
 	
+	TableLayout ingredientTableLayout;
+	
 	/** 
 	 *   creats the detail-view of recipe
 	 *   @param Bundle saved Instance State
@@ -77,11 +79,12 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	/**
 	 * Die Zutaten werden in die UI geladen.
 	 */
-	private void fillIngeridents(){
-		
-		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
-		
-		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
+	private void fillIngeridents(Recipe r){
+		if(!(ingredientTableLayout == null)){
+			ingredientTableLayout.removeAllViews();
+		}
+		ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
+		final List<CookingArticle> cookingArticleList = r.getIngredientsList();
 		
 		for(int i = 0; i < cookingArticleList.size(); i++){
 			LayoutInflater inflater = ((Activity) this).getLayoutInflater();
@@ -125,35 +128,35 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	 */
 	public void updateUi(Recipe r) {
 		// Fill the Recipe Activity
-		setTitle(recipe.getName());
+		setTitle(r.getName());
 		
 		TextView recipeNameTextView             = (TextView) findViewById(R.id.recipeNameTextView);
-		recipeNameTextView.setText(recipe.getName());
+		recipeNameTextView.setText(r.getName());
 		
 		TextView recipeTimeTextView    			= (TextView) findViewById(R.id.recipeTimeTextView);
-		recipeTimeTextView.setText((recipe.getCookingTimeInMin())+" Min.");
+		recipeTimeTextView.setText((r.getCookingTimeInMin())+" Min.");
 		
 		setServingSpinner();
 		
 		// not yet used.
 		
 		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
-		recipeLongDescriptionTextView.setText(recipe.getDescription());
+		recipeLongDescriptionTextView.setText(r.getDescription());
 		
-		fillIngeridents();
+		fillIngeridents(r);
 
 		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
 		String cookwareString = "";
-		for(Cookware item : recipe.getCookware()){
+		for(Cookware item : r.getCookware()){
 			cookwareString += item.getName()+"\n";
 		}
 		recipeCookingUtensilsTextView.setText(cookwareString);
 		
 		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
-		recipeInstructionsTextView.setText(recipe.getInstructions());
+		recipeInstructionsTextView.setText(r.getInstructions());
 
 		ImageFromURL imageUpdater = new ImageFromURL();
-		imageUpdater.execute(recipe.getImagerUrl());
+		imageUpdater.execute(r.getImagerUrl());
 		imageUpdater.updateClass = this;
 	}
 	
@@ -173,6 +176,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
 			public void onItemSelected(AdapterView<?> parent, View view, 
 		            int pos, long id) {
+				calculateNewAmount(pos+1);
 		    }
 
 			@Override
@@ -230,6 +234,8 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		}
 		
 		r.setIngredients(resultColl);
+		
+		fillIngeridents(r);
 	}
 
 	/**
