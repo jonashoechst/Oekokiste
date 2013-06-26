@@ -1,6 +1,8 @@
  package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
@@ -63,7 +65,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 			ImageFromURL imageUpdater = new ImageFromURL();
 			imageUpdater.execute(recipe.getName());
 			imageUpdater.updateClass = this;
-			updateUi();
+			updateUi(recipe);
 		} catch (SQLException e) {
 			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
 			e.printStackTrace();
@@ -75,7 +77,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	/**
 	 * Die Zutaten werden in die UI geladen.
 	 */
-	private void fillIngeridentsDefault(){
+	private void fillIngeridents(){
 		
 		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
 		
@@ -121,7 +123,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	/**
 	 * Aktualisiert die UI.
 	 */
-	public void updateUi() {
+	public void updateUi(Recipe r) {
 		// Fill the Recipe Activity
 		setTitle(recipe.getName());
 		
@@ -138,7 +140,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
 		recipeLongDescriptionTextView.setText(recipe.getDescription());
 		
-		fillIngeridentsDefault();
+		fillIngeridents();
 
 		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
 		String cookwareString = "";
@@ -175,7 +177,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
+				
 			}
 		});
 	}
@@ -199,19 +201,35 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	    }
 	}
 	
-	public double[] calculateNewAmount(int newServings){
-		double[] oldAmount = new double[recipe.getIngredientsList().size()];
-		double[] newAmount = new double[oldAmount.length];
-		for(int i = 0; i < oldAmount.length; i++){
-			oldAmount[i] = recipe.getIngredientsList().get(i).getAmount();
+	public void calculateNewAmount(int newServings){
+		Recipe r = new Recipe();
+		r.setCookingTimeInMin(recipe.getCookingTimeInMin());
+		r.setDescription(recipe.getDescription());
+		r.setDifficulty(recipe.getDifficulty());
+		r.setId(recipe.getId());
+		r.setImagerUrl(recipe.getImagerUrl());
+		r.setInstructions(recipe.getInstructions());
+		r.setName(recipe.getName());
+		r.setServings(newServings);
+		r.setCookware(recipe.getCookware());
+		
+		List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
+		
+		List<CookingArticle> resultColl = new LinkedList<CookingArticle>();
+		
+		for(CookingArticle ca : cookingArticleList){
+			CookingArticle cookingArticle = new CookingArticle();
+			
+			cookingArticle.setAmount((ca.getAmount()/recipe.getServings())*newServings);
+			Log.i("cookingArticle: ", cookingArticle.getAmountString());
+			cookingArticle.setAmountType(ca.getAmountType());
+			cookingArticle.setArticleGroup(ca.getArticleGroup());
+			cookingArticle.setRecipe(r);
+			
+			resultColl.add(cookingArticle);
 		}
 		
-		for(int i = 0; i < oldAmount.length; i++){
-			double temp = oldAmount[i];
-			temp = (temp/recipe.getServings())*newServings;
-			newAmount[i] = temp;
-		}
-		return newAmount;
+		r.setIngredients(resultColl);
 	}
 
 	/**
