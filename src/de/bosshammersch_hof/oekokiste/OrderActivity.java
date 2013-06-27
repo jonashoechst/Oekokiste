@@ -2,8 +2,6 @@ package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 import de.bosshammersch_hof.oekokiste.model.*;

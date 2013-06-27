@@ -1,7 +1,6 @@
  package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	TableLayout ingredientTableLayout;
 	
 	/** 
-	 *   creats the detail-view of recipe
+	 *   Creates the detail-view of recipe
 	 *   @param Bundle saved Instance State
 	 */
 	@Override
@@ -206,36 +205,27 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	}
 	
 	public void calculateNewAmount(int newServings){
-		Recipe r = new Recipe();
-		r.setCookingTimeInMin(recipe.getCookingTimeInMin());
-		r.setDescription(recipe.getDescription());
-		r.setDifficulty(recipe.getDifficulty());
-		r.setId(recipe.getId());
-		r.setImagerUrl(recipe.getImagerUrl());
-		r.setInstructions(recipe.getInstructions());
-		r.setName(recipe.getName());
-		r.setServings(newServings);
-		r.setCookware(recipe.getCookware());
+		Recipe newRecipe = new Recipe();
 		
-		List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
+		List<CookingArticle> oldCookingArticleList = recipe.getIngredientsList();
 		
-		List<CookingArticle> resultColl = new LinkedList<CookingArticle>();
+		List<CookingArticle> newCookingArticleList = new LinkedList<CookingArticle>();
 		
-		for(CookingArticle ca : cookingArticleList){
-			CookingArticle cookingArticle = new CookingArticle();
+		for(CookingArticle oldCookingArticle : oldCookingArticleList){
+			CookingArticle newCookingArticle = new CookingArticle();
 			
-			cookingArticle.setAmount((ca.getAmount()/recipe.getServings())*newServings);
-			Log.i("cookingArticle: ", cookingArticle.getAmountString());
-			cookingArticle.setAmountType(ca.getAmountType());
-			cookingArticle.setArticleGroup(ca.getArticleGroup());
-			cookingArticle.setRecipe(r);
+			newCookingArticle.setAmount((oldCookingArticle.getAmount()/recipe.getServings())*newServings);
+			Log.i("cookingArticle: ", newCookingArticle.getAmountString());
+			newCookingArticle.setAmountType(oldCookingArticle.getAmountType());
+			newCookingArticle.setArticleGroup(oldCookingArticle.getArticleGroup());
+			newCookingArticle.setRecipe(newRecipe);
 			
-			resultColl.add(cookingArticle);
+			newCookingArticleList.add(newCookingArticle);
 		}
 		
-		r.setIngredients(resultColl);
+		newRecipe.setIngredients(newCookingArticleList);
 		
-		fillIngeridents(r);
+		fillIngeridents(newRecipe);
 	}
 
 	/**
