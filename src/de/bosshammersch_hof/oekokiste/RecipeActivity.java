@@ -9,6 +9,8 @@ import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -70,6 +72,20 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 				articleGroups.add(DatabaseManager.getHelper().getArticleGroupDao().queryForId(articleGroupName));
 			} catch (java.sql.SQLException e) {
 				e.printStackTrace();
+
+				// Print an Error message
+				AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+				dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+				dlgAlert.setTitle("Ökokiste");
+				dlgAlert.setPositiveButton("Zurück", 
+					new DialogInterface.OnClickListener() {
+			        	public void onClick(DialogInterface dialog, int which) {
+			        		finish();
+			        	}
+					}
+				);
+				dlgAlert.setCancelable(true);
+				dlgAlert.create().show();
 			}
 		}
 		
@@ -154,7 +170,7 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(RecipeActivity.this, RecipeDetailActivity.class);
-				intent.putExtra(Constants.keyRecipe, recipeList.get(arg2).recipe.getId());
+				intent.putExtra(Constants.keyRecipeId, recipeList.get(arg2).recipe.getId());
 				startActivity(intent);
 			}
 		});

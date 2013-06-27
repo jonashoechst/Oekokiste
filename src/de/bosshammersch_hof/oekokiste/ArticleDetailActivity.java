@@ -1,6 +1,7 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
@@ -8,6 +9,8 @@ import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -43,10 +46,60 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	@Override
 	public void refreshData() {
 		
+		article = null;
+		orderedArticle = null;
+		
+		int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
+		int orderId = getIntent().getIntExtra(Constants.keyOrderId, 0);
+		
+		try {
+			article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
+		} catch (SQLException e) {
+			article = null;
+			
+			// Print an Error message
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+			dlgAlert.setTitle("Ökokiste");
+			dlgAlert.setPositiveButton("Zurück", 
+				new DialogInterface.OnClickListener() {
+		        	public void onClick(DialogInterface dialog, int which) {
+		        		finish();
+		        	}
+				}
+			);
+			dlgAlert.setCancelable(true);
+			dlgAlert.create().show();
+		}
+		
+		Order order = new Order();
+		order.setId(orderId);
+		
+		OrderedArticle orderedArticle = new OrderedArticle();
+		orderedArticle.setOrder(order);
+		orderedArticle.setArticle(article);
+		
+		List<OrderedArticle> matchingOrderedArticles;
+		
+		try {
+			matchingOrderedArticles = DatabaseManager.getHelper().getOrderedArticleDao().queryForMatching(orderedArticle);
+		} catch (SQLException e) {
+			matchingOrderedArticles = null;
+			e.printStackTrace();
+		}
+		
+		if(matchingOrderedArticles != null && matchingOrderedArticles.size() > 0)
+			orderedArticle = matchingOrderedArticles.get(0);
+		
+		updateUi();
+		
+		/*
 		// 1. Möglichkeit: OrderedArticle wird übergeben
 		
 		try {
-			int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
+			//int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
+			int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
+			int articleId = getIntent().getIntExtra(Constants., defaultValue)
 			orderedArticle = DatabaseManager.getHelper().getOrderedArticleDao().queryForId(orderedArticleId);
 		} catch (SQLException e) {
 			Log.e("Artikel Details", "kein bestellter Artikel gefunden...");
@@ -73,6 +126,7 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 			return;
 		}
 		Log.e("Artikel Details:", "Weder ein Bestellter, noch ein normaler Artikel konnten gefunden werden.");
+		*/
 	}
 
 	/**
@@ -87,9 +141,11 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
 		articleDescriptionView.setText(article.getOrigin());
 		
+		TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
 		if(orderedArticle!=null){
-			TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
 			oldPriceTextView.setText(orderedArticle.getPrice()+"€");
+		} else {
+			oldPriceTextView.setText("");
 		}
 		
 

@@ -10,7 +10,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,16 +63,29 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 	 */
 	@Override
 	public void refreshData() {
-		int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
+		int orderId = getIntent().getIntExtra(Constants.keyOrderId, 0);
 		try {
 			order = DatabaseManager.getHelper().getOrderDao().queryForId(orderId);
 		} catch (SQLException e) {
 			order = null;
 			e.printStackTrace();
+
+			
+			// Print an Error message
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+			dlgAlert.setTitle("Ökokiste");
+			dlgAlert.setPositiveButton("Zurück", 
+				new DialogInterface.OnClickListener() {
+		        	public void onClick(DialogInterface dialog, int which) {
+		        		finish();
+		        	}
+				}
+			);
+			dlgAlert.setCancelable(true);
+			dlgAlert.create().show();
 		}
 		
-		Log.i("OrderDetail", "order:"+order);
-
 		updateUi();
 	}
 	
@@ -153,13 +168,15 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 				}
 
 				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
-				intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(arg2).getId());
+				//intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(arg2).getId());
+				intent.putExtra(Constants.keyOrderId, order.getId());
+				intent.putExtra(Constants.keyArticleId, orderedArticleList.get(arg2).getArticle().getId());
 				startActivity(intent);
 			}
 		});
 		
 		TextView orderDateTextView = (TextView) findViewById(R.id.orderDateTextView);
-        	SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
 		orderDateTextView.setText(dateFormat.format(order.getDate()));
 		
 		getActionBar().setHomeButtonEnabled(true);

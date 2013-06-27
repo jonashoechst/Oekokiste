@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
 		Intent intent = null;
 		if(user != null){
 			intent = new Intent(this, OrderActivity.class);
-			intent.putExtra(Constants.keyUser, user.getId());
+			intent.putExtra(Constants.keyUserId, user.getId());
 		}
 		else{
 			intent = new Intent(this, LoginActivity.class);

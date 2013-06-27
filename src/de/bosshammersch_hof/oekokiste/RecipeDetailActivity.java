@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -53,18 +55,32 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	@Override
 	public void refreshData() {
 		// TODO Auto-generated method stub
-		int recipeId = getIntent().getIntExtra(Constants.keyRecipe, 0);
+		int recipeId = getIntent().getIntExtra(Constants.keyRecipeId, 0);
 		try {
 			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
 			ImageFromURL imageUpdater = new ImageFromURL();
 			imageUpdater.execute(recipe.getName());
 			imageUpdater.updateClass = this;
-			updateUi();
 		} catch (SQLException e) {
 			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
 			e.printStackTrace();
+
+			// Print an Error message
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+			dlgAlert.setTitle("Ökokiste");
+			dlgAlert.setPositiveButton("Zurück", 
+				new DialogInterface.OnClickListener() {
+		        	public void onClick(DialogInterface dialog, int which) {
+		        		finish();
+		        	}
+				}
+			);
+			dlgAlert.setCancelable(true);
+			dlgAlert.create().show();
 		}
 
+		updateUi();
 		
 	}
 	

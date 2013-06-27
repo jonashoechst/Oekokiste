@@ -8,6 +8,8 @@ import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.*;
@@ -51,13 +53,28 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 	@Override
 	public void refreshData() {
 
-		int userId = getIntent().getIntExtra(Constants.keyUser, 0);
+		int userId = getIntent().getIntExtra(Constants.keyUserId, 0);
 		Log.i("OrderActivity", "userId: "+userId);
 		try {
 			user = DatabaseManager.getHelper().getUserDao().queryForId(userId);
+			
 		} catch (SQLException e) {
 			user = null;
 			Log.e("Ökokiste: Bestellübersicht", "Konnte den User nicht in der Datenbank finden.");
+			
+			// Print an Error message
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+			dlgAlert.setTitle("Ökokiste");
+			dlgAlert.setPositiveButton("Zurück", 
+				new DialogInterface.OnClickListener() {
+		        	public void onClick(DialogInterface dialog, int which) {
+		        		finish();
+		        	}
+				}
+			);
+			dlgAlert.setCancelable(true);
+			dlgAlert.create().show();
 		}
 
 		updateUi();
@@ -99,7 +116,7 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(OrderActivity.this,OrderDetailActivity.class);
-				intent.putExtra(Constants.keyOrder, user.getOrderList().get(arg2).getId());
+				intent.putExtra(Constants.keyOrderId, user.getOrderList().get(arg2).getId());
 				startActivity(intent);
 			}
 		});
