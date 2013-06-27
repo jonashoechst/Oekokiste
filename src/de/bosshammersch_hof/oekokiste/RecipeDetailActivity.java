@@ -1,6 +1,7 @@
  package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
@@ -17,7 +18,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import de.bosshammersch_hof.oekokiste.model.CookingArticle;
@@ -30,8 +35,10 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	
 	Recipe recipe;
 	
+	TableLayout ingredientTableLayout;
+	
 	/** 
-	 *   creats the detail-view of recipe
+	 *   Creates the detail-view of recipe
 	 *   @param Bundle saved Instance State
 	 */
 	@Override
@@ -87,11 +94,12 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	/**
 	 * Die Zutaten werden in die UI geladen.
 	 */
-	private void fillIngeridents(){
-		
-		TableLayout ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
-		
-		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
+	private void fillIngeridents(Recipe r){
+		if(!(ingredientTableLayout == null)){
+			ingredientTableLayout.removeAllViews();
+		}
+		ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
+		final List<CookingArticle> cookingArticleList = r.getIngredientsList();
 		
 		for(int i = 0; i < cookingArticleList.size(); i++){
 			LayoutInflater inflater = ((Activity) this).getLayoutInflater();
@@ -133,40 +141,64 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	/**
 	 * Aktualisiert die UI.
 	 */
-	public void updateUi() {
+	public void updateUi(Recipe r) {
 		// Fill the Recipe Activity
-		setTitle(recipe.getName());
+		setTitle(r.getName());
 		
 		TextView recipeNameTextView             = (TextView) findViewById(R.id.recipeNameTextView);
-		recipeNameTextView.setText(recipe.getName());
+		recipeNameTextView.setText(r.getName());
 		
 		TextView recipeTimeTextView    			= (TextView) findViewById(R.id.recipeTimeTextView);
-		recipeTimeTextView.setText((recipe.getCookingTimeInMin())+" Min.");
+		recipeTimeTextView.setText((r.getCookingTimeInMin())+" Min.");
 		
-		TextView recipeNumberOfPersonTextView   = (TextView) findViewById(R.id.recipeNumberOfPersonTextView);
-		recipeNumberOfPersonTextView.setText(recipe.getServings()+" Personen");
+		setServingSpinner();
 		
 		// not yet used.
 		
 		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
-		recipeLongDescriptionTextView.setText(recipe.getDescription());
+		recipeLongDescriptionTextView.setText(r.getDescription());
 		
-		fillIngeridents();
+		fillIngeridents(r);
 
 		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
 		String cookwareString = "";
-		for(Cookware item : recipe.getCookware()){
+		for(Cookware item : r.getCookware()){
 			cookwareString += item.getName()+"\n";
 		}
 		recipeCookingUtensilsTextView.setText(cookwareString);
 		
 		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
-		recipeInstructionsTextView.setText(recipe.getInstructions());
+		recipeInstructionsTextView.setText(r.getInstructions());
 
 		ImageFromURL imageUpdater = new ImageFromURL();
-		imageUpdater.execute(recipe.getImagerUrl());
+		imageUpdater.execute(r.getImagerUrl());
 		imageUpdater.updateClass = this;
+	}
+	
+	/**
+	 * Setzt den Spinner, in dem man die Personenanzahl auswählen kann.
+	 */
+	public void setServingSpinner(){
+		Spinner spinner = (Spinner) findViewById(R.id.spinner);
 		
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+		        R.array.servings, android.R.layout.simple_spinner_item);
+		
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		
+		spinner.setAdapter(adapter);
+		spinner.setSelection(recipe.getServings()-1);
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+			public void onItemSelected(AdapterView<?> parent, View view, 
+		            int pos, long id) {
+				calculateNewAmount(pos+1);
+		    }
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+		});
 	}
 	
 	/**
@@ -186,6 +218,30 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	        default:
 	            return super.onOptionsItemSelected(item);  
 	    }
+	}
+	
+	public void calculateNewAmount(int newServings){
+		Recipe newRecipe = new Recipe();
+		
+		List<CookingArticle> oldCookingArticleList = recipe.getIngredientsList();
+		
+		List<CookingArticle> newCookingArticleList = new LinkedList<CookingArticle>();
+		
+		for(CookingArticle oldCookingArticle : oldCookingArticleList){
+			CookingArticle newCookingArticle = new CookingArticle();
+			
+			newCookingArticle.setAmount((oldCookingArticle.getAmount()/recipe.getServings())*newServings);
+			Log.i("cookingArticle: ", newCookingArticle.getAmountString());
+			newCookingArticle.setAmountType(oldCookingArticle.getAmountType());
+			newCookingArticle.setArticleGroup(oldCookingArticle.getArticleGroup());
+			newCookingArticle.setRecipe(newRecipe);
+			
+			newCookingArticleList.add(newCookingArticle);
+		}
+		
+		newRecipe.setIngredients(newCookingArticleList);
+		
+		fillIngeridents(newRecipe);
 	}
 
 	/**

@@ -4,34 +4,44 @@
     <string name="app_name">Ökokiste</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,</string>
     <string name="action_settings">Einstellungen</string>
-
     <string name="cookingUtensils1">1 Kochloeffel, 1 Blech, 1 Nudelholz, 1 Kuechenwage, 4 Tennisball, 1 Teigschaber </string>
     <string name="recipeFlammkuchenDescr">Flammkuchen, Flammenkuchen oder Flammekueche (frz. Tarte flambée) ist ein herzhafter Kuchen aus dem Elsass (frz. Alsace) in Frankreich. Ursprünglich war Flammkuchen ein bäuerliches Essen, mit dem am Backtag getestet wurde, ob der dörfliche Backofen heiß genug war, bevor die Brote für die Woche gebacken wurden. Da der Backtag im dörflichen Arbeitsrhythmus ein Gemeinschaftsereignis war und der Backofen im Backhaus auch vor Feiertagen angeheizt wurde, entwickelte sich der Flammkuchen mit der Zeit zum Festtagsessen. Als Teig benutzte man Brotteig. </string>
     <string name="recipeFlammkuchenName">Flammkuchen</string>
     <string name="recipeFlammkuchenInstructions">"Den Brotteig in 4–5 Stücke zerteilen, mit einem Küchentuch abdecken und die Teigstücke 30 Minuten ruhen lassen. Den Quark (mit oder ohne Crème fraîche, siehe Varianten) mit Salz und Pfeffer verrühren. Zwiebel in dünne Ringe schneiden oder hobeln. Den Frühstücksspeck in Streifen schneiden. Den Teig auf einer bemehlten Arbeitsfläche so dünn wie möglich auswellen und mit dem Quark gleichmäßig dünn bestreichen. Mit Frühstücksspeck, Zwiebelringen (und Käse, siehe Varianten) belegen. "</string>
 
     <!-- Konvention: fooBarActivity_name -->
-    
+
     <string name="mainActivity_welcome">Willkommen bei der Ökokiste, </string>
     <string name="mainActivity_logged_in">Sie sind angemeldet. Ihre Kisten sehen sie in der Übersicht:</string>
-
     <string name="recipeDetailActivity_ingredients_header">Zutaten</string>
     <string name="recipeDetailActivity_cookingutensils_header">Kochgeschirr</string>
     <string name="recipeDetailActivity_cookinginstructions_header">Zubereitung</string>
-    
     <string name="detailOrderActivity_bill">Rechung</string>
     <string name="detailOrderActivity_findRecipeButton">Rezepte finden.</string>
     <string name="detailOrderActivity_totalValue">Summe:</string>
-    
     <string name="detailArticleActivity_findRecipe">Rezepte...</string>
     <string name="detailArticleActivity_goToShop">Online Shop...</string>
     <string name="detailArticleActivity_oldPrice">alter Preis</string>
     <string name="detailArticleActivity_newPrice">neuer Preis</string>
-    
     <string name="loginActivity_title">Anmelden</string>
-    
     <string name="loginActivity_info">Geben Sie bitte Ihren Nutzernamen und ihr Passwort ein. \n\nWenn Sie noch keinen Nutzerkonto haben, gehen Sie bitte auf unsere Homepage und legen Sie sich eins an. </string>
 
     <!-- Strings von Eclipse, ohne Konvention -->
+
+    <string name="title_activity_find_recipes_by_article">Zutaten auswählen</string>
+    <string name="hello_world">Hello world!</string>
     
+    <string-array name="servings">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+     </string-array>
+
 </resources>

@@ -1,6 +1,10 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
+import java.util.List;
+
+import jim.h.common.android.zxinglib.integrator.IntentIntegrator;
+import jim.h.common.android.zxinglib.integrator.IntentResult;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
@@ -12,11 +16,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	
+	private String txtScanResult;
+	
+	Order order;
 	
 	User user;
 	
@@ -41,7 +50,7 @@ public class MainActivity extends Activity {
 
 		updater = new UpdateDatabase();
 		
-		// 1. Versuch: letzten Status �ffnen
+		// 1. Versuch: letzten Status öffnen
 		OpenState lastOpenState = null;
 		
 		try {
@@ -121,6 +130,12 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 	
+	public void findRecipesClicked(View view){
+		Intent intent = new Intent(this, FindRecipesByArticleActivity.class);
+		
+		startActivity(intent);
+	}
+	
 	/**
 	 * Sends an intent if loginButton is clicked.
 	 * Starts LoginActivity lets the User login to the DB  
@@ -148,6 +163,8 @@ public class MainActivity extends Activity {
 		Button orderButton = (Button) findViewById(R.id.orderButton);
 		orderButton.setEnabled(true);
 		
+		setScanButton();
+		
 		Button logoutButton = (Button) findViewById(R.id.logoutButton);
 		logoutButton.setText("Abmelden...");
 		
@@ -163,11 +180,76 @@ public class MainActivity extends Activity {
 		Button orderButton = (Button) findViewById(R.id.orderButton);
 		orderButton.setEnabled(false);
 		
+		setScanButton();
+		
 		Button logoutButton = (Button) findViewById(R.id.logoutButton);
 		logoutButton.setText("Anmelden...");
 		
 		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
 		welcomeTextView.setText(welcomeTextView.getText()+" sie sind nicht eingeloggt.");
+	}
+	
+	private void setScanButton(){
+		View scanButton = findViewById(R.id.scan_button);
+		
+		scanButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // set the last parameter to true to open front light if available
+                IntentIntegrator.initiateScan(MainActivity.this, R.layout.activity_scan_bar_code,
+                        R.id.viewfinder_view, R.id.preview_view, true);
+            }
+        });
+	}
+	
+	/**
+	 * Parsed den gescannten Code und gibt die gefundene Order der OrderActivity zu anzeigen.
+	 */
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == IntentIntegrator.REQUEST_CODE){
+        	IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode,
+                    resultCode, data);
+            if (scanResult == null) {
+                return;
+            }
+            final String result = scanResult.getContents();
+            if (result != null) {
+            	txtScanResult = buildCode(result);
+            	Log.i("Barcode", txtScanResult);
+            	try{
+            		List<Barcode> bl = DatabaseManager.getHelper().getBarcodeDao().queryForAll();
+            		
+            		for(Barcode b : bl){
+            			Log.i("Barcode", b.getBarcodeString());
+            		}
+            		
+            		Barcode barcode = DatabaseManager.getHelper().getBarcodeDao().queryForId(txtScanResult);
+            		Log.i("Barcode", barcode.getBarcodeString());
+            		
+                	order = DatabaseManager.getHelper().getOrderDao().queryForId(barcode.getOrder().getId());
+            	} catch (SQLException e){
+            		Log.e("OrderDetailActivity: ", "Kein Barcode gefunden.");
+            	}
+            	
+                Intent intent = new Intent(this, OrderDetailActivity.class);
+                intent.putExtra(Constants.keyOrder, order.getId());
+        		startActivity(intent);
+            }
+        }
+    }
+	
+	/**
+	 * Generiert zu einem 13 Zeichen langen EAN-Code den Kistencode.
+	 * @param str
+	 * @return Kistencode
+	 */
+	private String buildCode(String str){
+		String result;
+	    char ascii = (char) Integer.parseInt(str.substring(7, 9));
+	    result = ascii+"-"+str.substring(9, 12);
+	    return result;
 	}
 	
 }

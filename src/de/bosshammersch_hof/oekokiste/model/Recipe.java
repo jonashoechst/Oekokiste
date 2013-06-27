@@ -87,6 +87,10 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 		this.cookware.add(inCookware);
 	}
 	
+	public void setCookware(Collection<Cookware> ca){
+		this.cookware = ca;
+	}
+	
 	public int getDifficulty() {
 		return difficulty;
 	}
@@ -122,6 +126,10 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 		}
 		return caList;
 	}
+	
+	public void setIngredients(Collection<CookingArticle> ingrColl){
+		this.ingredients = ingrColl;
+	}
 
 	public int getId() {
 		return id;
@@ -148,7 +156,4 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 	public void setImagerUrl(String imagerUrl) {
 		this.imagerUrl = imagerUrl;
 	}
-	
-	
-	
 }

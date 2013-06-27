@@ -32,6 +32,24 @@
     	android:gravity="center"
         android:text="Bestellungen" />
     
+    <Button
+        android:id="@+id/scan_button"
+        android:padding="@dimen/header_padding"
+        android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:onClick="scannButtonClicked"
+		android:gravity="center"
+		android:text="Kistencode scannen" />
+    
+    <Button
+        android:id="@+id/find_recipe_button"
+        android:padding="@dimen/header_padding"
+        android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:onClick="findRecipesClicked"
+		android:gravity="center"
+		android:text="Rezepte Finden" />
+    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
