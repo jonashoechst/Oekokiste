@@ -141,7 +141,9 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	/**
 	 * Aktualisiert die UI.
 	 */
-	public void updateUi(Recipe r) {
+	public void updateUi() {
+		Recipe r = recipe;
+		
 		// Fill the Recipe Activity
 		setTitle(r.getName());
 		

@@ -1,7 +1,6 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import jim.h.common.android.zxinglib.integrator.IntentIntegrator;
 import jim.h.common.android.zxinglib.integrator.IntentResult;
@@ -28,8 +27,9 @@ public class MainActivity extends Activity {
 	Order order;
 	
 	User user;
-	
-	UpdateDatabase updater;
+
+	UpdateDatabaseGeneral updaterGeneral;
+	UpdateDatabaseUser updaterUser;
 	
 	/**
 	 *   calls the super Constructor
@@ -48,7 +48,16 @@ public class MainActivity extends Activity {
 		
 		Constants.refreshableActivity = null;
 
-		updater = new UpdateDatabase();
+		updaterGeneral = new UpdateDatabaseGeneral();
+		updaterUser = new UpdateDatabaseUser();
+		updaterGeneral.execute();
+		
+		try {
+			int orderId = new UpdateDatabaseOrder().updateBarcodeForBarcodeStringGetOrderId("A-033");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		// 1. Versuch: letzten Status öffnen
 		OpenState lastOpenState = null;
@@ -80,7 +89,7 @@ public class MainActivity extends Activity {
 			
 			// validate the user
 			try {
-				loginUser = updater.validateUser(loginUser);
+				loginUser = updaterUser.validateUser(loginUser);
 			} catch (SQLException e) {
 				loginUser = null;
 				Toast.makeText(this, "Login fehlgeschlagen. Die Datenbankverbindung konnte nicht aufgebaut werden.", 30).show();
@@ -96,7 +105,7 @@ public class MainActivity extends Activity {
 			} else {
 				// Login erfolgreich!
 				user = loginUser;
-				updater.execute(loginUser);
+				updaterUser.execute(loginUser);
 				updateUiWithUser();
 				OpenState os = new OpenState();
 				os.setUser(loginUser);
@@ -218,24 +227,19 @@ public class MainActivity extends Activity {
             if (result != null) {
             	txtScanResult = buildCode(result);
             	Log.i("Barcode", txtScanResult);
-            	try{
-            		List<Barcode> bl = DatabaseManager.getHelper().getBarcodeDao().queryForAll();
-            		
-            		for(Barcode b : bl){
-            			Log.i("Barcode", b.getBarcodeString());
-            		}
-            		
-            		Barcode barcode = DatabaseManager.getHelper().getBarcodeDao().queryForId(txtScanResult);
-            		Log.i("Barcode", barcode.getBarcodeString());
-            		
-                	order = DatabaseManager.getHelper().getOrderDao().queryForId(barcode.getOrder().getId());
-            	} catch (SQLException e){
-            		Log.e("OrderDetailActivity: ", "Kein Barcode gefunden.");
-            	}
             	
-                Intent intent = new Intent(this, OrderDetailActivity.class);
-                intent.putExtra(Constants.keyOrder, order.getId());
-        		startActivity(intent);
+            	try {
+					int orderId = new UpdateDatabaseOrder().updateBarcodeForBarcodeStringGetOrderId(txtScanResult);
+					Intent intent = new Intent(this, OrderDetailActivity.class);
+	                intent.putExtra(Constants.keyOrderId, orderId);
+	        		startActivity(intent);
+				} catch (SQLException e) {
+					Log.e("Main Activity", "Could not find Order for Barcode");
+					e.printStackTrace();
+				}
+            	
+            	
+                
             }
         }
     }
