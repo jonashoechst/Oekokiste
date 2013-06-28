@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -48,6 +50,21 @@ public class FindArticleActivity extends Activity{
 		ListView findArticleListView = (ListView) findViewById(R.id.findArticleListView);
 		
 		final List<Article> findArticleList = articleGroup.getArticleList();
+		
+		if(findArticleList.isEmpty()){
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+			dlgAlert.setMessage("Keine Artikel gefunden.");
+			dlgAlert.setTitle("Ökokiste");
+			dlgAlert.setPositiveButton("Zurück", 
+				new DialogInterface.OnClickListener() {
+		        	public void onClick(DialogInterface dialog, int which) {
+		        		finish();
+		        	}
+				}
+			);
+			dlgAlert.setCancelable(true);
+			dlgAlert.create().show();
+		}
 		
 		ListAdapter adapter = new ArrayAdapter<Article>(this, R.layout.listview_item_find_article, findArticleList){
 			

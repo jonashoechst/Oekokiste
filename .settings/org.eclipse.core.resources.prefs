@@ -1,6 +1,8 @@
 eclipse.preferences.version=1
 encoding//src/de/bosshammersch_hof/oekokiste/ArticleDetailActivity.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/Constants.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/FindArticleActivity.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/FindRecipesByArticleActivity.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/MainActivity.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/OrderActivity.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/OrderDetailActivity.java=UTF-8

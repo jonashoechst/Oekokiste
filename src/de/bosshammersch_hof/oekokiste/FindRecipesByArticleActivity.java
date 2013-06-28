@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -92,7 +95,10 @@ public class FindRecipesByArticleActivity extends Activity {
     	recipeFindButton.setOnClickListener(new OnClickListener(){
     		@Override
     		public void onClick(View v){
-    			Intent intent = new Intent(FindRecipesByArticleActivity.this, RecipeActivity.class);
+    			
+    			showDialog(0);
+    			
+    			/*Intent intent = new Intent(FindRecipesByArticleActivity.this, RecipeActivity.class);
     			
     			String[] articleGroupNameArray = new String[selectedGroup.size()];
     			for(int i = 0; i < selectedGroup.size(); i++){
@@ -100,11 +106,30 @@ public class FindRecipesByArticleActivity extends Activity {
     			}
     			
     			intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNameArray);
-    			startActivity(intent);
+    			startActivity(intent);*/
     		}
     	});
 		
 		getActionBar().setHomeButtonEnabled(true);
+	}
+	
+	protected Dialog onCreateDialog(int id){
+		return new AlertDialog.Builder(FindRecipesByArticleActivity.this)
+		.setTitle("Bitte wählen Sie, wonach Sie suchen möchten.")
+		.setItems(R.array.select_dialog_items, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent(FindRecipesByArticleActivity.this, RecipeActivity.class);
+	    			
+				String[] articleGroupNameArray = new String[selectedGroup.size()];
+				for(int i = 0; i < selectedGroup.size(); i++){
+					articleGroupNameArray[i] = selectedGroup.get(i).getName();
+				}
+	    			
+	    		intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNameArray);
+	    		startActivity(intent);
+			}
+		})
+		.create();
 	}
 	
 	/**

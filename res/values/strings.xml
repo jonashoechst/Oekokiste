@@ -42,6 +42,11 @@
         <item>8</item>
         <item>9</item>
         <item>10</item>
-     </string-array>
+    </string-array>
+     
+    <string-array name = "select_dialog_items">
+        <item >Haupt- und Nebenzutaten</item>
+        <item >Nur Hauptzutaten</item>
+    </string-array>
 
 </resources>
