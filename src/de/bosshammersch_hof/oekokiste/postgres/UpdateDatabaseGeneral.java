@@ -226,7 +226,7 @@ public class UpdateDatabaseGeneral extends AsyncTask<Void, Integer, boolean[]> {
 		while(rs.next()){
 			Article a = new Article();
 			// TODO Get a description from anywhere
-			a.setDescription("");
+			a.setDescription(rs.getString("article_description"));
 			a.setId(rs.getInt("article_id"));
 			a.setName(rs.getString("article_name"));
 			a.setOrigin(rs.getString("article_origin"));

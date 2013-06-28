@@ -1,8 +1,10 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +25,8 @@ import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
+import de.bosshammersch_hof.oekokiste.model.CookingArticle;
+import de.bosshammersch_hof.oekokiste.model.Recipe;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 public class FindRecipesByArticleActivity extends Activity {

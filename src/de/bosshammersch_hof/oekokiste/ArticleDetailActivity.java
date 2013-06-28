@@ -139,7 +139,7 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		
 		//ImageView articleImageView = (ImageView) findViewById(R.id.articleImageView);
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
-		articleDescriptionView.setText(article.getOrigin());
+		articleDescriptionView.setText(article.getDescription());
 		
 		TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
 		if(orderedArticle!=null){
