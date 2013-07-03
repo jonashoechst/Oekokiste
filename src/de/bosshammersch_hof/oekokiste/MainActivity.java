@@ -215,13 +215,13 @@ public class MainActivity extends Activity {
 	 * Parsed den gescannten Code und gibt die gefundene Order der OrderActivity zu anzeigen.
 	 */
 	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) throws NullPointerException {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == IntentIntegrator.REQUEST_CODE){
         	IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode,
                     resultCode, data);
-            if (scanResult == null) {
-                return;
+            if (scanResult == null || scanResult.getContents().length() != 13) {
+            	return;
             }
             final String result = scanResult.getContents();
             if (result != null) {
