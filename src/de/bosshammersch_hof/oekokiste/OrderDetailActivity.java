@@ -4,8 +4,10 @@ import java.io.File;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -148,11 +150,22 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
     		public void onClick(View v){
     			Intent intent = new Intent(OrderDetailActivity.this, RecipeActivity.class);
     			
-    			String[] articleGroupNameArray = new String[order.getArticleList().size()];
-    			for(int i = 0; i < order.getArticleList().size(); i++){
-    				articleGroupNameArray[i] = order.getArticleList().get(i).getArticle().getArticleGroup().getName();
-    			}
-    			intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNameArray);
+    			List<ArticleGroup> articleGroups = new LinkedList<ArticleGroup>();
+    			for(OrderedArticle oa : order.getArticleCollection())
+    				articleGroups.add(oa.getArticle().getArticleGroup());
+    			
+    			List<Recipe.RecipeWithHits> recipesWithHits;
+				try {
+					recipesWithHits = Recipe.findRecipesByArticleGroups(articleGroups, false);
+				} catch (SQLException e) {
+					recipesWithHits = new LinkedList<Recipe.RecipeWithHits>();
+					Log.w("OrderDetailActivity", "No Matching Recipes found.");
+					e.printStackTrace();
+				}
+    			
+    			intent.putExtra(Constants.keyRecipeIdArray, Recipe.RecipeWithHits.getRecipeIdArray(recipesWithHits));
+    			intent.putExtra(Constants.keyRecipeHitsArray, Recipe.RecipeWithHits.getHitsArray(recipesWithHits));
+    			
     			startActivity(intent);
     		}
     	});

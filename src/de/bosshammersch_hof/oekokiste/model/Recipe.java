@@ -2,6 +2,7 @@ package de.bosshammersch_hof.oekokiste.model;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -14,6 +15,35 @@ import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrUpdateable{
 
+	public static class RecipeWithHits implements Comparable<RecipeWithHits>{
+		public int hits;
+		public int recipeId;
+		public RecipeWithHits(int recipeId){
+			this.recipeId = recipeId;
+		}
+		@Override
+		public int compareTo(RecipeWithHits r2) {
+			return this.hits-r2.hits;
+		}
+		
+		public static int[] getRecipeIdArray(List<RecipeWithHits> list){
+			int[] recipeIds = new int[list.size()];
+			for(int i = 0; i < list.size(); i++){
+				recipeIds[i] = list.get(i).recipeId;
+			}
+			return recipeIds;
+		}
+		
+		public static int[] getHitsArray(List<RecipeWithHits> list){
+			int[] hits = new int[list.size()];
+			for(int i = 0; i < list.size(); i++){
+				hits[i] = list.get(i).hits;
+			}
+			return hits;
+		}
+		
+	}
+	
 	@DatabaseField(id = true)
 	private int id;
 	
@@ -156,4 +186,35 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 	public void setImagerUrl(String imagerUrl) {
 		this.imagerUrl = imagerUrl;
 	}
+	
+	public static List<RecipeWithHits> findRecipesByArticleGroups(List<ArticleGroup> articleGroups, boolean onlyMainIngrediants) throws SQLException{
+		
+		List<RecipeWithHits> recipesWithHits = new LinkedList<RecipeWithHits>();
+		
+		List<Recipe> recipeList = DatabaseManager.getHelper().getRecipeDao().queryForAll();
+		for(Recipe r : recipeList){
+			RecipeWithHits rwh = new RecipeWithHits(r.getId());
+			recipesWithHits.add(rwh);
+		}
+		
+		for(ArticleGroup a : articleGroups){
+			for(RecipeWithHits r : recipesWithHits){
+				for(CookingArticle ca : DatabaseManager.getHelper().getRecipeDao().queryForId(r.recipeId).getIngredients()){
+					if(a.getName().equals(ca.getArticleGroup().getName())){
+						if(!onlyMainIngrediants || ca.isPrimaryIngredient()){
+							r.hits++;
+						}
+					}
+				}
+			}
+		}
+		
+		Collections.sort(recipesWithHits);
+		
+		int zeroIndex;
+		for(zeroIndex = 0; recipesWithHits.get(zeroIndex).hits > 0; zeroIndex++);
+		
+		return recipesWithHits.subList(0, zeroIndex);
+	}
+	
 }

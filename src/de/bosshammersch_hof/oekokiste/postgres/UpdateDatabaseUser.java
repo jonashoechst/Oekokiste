@@ -166,17 +166,7 @@ public class UpdateDatabaseUser extends AsyncTask<User, Integer, boolean[]> {
 				oa.setOrder(DatabaseManager.getHelper().getOrderDao().queryForId(orderId));
 				oa.setArticle(DatabaseManager.getHelper().getArticleDao().queryForId(rs.getInt("article_id")));
 
-				// Do an example Query for the already created OrderedArticle
-				List<OrderedArticle> oldOAList = DatabaseManager.getHelper().getOrderedArticleDao().queryForMatching(oa);
-				if(oldOAList.size() > 0) {
-					OrderedArticle oldOA = oldOAList.get(0);
-					OrderedArticle deleteThis = null;
-					for(OrderedArticle comp : toDelete){
-						if(comp.equals(oldOA)) deleteThis = comp;
-					}
-					toDelete.remove(deleteThis);
-					oa = oldOA;
-				}
+				
 				oa.setAmount(rs.getDouble("amount"));
 				oa.setAmountType(rs.getString("amount_type"));
 				oa.setPrice((int) (rs.getDouble("price")*100));
