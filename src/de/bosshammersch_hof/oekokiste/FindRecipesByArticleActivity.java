@@ -1,17 +1,15 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +23,6 @@ import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
-import de.bosshammersch_hof.oekokiste.model.CookingArticle;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
@@ -100,40 +97,38 @@ public class FindRecipesByArticleActivity extends Activity {
     		@Override
     		public void onClick(View v){
     			
-    			showDialog(0);
     			
-    			/*Intent intent = new Intent(FindRecipesByArticleActivity.this, RecipeActivity.class);
+    			AlertDialog.Builder b = new AlertDialog.Builder(FindRecipesByArticleActivity.this);
     			
-    			String[] articleGroupNameArray = new String[selectedGroup.size()];
-    			for(int i = 0; i < selectedGroup.size(); i++){
-    				articleGroupNameArray[i] = selectedGroup.get(i).getName();
-    			}
+    			b.setTitle("Sollen die Artikel als Hauptzutat oder auch als Nebenzutat auftauchen?");
+    			b.setItems(R.array.select_dialog_items, new DialogInterface.OnClickListener(){
+    				public void onClick(DialogInterface dialog, int i) {
+    					boolean onlyMainIngrediants = false;
+    					if(i == 1) onlyMainIngrediants = true;
+    					
+    					List<Recipe.RecipeWithHits> recipesWithHits;
+    					try {
+    						recipesWithHits = Recipe.findRecipesByArticleGroups(selectedGroup, onlyMainIngrediants);
+    					} catch (SQLException e) {
+    						recipesWithHits = new LinkedList<Recipe.RecipeWithHits>();
+    						Log.w("OrderDetailActivity", "No Matching Recipes found.");
+    						e.printStackTrace();
+    					}
+    	    			
+    					
+    					Intent intent = new Intent(FindRecipesByArticleActivity.this, RecipeActivity.class);
+    	    			intent.putExtra(Constants.keyRecipeIdArray, Recipe.RecipeWithHits.getRecipeIdArray(recipesWithHits));
+    	    			intent.putExtra(Constants.keyRecipeHitsArray, Recipe.RecipeWithHits.getHitsArray(recipesWithHits));
+    					startActivity(intent);
+    				}
+    				
+    			});
+    			b.create().show();
     			
-    			intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNameArray);
-    			startActivity(intent);*/
     		}
     	});
 		
 		getActionBar().setHomeButtonEnabled(true);
-	}
-	
-	protected Dialog onCreateDialog(int id){
-		return new AlertDialog.Builder(FindRecipesByArticleActivity.this)
-		.setTitle("Bitte wählen Sie, wonach Sie suchen möchten.")
-		.setItems(R.array.select_dialog_items, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				Intent intent = new Intent(FindRecipesByArticleActivity.this, RecipeActivity.class);
-	    			
-				String[] articleGroupNameArray = new String[selectedGroup.size()];
-				for(int i = 0; i < selectedGroup.size(); i++){
-					articleGroupNameArray[i] = selectedGroup.get(i).getName();
-				}
-	    			
-	    		intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNameArray);
-	    		startActivity(intent);
-			}
-		})
-		.create();
 	}
 	
 	/**

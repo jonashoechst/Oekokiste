@@ -1,17 +1,15 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,18 +22,18 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class RecipeActivity extends Activity implements RefreshableActivity{
-	
-	Map<Recipe, Integer> recipeMap;
+
+	List<RecipeWithHits> recipeWithHitsList;
 	
 	/**
 	 * Rezepte werden bei Bedarf mit Trefferquote erweitert.
 	 *
 	 */
-	private class RecipeWithHits{
+	public class RecipeWithHits{
 		public Recipe recipe;
 		public int hits;
-		public RecipeWithHits(Recipe r, int hits){
-			this.recipe = r;
+		public RecipeWithHits(int recipeId, int hits) throws SQLException{
+			this.recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
 			this.hits = hits;
 		}
 	}
@@ -64,6 +62,19 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 	@Override
 	public void refreshData() {
 
+		int[] recipeIdArray = this.getIntent().getIntArrayExtra(Constants.keyRecipeIdArray);
+		int[] recipeHitsArray = this.getIntent().getIntArrayExtra(Constants.keyRecipeHitsArray);
+		
+		recipeWithHitsList = new LinkedList<RecipeWithHits>();
+		for(int i = 0; i < recipeIdArray.length; i++)
+			try {
+				recipeWithHitsList.add(new RecipeWithHits(recipeIdArray[i], recipeHitsArray[i]));
+			} catch (SQLException e) {
+				Log.e("Recipe Activity","Recipe could not be entered.");
+				e.printStackTrace();
+			}
+		
+		/*
 		String[] articleGroupIdArray = this.getIntent().getStringArrayExtra(Constants.keyArticleGroupNameArray);
 		
 		List<ArticleGroup> articleGroups = new LinkedList<ArticleGroup>();
@@ -114,6 +125,8 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 			}
 		}
 		
+		*/
+		
 		updateUi();
 		
 	}
@@ -124,9 +137,7 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 	public void updateUi() {
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
 		
-		final List<RecipeWithHits> recipeList = new LinkedList<RecipeWithHits>();
-		
-		while(!recipeMap.isEmpty()){
+		/*while(!recipeMap.isEmpty()){
 			
 			Recipe bestRecipe = null;
 			
@@ -137,9 +148,9 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 			
 			recipeList.add(new RecipeWithHits(bestRecipe, recipeMap.get(bestRecipe)));
 			recipeMap.remove(bestRecipe);
-		}
+		}*/
 	
-		ListAdapter adapter = new ArrayAdapter<RecipeWithHits>(this, R.layout.listview_item_recipe, recipeList){
+		ListAdapter adapter = new ArrayAdapter<RecipeWithHits>(this, R.layout.listview_item_recipe, recipeWithHitsList){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -148,17 +159,19 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 		        
 		        	if(row == null){
 		        		LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
-		            		row = inflater.inflate(R.layout.listview_item_recipe, parent, false);
+		            	row = inflater.inflate(R.layout.listview_item_recipe, parent, false);
 		        	}
+		        	
 		        
 		        	TextView recipeNameTextView = (TextView) row.findViewById(R.id.recipeName);
-		        	recipeNameTextView.setText(recipeList.get(position).recipe.getName());
+		        	recipeNameTextView.setText(recipeWithHitsList.get(position).recipe.getName());
 		        
 		        	TextView recipeDifficultyTextView = (TextView) row.findViewById(R.id.recipeDifficulty);
-		        	recipeDifficultyTextView.setText("" + recipeList.get(position).recipe.getDifficulty());
+		        	recipeDifficultyTextView.setText(recipeWithHitsList.get(position).recipe.getDifficulty());
 		        
 		        	TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
-		        	hitRateTextView.setText(recipeList.get(position).hits+"");
+		        	if(recipeWithHitsList.get(position).hits != 0)
+		        		hitRateTextView.setText(recipeWithHitsList.get(position).hits+"");
 		       
 		        	return row;
 		    	}
@@ -170,7 +183,7 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(RecipeActivity.this, RecipeDetailActivity.class);
-				intent.putExtra(Constants.keyRecipeId, recipeList.get(arg2).recipe.getId());
+				intent.putExtra(Constants.keyRecipeId, recipeWithHitsList.get(arg2).recipe.getId());
 				startActivity(intent);
 			}
 		});

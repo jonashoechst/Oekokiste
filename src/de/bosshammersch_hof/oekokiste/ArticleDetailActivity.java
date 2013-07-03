@@ -1,6 +1,7 @@
 package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -10,6 +11,7 @@ import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -93,40 +95,6 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		
 		updateUi();
 		
-		/*
-		// 1. Möglichkeit: OrderedArticle wird übergeben
-		
-		try {
-			//int orderedArticleId = getIntent().getIntExtra(Constants.keyOrderedArticle, 0);
-			int orderId = getIntent().getIntExtra(Constants.keyOrder, 0);
-			int articleId = getIntent().getIntExtra(Constants., defaultValue)
-			orderedArticle = DatabaseManager.getHelper().getOrderedArticleDao().queryForId(orderedArticleId);
-		} catch (SQLException e) {
-			Log.e("Artikel Details", "kein bestellter Artikel gefunden...");
-			e.printStackTrace();
-		}
-
-		if( orderedArticle != null ) {
-			article = orderedArticle.getArticle();
-			updateUi();
-			return;
-		}
-		
-		// 2. Möglichkeit: Aricle wird übergeben
-		
-		try {
-			int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
-			article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		if(article != null) {
-			updateUi();
-			return;
-		}
-		Log.e("Artikel Details:", "Weder ein Bestellter, noch ein normaler Artikel konnten gefunden werden.");
-		*/
 	}
 
 	/**
@@ -155,11 +123,37 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	}
 	
 	public void findRecipeButtonClicked(View view){
-		Intent intent = new Intent(this, RecipeActivity.class);
-		String[] articleGroupNames = {article.getArticleGroup().getName()};
+		// Dialog: Haupt oder Nebenzutat
 		
-		intent.putExtra(Constants.keyArticleGroupNameArray, articleGroupNames);
-		startActivity(intent);
+		AlertDialog.Builder b = new AlertDialog.Builder(ArticleDetailActivity.this);
+		
+		b.setTitle("Soll der Artikel als Hauptzutat oder auch als Nebenzutat auftauchen?");
+		b.setItems(R.array.select_dialog_items, new DialogInterface.OnClickListener(){
+			public void onClick(DialogInterface dialog, int i) {
+				boolean onlyMainIngrediants = false;
+				if(i == 1) onlyMainIngrediants = true;
+				
+				List<ArticleGroup> articleGroups = new LinkedList<ArticleGroup>();
+				articleGroups.add(article.getArticleGroup());
+				
+				List<Recipe.RecipeWithHits> recipesWithHits;
+				try {
+					recipesWithHits = Recipe.findRecipesByArticleGroups(articleGroups, onlyMainIngrediants);
+				} catch (SQLException e) {
+					recipesWithHits = new LinkedList<Recipe.RecipeWithHits>();
+					Log.w("OrderDetailActivity", "No Matching Recipes found.");
+					e.printStackTrace();
+				}
+    			
+				
+				Intent intent = new Intent(ArticleDetailActivity.this, RecipeActivity.class);
+    			intent.putExtra(Constants.keyRecipeIdArray, Recipe.RecipeWithHits.getRecipeIdArray(recipesWithHits));
+    			intent.putExtra(Constants.keyRecipeHitsArray, Recipe.RecipeWithHits.getHitsArray(recipesWithHits));
+				startActivity(intent);
+			}
+			
+		});
+		b.create().show();
 	}
 	
 	public void goToStoreButtonClicked(View view){
@@ -168,7 +162,6 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		intent.putExtra(Constants.keyUrl, Constants.pathToArticleDescription+article.getId());
 		startActivity(intent);
 	}
-	
 	/**
 	 *   if the app icon in action bar is clicked => go home
 	 *   else the super constructor of the function is called
