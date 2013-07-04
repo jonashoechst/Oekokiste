@@ -26,12 +26,17 @@ public class FindArticleActivity extends Activity implements RefreshableActivity
 	
 	ArticleGroup articleGroup;
 	
+	/**  set the right view for the content.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_article);
 	}
 	
+	/**  if the app resume to this activity the methode refeshes the data for this activity.
+	 *   calls the refreshData()
+	 */
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -39,7 +44,9 @@ public class FindArticleActivity extends Activity implements RefreshableActivity
 		refreshData();
 	}
 
-
+	/**  get extradata from the intent and query the database for the data the article.
+	 * 	 if there is no article a message is shown
+	 */
 	@Override
 	public void refreshData() {
 
@@ -67,11 +74,10 @@ public class FindArticleActivity extends Activity implements RefreshableActivity
 		updateUi();
 	}
 
-	/**
-	 * Aktualisiert die UI.
+	/**  refreshed the UI.
+	 * 	 the methode shows a message if the article is not in the online-shop.
 	 */
 	public void updateUi() {
-		// update UI
 		ListView findArticleListView = (ListView) findViewById(R.id.findArticleListView);
 		
 		final List<Article> findArticleList = articleGroup.getArticleList();
@@ -124,8 +130,7 @@ public class FindArticleActivity extends Activity implements RefreshableActivity
 		getActionBar().setHomeButtonEnabled(true);
 	}
 	
-	/**
-	 *   if the app icon in action bar is clicked => go home
+	/**  if the app icon in action bar is clicked => go home
 	 *   else the super constructor of the function is called
 	 *   @param MenuItem which was selected
 	 *   @return boolean 

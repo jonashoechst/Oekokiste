@@ -50,6 +50,9 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		
 	}
 	
+	/**
+	 *  call the super constructor and call refreshData();
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -215,7 +218,6 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 	
 	/**
 	 * Sends an intent to read .pdf-files. 
-	 *
 	 * @param	view	The clicked view.
 	 */
 	public void viewBillClicked(View view){

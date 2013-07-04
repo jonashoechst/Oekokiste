@@ -32,12 +32,17 @@ public class FindRecipesByArticleActivity extends Activity implements Refreshabl
 	
 	List<ArticleGroup> selectedArticleGroups;
 	
+	/**  set the right view for the content.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_recipe_article);
 	}
 	
+	/**  if the app resume to this activity the methode refeshes the data for this activity.
+	 *   calls the refreshData()
+	 */
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -45,7 +50,8 @@ public class FindRecipesByArticleActivity extends Activity implements Refreshabl
 		refreshData();
 	}
 
-	
+	/**  gets all articleGroup and update the Ui by calling uodateUi().
+	 */
 	@Override
 	public void refreshData() {
 		try {
@@ -62,8 +68,7 @@ public class FindRecipesByArticleActivity extends Activity implements Refreshabl
 		updateUi();
 	}
 
-	/**
-	 * Aktualisiert die UI.
+	/**  update the UI.
 	 */
 	public void updateUi() {
 		final ListView findArticleGroupListView = (ListView) findViewById(R.id.findArticleRecipeListView);

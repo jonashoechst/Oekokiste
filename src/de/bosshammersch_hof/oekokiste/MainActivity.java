@@ -35,9 +35,7 @@ public class MainActivity extends Activity {
 	UpdateDatabaseUser updaterUser;
 	UpdateDatabaseArticleImages updaterImages;
 	
-	/**
-	 *   calls the super Constructor
-	 *   and set the Contentview 
+	/**  call the super Constructor and set the Contentview 
 	 *   and checks the login state so the user can work without login again
 	 *   @param  Bundle saved Instance State
 	 */
@@ -131,6 +129,10 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 	
+	/**
+	 * creat a new intent and start the FindRecipesByArticleActivity
+	 * @param view
+	 */
 	public void findRecipesClicked(View view){
 		Intent intent = new Intent(this, FindRecipesByArticleActivity.class);
 		startActivity(intent);
