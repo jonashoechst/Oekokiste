@@ -6,13 +6,13 @@ import java.util.List;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
 import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,18 +22,16 @@ import android.widget.TextView;
 public class ArticleDetailActivity extends Activity implements RefreshableActivity, ImageUpdatable{
 	
 	private OrderedArticle orderedArticle;
+	
 	private Article article;
+	
 	private ImageFromURL imageUpdater;
-	private Drawable image = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_article_detail);
 		getActionBar().setHomeButtonEnabled(true);
-
-		imageUpdater = new ImageFromURL();
-		imageUpdater.updateClass = this;
 	}
 	
 	@Override
@@ -59,98 +57,80 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 			article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
 		} catch (SQLException e) {
 			article = null;
-		}
-		
-		if(article == null){
+			
 			// Print an Error message
-						AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
-						dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
-						dlgAlert.setTitle("Ökokiste");
-						dlgAlert.setPositiveButton("Zurück", 
-							new DialogInterface.OnClickListener() {
-					        	public void onClick(DialogInterface dialog, int which) {
-					        		finish();
-					        	}
-							});
-						dlgAlert.setCancelable(false);
-						dlgAlert.create().show();
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+			dlgAlert.setTitle("Ökokiste");
+			dlgAlert.setPositiveButton("Zurück", 
+				new DialogInterface.OnClickListener() {
+		        	public void onClick(DialogInterface dialog, int which) {
+		        		finish();
+		        	}
+				}
+			);
+			dlgAlert.setCancelable(true);
+			dlgAlert.create().show();
 		}
 		
+		Order order = new Order();
+		order.setId(orderId);
 		
-		Order order;
+		OrderedArticle orderedArticle = new OrderedArticle();
+		orderedArticle.setOrder(order);
+		orderedArticle.setArticle(article);
+		
+		List<OrderedArticle> matchingOrderedArticles;
+		
 		try {
-			order = DatabaseManager.getHelper().getOrderDao().queryForId(orderId);
-		} catch (SQLException e1) {
-			order = null;
+			matchingOrderedArticles = DatabaseManager.getHelper().getOrderedArticleDao().queryForMatching(orderedArticle);
+		} catch (SQLException e) {
+			matchingOrderedArticles = null;
+			e.printStackTrace();
 		}
-		if(order != null){
-			OrderedArticle orderedArticle = new OrderedArticle();
-			orderedArticle.setOrder(order);
-			orderedArticle.setArticle(article);
 		
-			List<OrderedArticle> matchingOrderedArticles;
+		if(matchingOrderedArticles != null && matchingOrderedArticles.size() > 0)
+			orderedArticle = matchingOrderedArticles.get(0);
 		
-			try {
-				matchingOrderedArticles = DatabaseManager.getHelper().getOrderedArticleDao().queryForMatching(orderedArticle);
-			} catch (SQLException e) {
-				matchingOrderedArticles = null;
-			}
-		
-			if(matchingOrderedArticles != null && matchingOrderedArticles.size() > 0)
-				orderedArticle = matchingOrderedArticles.get(0);
-		}
 		updateUi();
+		
 	}
 
-	/**
-	 *  update the Ui 
+	/** update the Ui. 
 	 *  an set the title to the name of the articlename
 	 */
 	private void updateUi() {
 		// Fill the Article Activity
 		setTitle(article.getName());
 		
-		//ImageView articleImageView = (ImageView) findViewById(R.id.articleImageView);
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
 		articleDescriptionView.setText(article.getDescription());
 		
-		TextView textViewOrigin = (TextView) findViewById(R.id.textViewOrigin);
-		textViewOrigin.setText(article.getOrigin());
-		
 		TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
-		if(orderedArticle!=null){
+		if (orderedArticle!=null){
 			oldPriceTextView.setText(orderedArticle.getPrice()+"€");
 		} else {
 			oldPriceTextView.setText("");
 		}
-
-		// Download Image if:
-					// 1. there is no image yet
-					// 2. there is no imageUpdater running.
-					// 3. there is a valid link
-		if(	image == null && 
-			imageUpdater.getStatus() != AsyncTask.Status.RUNNING && 
-			article.getImageUrl() != null && 
-			!article.getImageUrl().equals("")){
-			
-			imageUpdater.execute(article.getImageUrl());
-			imageUpdater.updateClass = this;
-		} else if (image != null)
-			updateImage(image);
 		
+
+		imageUpdater = new ImageFromURL();
+		imageUpdater.execute(article.getImageUrl());
+		imageUpdater.updateClass = this;
 	}
 	
+	/**  ask the user about mainingredient and subingredients.
+	 * 	 and make a intent to the RecipeActivity 
+	 */
 	public void findRecipeButtonClicked(View view){
 		// Dialog: Haupt oder Nebenzutat
-		
 		AlertDialog.Builder b = new AlertDialog.Builder(ArticleDetailActivity.this);
 		
 		b.setTitle("Soll der Artikel als Hauptzutat oder auch als Nebenzutat auftauchen?");
 		b.setItems(R.array.select_dialog_items, new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int i) {
-				
 				boolean onlyMainIngrediants = false;
-				if(i == 1) onlyMainIngrediants = true;
+				if (i == 1) onlyMainIngrediants = true;
 				
 				List<ArticleGroup> articleGroups = new LinkedList<ArticleGroup>();
 				articleGroups.add(article.getArticleGroup());
@@ -160,26 +140,28 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 					recipesWithHits = Recipe.findRecipesByArticleGroups(articleGroups, onlyMainIngrediants);
 				} catch (SQLException e) {
 					recipesWithHits = new LinkedList<Recipe.RecipeWithHits>();
+					Log.w("OrderDetailActivity", "No Matching Recipes found.");
+					e.printStackTrace();
 				}
-    			
 				Intent intent = new Intent(ArticleDetailActivity.this, RecipeActivity.class);
     			intent.putExtra(Constants.keyRecipeIdArray, Recipe.RecipeWithHits.getRecipeIdArray(recipesWithHits));
     			intent.putExtra(Constants.keyRecipeHitsArray, Recipe.RecipeWithHits.getHitsArray(recipesWithHits));
 				startActivity(intent);
 			}
-			
 		});
 		b.create().show();
 	}
 	
+	/**  show the user the homepage of the oekokiste.
+	 */
 	public void goToStoreButtonClicked(View view){
 		Intent intent = new Intent(this, WebViewActivity.class);
 		
 		intent.putExtra(Constants.keyUrl, Constants.pathToArticleDescription+article.getId());
 		startActivity(intent);
 	}
-	/**
-	 *   if the app icon in action bar is clicked => go home
+	
+	/**  if the app icon in action bar is clicked => go home.
 	 *   else the super constructor of the function is called
 	 *   @param MenuItem which was selected
 	 *   @return boolean 
@@ -197,22 +179,29 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	    }
 	}
 	
-	/**
-	 * Bild wird nachgeladen.
-	 * 
-	 * @params Drawable d Das zu ladene Bild.
+	/** loading the image from the net.
+	 *  @params Drawable d the show-image
 	 */
 	@Override
 	public void updateImage(Drawable d) {
 		ImageView imageView = (ImageView) findViewById(R.id.articleImageView);
+		Log.i("Article Detail", "updateImage called");
 		if( d != null) {
 			imageView.setImageDrawable(d);
-			image = d;
+			/*
+			int imageWidth = imageView.getWidth();
+			LinearLayout.LayoutParams layout = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+			layout.height = (layout.width / imageWidth) * layout.height;
+			imageView.setLayoutParams(layout);
+			*/
+			Log.i("Article Detail", "image set");
 		}
 	}
 
+	/** cancel the imageUddater.
+	 */
 	@Override
-	protected void onDestroy(){
+	protected void onDestroy() {
 		super.onDestroy();
 		imageUpdater.cancel(true);
 	}
