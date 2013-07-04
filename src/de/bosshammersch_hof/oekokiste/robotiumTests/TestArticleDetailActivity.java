@@ -70,7 +70,7 @@ public class TestArticleDetailActivity extends ActivityInstrumentationTestCase2<
 		int crntPrice = 0; 
 		ResultSet rs = null;
 		DatabaseConnection con = new DatabaseConnection();
-		Connection connection = con.getConnection();
+		Connection connection = null;
 		PreparedStatement pstmt = null;
 		
 		try {
