@@ -3,6 +3,15 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
     
+    <ProgressBar
+       android:id="@+id/progressBar"
+       android:layout_width="wrap_content"
+       android:layout_centerHorizontal="true"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/welcomeTextView" />
+    
+    
+    
     <TextView
         android:id="@+id/welcomeTextView"
         android:layout_width="wrap_content"
