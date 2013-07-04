@@ -69,10 +69,13 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		try {
 			order = DatabaseManager.getHelper().getOrderDao().queryForId(orderId);
 		} catch (SQLException e) {
+			// SQL Error
 			order = null;
 			e.printStackTrace();
 
-			
+		}
+		
+		if(order == null){
 			// Print an Error message
 			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
 			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");

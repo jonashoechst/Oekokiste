@@ -26,7 +26,7 @@ import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
-public class FindRecipesByArticleActivity extends Activity {
+public class FindRecipesByArticleActivity extends Activity implements RefreshableActivity {
 
 	List<ArticleGroup> articleGroup;
 	
@@ -35,17 +35,9 @@ public class FindRecipesByArticleActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.activity_find_recipe_article);
-		
-		try {
-			articleGroup = DatabaseManager.getHelper().getArticleGroupDao().queryForAll();
-		} catch (SQLException e) {
-			articleGroup = null;
-			e.printStackTrace();
-		}
-		
-		updateUi();
+		Constants.refreshableActivity = this;
+		refreshData();
 	}
 
 	/**
@@ -149,6 +141,20 @@ public class FindRecipesByArticleActivity extends Activity {
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	}
+
+	@Override
+	public void refreshData() {
+		// TODO Auto-generated method stub
+
+		try {
+			articleGroup = DatabaseManager.getHelper().getArticleGroupDao().queryForAll();
+		} catch (SQLException e) {
+			articleGroup = null;
+			e.printStackTrace();
+		}
+		
+		updateUi();
 	}
 
 }

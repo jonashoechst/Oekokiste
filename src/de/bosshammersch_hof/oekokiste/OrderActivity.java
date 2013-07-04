@@ -22,11 +22,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class OrderActivity extends Activity implements RefreshableActivity{
 	
-	
-	/*TextView orderDateTextView;
-	TextView boxnameTextView;
-	TextView priceTextView;*/
-	
 	User user;
 	
 	ListView orderListView;
@@ -54,7 +49,7 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 	public void refreshData() {
 
 		int userId = getIntent().getIntExtra(Constants.keyUserId, 0);
-		Log.i("OrderActivity", "userId: "+userId);
+		
 		try {
 			user = DatabaseManager.getHelper().getUserDao().queryForId(userId);
 			

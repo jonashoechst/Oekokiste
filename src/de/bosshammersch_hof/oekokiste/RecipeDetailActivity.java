@@ -37,6 +37,10 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	
 	TableLayout ingredientTableLayout;
 	
+	int servings;
+	
+	ImageFromURL imageUpdater;
+	
 	/** 
 	 *   Creates the detail-view of recipe
 	 *   @param Bundle saved Instance State
@@ -54,6 +58,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		Constants.refreshableActivity = this;
 		setContentView(R.layout.activity_recipe_detail);
 		refreshData();
+		Log.i("RecipeDetail", "onResume()");
 	}
 
 	/**
@@ -65,9 +70,10 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		int recipeId = getIntent().getIntExtra(Constants.keyRecipeId, 0);
 		try {
 			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
-			ImageFromURL imageUpdater = new ImageFromURL();
-			imageUpdater.execute(recipe.getName());
+			imageUpdater = new ImageFromURL();
+			//imageUpdater.execute(recipe.getName());
 			imageUpdater.updateClass = this;
+			servings = recipe.getServings();
 		} catch (SQLException e) {
 			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
 			e.printStackTrace();
@@ -94,12 +100,12 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	/**
 	 * Die Zutaten werden in die UI geladen.
 	 */
-	private void fillIngeridents(Recipe r){
+	private void fillIngeridents(int servings){
 		if(!(ingredientTableLayout == null)){
 			ingredientTableLayout.removeAllViews();
 		}
 		ingredientTableLayout = (TableLayout) findViewById(R.id.ingredientTableLayout);
-		final List<CookingArticle> cookingArticleList = r.getIngredientsList();
+		final List<CookingArticle> cookingArticleList = recipe.getIngredientsList();
 		
 		for(int i = 0; i < cookingArticleList.size(); i++){
 			LayoutInflater inflater = ((Activity) this).getLayoutInflater();
@@ -109,7 +115,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
         	TextView amountTextView = (TextView) row.findViewById(R.id.ingredientAmount);
         	TextView unitTextView = (TextView) row.findViewById(R.id.ingredientUnit);
         
-        	amountTextView.setText(cookingArticleList.get(i).getAmount()+"");
+        	amountTextView.setText(cookingArticleList.get(i).getAmountStringMul(((double) servings)/((double) recipe.getServings())));
         	unitTextView.setText(cookingArticleList.get(i).getAmountType());
         	nameTextView.setText(cookingArticleList.get(i).getArticleGroup().getName());
         	
@@ -142,38 +148,38 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	 * Aktualisiert die UI.
 	 */
 	public void updateUi() {
-		Recipe r = recipe;
+		Log.i("RecipeDetail", "updateUi()");
 		
 		// Fill the Recipe Activity
-		setTitle(r.getName());
+		setTitle(recipe.getName());
 		
 		TextView recipeNameTextView             = (TextView) findViewById(R.id.recipeNameTextView);
-		recipeNameTextView.setText(r.getName());
+		recipeNameTextView.setText(recipe.getName());
 		
 		TextView recipeTimeTextView    			= (TextView) findViewById(R.id.recipeTimeTextView);
-		recipeTimeTextView.setText((r.getCookingTimeInMin())+" Min.");
+		recipeTimeTextView.setText((recipe.getCookingTimeInMin())+" Min.");
 		
 		setServingSpinner();
 		
 		// not yet used.
 		
 		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
-		recipeLongDescriptionTextView.setText(r.getDescription());
+		recipeLongDescriptionTextView.setText(recipe.getDescription());
 		
-		fillIngeridents(r);
+		fillIngeridents(servings);
 
 		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
 		String cookwareString = "";
-		for(Cookware item : r.getCookware()){
+		for(Cookware item : recipe.getCookware()){
 			cookwareString += item.getName()+"\n";
 		}
 		recipeCookingUtensilsTextView.setText(cookwareString);
 		
 		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
-		recipeInstructionsTextView.setText(r.getInstructions());
+		recipeInstructionsTextView.setText(recipe.getInstructions());
 
 		ImageFromURL imageUpdater = new ImageFromURL();
-		imageUpdater.execute(r.getImagerUrl());
+		imageUpdater.execute(recipe.getImagerUrl());
 		imageUpdater.updateClass = this;
 	}
 	
@@ -189,16 +195,17 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
 		spinner.setAdapter(adapter);
-		spinner.setSelection(recipe.getServings()-1);
+		spinner.setSelection(servings-1);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
 			public void onItemSelected(AdapterView<?> parent, View view, 
 		            int pos, long id) {
-				calculateNewAmount(pos+1);
+				servings = pos+1;
+				fillIngeridents(servings);
 		    }
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				
+				return;
 			}
 		});
 	}
@@ -222,30 +229,6 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	    }
 	}
 	
-	public void calculateNewAmount(int newServings){
-		Recipe newRecipe = new Recipe();
-		
-		List<CookingArticle> oldCookingArticleList = recipe.getIngredientsList();
-		
-		List<CookingArticle> newCookingArticleList = new LinkedList<CookingArticle>();
-		
-		for(CookingArticle oldCookingArticle : oldCookingArticleList){
-			CookingArticle newCookingArticle = new CookingArticle();
-			
-			newCookingArticle.setAmount((oldCookingArticle.getAmount()/recipe.getServings())*newServings);
-			Log.i("cookingArticle: ", newCookingArticle.getAmountString());
-			newCookingArticle.setAmountType(oldCookingArticle.getAmountType());
-			newCookingArticle.setArticleGroup(oldCookingArticle.getArticleGroup());
-			newCookingArticle.setRecipe(newRecipe);
-			
-			newCookingArticleList.add(newCookingArticle);
-		}
-		
-		newRecipe.setIngredients(newCookingArticleList);
-		
-		fillIngeridents(newRecipe);
-	}
-
 	/**
 	 * Aktualisiert das Bild.
 	 * 
@@ -255,5 +238,12 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	public void updateImage(Drawable d) {
 		ImageView imageView = (ImageView) findViewById(R.id.recipeImageView);
 		if( d != null) imageView.setImageDrawable(d);
+	}
+	
+
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		imageUpdater.cancel(true);
 	}
 }

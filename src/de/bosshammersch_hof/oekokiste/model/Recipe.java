@@ -23,7 +23,7 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 		}
 		@Override
 		public int compareTo(RecipeWithHits r2) {
-			return this.hits-r2.hits;
+			return r2.hits-this.hits;
 		}
 		
 		public static int[] getRecipeIdArray(List<RecipeWithHits> list){
