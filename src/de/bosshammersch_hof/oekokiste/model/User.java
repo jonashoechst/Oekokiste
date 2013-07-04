@@ -1,10 +1,16 @@
 package de.bosshammersch_hof.oekokiste.model;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+
+import android.util.Log;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -97,20 +103,22 @@ public class User extends BaseDaoEnabled<User, Integer> implements CreateOrUpdat
 	}
 
 	public void setPassword(String password) {
-		this.passwordSha = password;
-		/*MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-			md.update(password.getBytes("UTF-8"));
-			byte[] digest = md.digest();
-			this.passwordSha = new String(digest, "UTF-8");
-		} catch (NoSuchAlgorithmException e) {
-			Log.e("�kokiste - Login", "Algorithm for sha-256 is not present.");
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			Log.e("�kokiste - Login", "Encoding in password conversion is not supported.");
-			e.printStackTrace();
-		}*/
+		this.passwordSha = bin2hex(getHash(password));
 	}
+
+	private byte[] getHash(String password) {
+	       MessageDigest digest=null;
+	    try {
+	        digest = MessageDigest.getInstance("SHA-256");
+	    } catch (NoSuchAlgorithmException e1) {
+	        e1.printStackTrace();
+	    }
+	       digest.reset();
+	       return digest.digest(password.getBytes());
+	 }
+	private String bin2hex(byte[] data) {
+	    return String.format("%0" + (data.length*2) + "X", new BigInteger(1, data)).toLowerCase();
+	}
+
 	
 }
