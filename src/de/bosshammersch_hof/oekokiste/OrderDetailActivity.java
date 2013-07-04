@@ -1,17 +1,21 @@
 package de.bosshammersch_hof.oekokiste;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -27,8 +31,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
-
-
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
 
@@ -36,6 +38,8 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 	
 	private View sumRow;
 	private View recipeFindRow;
+	
+	private File billFile;
 	
 	private Order order;
 	
@@ -85,6 +89,11 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 			dlgAlert.setCancelable(true);
 			dlgAlert.create().show();
 		}
+		
+		File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "oekokiste");
+        folder.mkdir();
+        
+        billFile = new File(folder, "oekokiste-rechnung-"+order.getId()+".pdf");
 		
 		updateUi();
 	}
@@ -190,6 +199,10 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
 		orderDateTextView.setText(dateFormat.format(order.getDate()));
 		
+		Button billButton = (Button) findViewById(R.id.billButton);
+		if(billFile.exists()) billButton.setText("Rechnung anzeigen");
+		else billButton.setText("Rechnung speichern");
+		
 		getActionBar().setHomeButtonEnabled(true);
 	}
 	
@@ -219,25 +232,43 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 	 * @param	view	The clicked view.
 	 */
 	public void viewBillClicked(View view){
-
-		//String link = "http://vcp-kurhessen.info/wordpress/wp-content/uploads/2011/08/2011-08-09_regionsordnung.pdf";
 		
-		/*File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/lieferscheine/1.pdf");
-		Uri path = Uri.fromFile(file);*/
-		Uri path = Uri.parse(Constants.pathToBill+order.getId()+".pdf");
+		String link = Constants.pathToBill+order.getId()+".pdf";
 		
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-    	intent.setDataAndType(path, "application/pdf");
-    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-    	try {
-        		startActivity(intent);
-    	} catch (ActivityNotFoundException e) {
-    		e.printStackTrace();
-    		Toast.makeText(OrderDetailActivity.this, 
-    			"Auf diesem Gerät ist keine App zum anzeigen von PDF Dokumenten installiert.", 
-    			Toast.LENGTH_SHORT).show();
-    	}
+		Uri path = Uri.fromFile(billFile);
+		
+		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(link));
+		request.setDescription("Rechnung vom "+order.getDate().toString());
+		request.setTitle("Ökokiste Rechnung ("+order.getId()+")");
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		    request.allowScanningByMediaScanner();
+		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+		}
+		
+		if(!billFile.exists()){	
+			request.setDestinationUri(path);
+			// get download service and enqueue file
+			DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+			manager.enqueue(request);
+			Toast.makeText(OrderDetailActivity.this, 
+	    			"Rechung wird gespeichert...", 
+	    			Toast.LENGTH_LONG).show();
+			Button billButton = (Button) findViewById(R.id.billButton);
+			billButton.setText("Rechnung anzeigen");
+		} else {
+			try {
+	    		Intent intent = new Intent(Intent.ACTION_VIEW);
+	    		intent.setDataAndType(path, "application/pdf");
+	    		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    		startActivity(intent);
+	    	} catch (ActivityNotFoundException e) {
+	    		e.printStackTrace();
+	    		Toast.makeText(OrderDetailActivity.this, 
+	    			"Auf diesem Gerät ist keine App zum anzeigen von PDF Dokumenten installiert.", 
+	    			Toast.LENGTH_SHORT).show();
+	    	} 
+		}
 	}
 
 }
