@@ -13,6 +13,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -207,13 +209,29 @@ public class MainActivity extends Activity {
 	 * Parsed den gescannten Code und gibt die gefundene Order der OrderActivity zu anzeigen.
 	 */
 	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) throws NullPointerException {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == IntentIntegrator.REQUEST_CODE){
         	IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode,
                     resultCode, data);
-            if (scanResult == null) {
-                return;
+            if (scanResult == null || scanResult.getContents().length() != 13) {
+            	Log.e("Main Activity", "Could not find barcode or barcode has invalid barcode length!");
+            	
+            	// Print an Error message
+    			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+    			dlgAlert.setMessage("Barcode wurde nicht gefunden!");
+    			dlgAlert.setTitle("Ökokiste");
+    			dlgAlert.setPositiveButton("Zurück", 
+    				new DialogInterface.OnClickListener() {
+    		        	public void onClick(DialogInterface dialog, int which) {
+    		        		finish();
+    		        	}
+    				}
+    			);
+    			dlgAlert.setCancelable(true);
+    			dlgAlert.create().show();
+            	return;
+            	
             }
             final String result = scanResult.getContents();
             if (result != null) {
