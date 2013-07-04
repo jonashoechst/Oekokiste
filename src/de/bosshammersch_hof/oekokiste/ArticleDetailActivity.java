@@ -96,20 +96,18 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		
 	}
 
-	/**
-	 *  update the Ui 
+	/** update the Ui. 
 	 *  an set the title to the name of the articlename
 	 */
 	private void updateUi() {
 		// Fill the Article Activity
 		setTitle(article.getName());
 		
-		//ImageView articleImageView = (ImageView) findViewById(R.id.articleImageView);
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
 		articleDescriptionView.setText(article.getDescription());
 		
 		TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
-		if(orderedArticle!=null){
+		if (orderedArticle!=null){
 			oldPriceTextView.setText(orderedArticle.getPrice()+"€");
 		} else {
 			oldPriceTextView.setText("");
@@ -121,16 +119,18 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		imageUpdater.updateClass = this;
 	}
 	
+	/**  ask the user about mainingredient and subingredients.
+	 * 	 and make a intent to the RecipeActivity 
+	 */
 	public void findRecipeButtonClicked(View view){
 		// Dialog: Haupt oder Nebenzutat
-		
 		AlertDialog.Builder b = new AlertDialog.Builder(ArticleDetailActivity.this);
 		
 		b.setTitle("Soll der Artikel als Hauptzutat oder auch als Nebenzutat auftauchen?");
 		b.setItems(R.array.select_dialog_items, new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int i) {
 				boolean onlyMainIngrediants = false;
-				if(i == 1) onlyMainIngrediants = true;
+				if (i == 1) onlyMainIngrediants = true;
 				
 				List<ArticleGroup> articleGroups = new LinkedList<ArticleGroup>();
 				articleGroups.add(article.getArticleGroup());
@@ -143,26 +143,25 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 					Log.w("OrderDetailActivity", "No Matching Recipes found.");
 					e.printStackTrace();
 				}
-    			
-				
 				Intent intent = new Intent(ArticleDetailActivity.this, RecipeActivity.class);
     			intent.putExtra(Constants.keyRecipeIdArray, Recipe.RecipeWithHits.getRecipeIdArray(recipesWithHits));
     			intent.putExtra(Constants.keyRecipeHitsArray, Recipe.RecipeWithHits.getHitsArray(recipesWithHits));
 				startActivity(intent);
 			}
-			
 		});
 		b.create().show();
 	}
 	
+	/**  show the user the homepage of the oekokiste.
+	 */
 	public void goToStoreButtonClicked(View view){
 		Intent intent = new Intent(this, WebViewActivity.class);
 		
 		intent.putExtra(Constants.keyUrl, Constants.pathToArticleDescription+article.getId());
 		startActivity(intent);
 	}
-	/**
-	 *   if the app icon in action bar is clicked => go home
+	
+	/**  if the app icon in action bar is clicked => go home.
 	 *   else the super constructor of the function is called
 	 *   @param MenuItem which was selected
 	 *   @return boolean 
@@ -180,10 +179,8 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	    }
 	}
 	
-	/**
-	 * Bild wird nachgeladen.
-	 * 
-	 * @params Drawable d Das zu ladene Bild.
+	/** loading the image from the net.
+	 *  @params Drawable d the show-image
 	 */
 	@Override
 	public void updateImage(Drawable d) {
@@ -201,8 +198,10 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		}
 	}
 
+	/** cancel the imageUddater.
+	 */
 	@Override
-	protected void onDestroy(){
+	protected void onDestroy() {
 		super.onDestroy();
 		imageUpdater.cancel(true);
 	}
