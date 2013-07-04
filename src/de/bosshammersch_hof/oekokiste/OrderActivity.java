@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,8 +22,6 @@ import android.widget.AdapterView.OnItemClickListener;
 public class OrderActivity extends Activity implements RefreshableActivity{
 	
 	User user;
-	
-	ListView orderListView;
 	
 	/**
 	 *   creats the order list 
@@ -52,11 +49,11 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 		
 		try {
 			user = DatabaseManager.getHelper().getUserDao().queryForId(userId);
-			
 		} catch (SQLException e) {
 			user = null;
-			Log.e("Ökokiste: Bestellübersicht", "Konnte den User nicht in der Datenbank finden.");
-			
+		}
+		
+		if(user == null){
 			// Print an Error message
 			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
 			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
@@ -79,7 +76,7 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 	 * Aktualisert die UI.
 	 */
 	private void updateUi() {
-		orderListView = (ListView) findViewById(R.id.orderListView);
+		ListView orderListView = (ListView) findViewById(R.id.orderListView);
 		 
 		ListAdapter adapter = new ArrayAdapter<Order>(this, R.layout.listview_item_order, user.getOrderList()){
 			@Override

@@ -13,6 +13,7 @@ encoding//src/de/bosshammersch_hof/oekokiste/model/OrderedArticle.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/model/User.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/ormlite/DatabaseHelper.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/ormlite/DatabaseManager.java=UTF-8
+encoding//src/de/bosshammersch_hof/oekokiste/postgres/UpdateDatabaseArticleImages.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/postgres/UpdateDatabaseGeneral.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/postgres/UpdateDatabaseOrder.java=UTF-8
 encoding//src/de/bosshammersch_hof/oekokiste/postgres/UpdateDatabaseUser.java=UTF-8

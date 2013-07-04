@@ -6,13 +6,13 @@ import java.util.List;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
 import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,16 +22,18 @@ import android.widget.TextView;
 public class ArticleDetailActivity extends Activity implements RefreshableActivity, ImageUpdatable{
 	
 	private OrderedArticle orderedArticle;
-	
 	private Article article;
-	
 	private ImageFromURL imageUpdater;
+	private Drawable image = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_article_detail);
 		getActionBar().setHomeButtonEnabled(true);
+
+		imageUpdater = new ImageFromURL();
+		imageUpdater.updateClass = this;
 	}
 	
 	@Override
@@ -57,43 +59,47 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 			article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
 		} catch (SQLException e) {
 			article = null;
-			
+		}
+		
+		if(article == null){
 			// Print an Error message
-			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
-			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
-			dlgAlert.setTitle("Ökokiste");
-			dlgAlert.setPositiveButton("Zurück", 
-				new DialogInterface.OnClickListener() {
-		        	public void onClick(DialogInterface dialog, int which) {
-		        		finish();
-		        	}
-				}
-			);
-			dlgAlert.setCancelable(true);
-			dlgAlert.create().show();
+						AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+						dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+						dlgAlert.setTitle("Ökokiste");
+						dlgAlert.setPositiveButton("Zurück", 
+							new DialogInterface.OnClickListener() {
+					        	public void onClick(DialogInterface dialog, int which) {
+					        		finish();
+					        	}
+							});
+						dlgAlert.setCancelable(false);
+						dlgAlert.create().show();
 		}
 		
-		Order order = new Order();
-		order.setId(orderId);
 		
-		OrderedArticle orderedArticle = new OrderedArticle();
-		orderedArticle.setOrder(order);
-		orderedArticle.setArticle(article);
-		
-		List<OrderedArticle> matchingOrderedArticles;
-		
+		Order order;
 		try {
-			matchingOrderedArticles = DatabaseManager.getHelper().getOrderedArticleDao().queryForMatching(orderedArticle);
-		} catch (SQLException e) {
-			matchingOrderedArticles = null;
-			e.printStackTrace();
+			order = DatabaseManager.getHelper().getOrderDao().queryForId(orderId);
+		} catch (SQLException e1) {
+			order = null;
 		}
+		if(order != null){
+			OrderedArticle orderedArticle = new OrderedArticle();
+			orderedArticle.setOrder(order);
+			orderedArticle.setArticle(article);
 		
-		if(matchingOrderedArticles != null && matchingOrderedArticles.size() > 0)
-			orderedArticle = matchingOrderedArticles.get(0);
+			List<OrderedArticle> matchingOrderedArticles;
 		
+			try {
+				matchingOrderedArticles = DatabaseManager.getHelper().getOrderedArticleDao().queryForMatching(orderedArticle);
+			} catch (SQLException e) {
+				matchingOrderedArticles = null;
+			}
+		
+			if(matchingOrderedArticles != null && matchingOrderedArticles.size() > 0)
+				orderedArticle = matchingOrderedArticles.get(0);
+		}
 		updateUi();
-		
 	}
 
 	/**
@@ -108,17 +114,30 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		TextView articleDescriptionView = (TextView) findViewById(R.id.articleDescriptionView);
 		articleDescriptionView.setText(article.getDescription());
 		
+		TextView textViewOrigin = (TextView) findViewById(R.id.textViewOrigin);
+		textViewOrigin.setText(article.getOrigin());
+		
 		TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
 		if(orderedArticle!=null){
 			oldPriceTextView.setText(orderedArticle.getPrice()+"€");
 		} else {
 			oldPriceTextView.setText("");
 		}
-		
 
-		imageUpdater = new ImageFromURL();
-		imageUpdater.execute(article.getImageUrl());
-		imageUpdater.updateClass = this;
+		// Download Image if:
+					// 1. there is no image yet
+					// 2. there is no imageUpdater running.
+					// 3. there is a valid link
+		if(	image == null && 
+			imageUpdater.getStatus() != AsyncTask.Status.RUNNING && 
+			article.getImageUrl() != null && 
+			!article.getImageUrl().equals("")){
+			
+			imageUpdater.execute(article.getImageUrl());
+			imageUpdater.updateClass = this;
+		} else if (image != null)
+			updateImage(image);
+		
 	}
 	
 	public void findRecipeButtonClicked(View view){
@@ -129,6 +148,7 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		b.setTitle("Soll der Artikel als Hauptzutat oder auch als Nebenzutat auftauchen?");
 		b.setItems(R.array.select_dialog_items, new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int i) {
+				
 				boolean onlyMainIngrediants = false;
 				if(i == 1) onlyMainIngrediants = true;
 				
@@ -140,11 +160,8 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 					recipesWithHits = Recipe.findRecipesByArticleGroups(articleGroups, onlyMainIngrediants);
 				} catch (SQLException e) {
 					recipesWithHits = new LinkedList<Recipe.RecipeWithHits>();
-					Log.w("OrderDetailActivity", "No Matching Recipes found.");
-					e.printStackTrace();
 				}
     			
-				
 				Intent intent = new Intent(ArticleDetailActivity.this, RecipeActivity.class);
     			intent.putExtra(Constants.keyRecipeIdArray, Recipe.RecipeWithHits.getRecipeIdArray(recipesWithHits));
     			intent.putExtra(Constants.keyRecipeHitsArray, Recipe.RecipeWithHits.getHitsArray(recipesWithHits));
@@ -188,16 +205,9 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	@Override
 	public void updateImage(Drawable d) {
 		ImageView imageView = (ImageView) findViewById(R.id.articleImageView);
-		Log.i("Article Detail", "updateImage called");
 		if( d != null) {
 			imageView.setImageDrawable(d);
-			/*
-			int imageWidth = imageView.getWidth();
-			LinearLayout.LayoutParams layout = (LinearLayout.LayoutParams) imageView.getLayoutParams();
-			layout.height = (layout.width / imageWidth) * layout.height;
-			imageView.setLayoutParams(layout);
-			*/
-			Log.i("Article Detail", "image set");
+			image = d;
 		}
 	}
 

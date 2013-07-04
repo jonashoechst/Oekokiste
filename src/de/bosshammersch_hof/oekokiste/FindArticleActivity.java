@@ -22,7 +22,7 @@ import de.bosshammersch_hof.oekokiste.model.Article;
 import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
-public class FindArticleActivity extends Activity{
+public class FindArticleActivity extends Activity implements RefreshableActivity{
 	
 	ArticleGroup articleGroup;
 	
@@ -30,13 +30,38 @@ public class FindArticleActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_article);
-		
-		String articleGroupId = getIntent().getStringExtra(Constants.keyArticleGroupId);
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
+	}
+
+
+	@Override
+	public void refreshData() {
+
+		String articleGroupName = getIntent().getStringExtra(Constants.keyArticleGroupName);
 		try {
-			articleGroup = DatabaseManager.getHelper().getArticleGroupDao().queryForId(articleGroupId);
+			articleGroup = DatabaseManager.getHelper().getArticleGroupDao().queryForId(articleGroupName);
 		} catch (SQLException e) {
 			articleGroup = null;
-			e.printStackTrace();
+		}
+		
+		if(articleGroup == null){
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+			dlgAlert.setTitle("Ökokiste");
+			dlgAlert.setPositiveButton("Zurück", 
+				new DialogInterface.OnClickListener() {
+		        	public void onClick(DialogInterface dialog, int which) {
+		        		finish();
+		        	}
+				});
+			dlgAlert.setCancelable(false);
+			dlgAlert.create().show();
 		}
 		
 		updateUi();
@@ -73,13 +98,13 @@ public class FindArticleActivity extends Activity{
 		       	 	View row = convertView;
 		        
 		        	if(row == null){
-		            	    LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
+		        		LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
 		        	    row = inflater.inflate(R.layout.listview_item_find_article, parent, false);
 		        	}
  
 		        	TextView nameTextView = (TextView) row.findViewById(R.id.itemTextView);
 		        
-		        	nameTextView.setText(findArticleList.get(position).getName());
+		        	nameTextView.setText(findArticleList.get(position).getName()+" ("+findArticleList.get(position).getOrigin()+")");
 		        
 		        	return row;
 			}

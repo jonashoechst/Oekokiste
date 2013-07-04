@@ -66,66 +66,14 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 		int[] recipeHitsArray = this.getIntent().getIntArrayExtra(Constants.keyRecipeHitsArray);
 		
 		recipeWithHitsList = new LinkedList<RecipeWithHits>();
-		for(int i = 0; i < recipeIdArray.length; i++)
+		for(int i = 0; i < recipeIdArray.length; i++) {
 			try {
 				recipeWithHitsList.add(new RecipeWithHits(recipeIdArray[i], recipeHitsArray[i]));
 			} catch (SQLException e) {
-				Log.e("Recipe Activity","Recipe could not be entered.");
+				Log.e("Recipe Activity","Recipe could not be entered, id:"+recipeIdArray[i]);
 				e.printStackTrace();
 			}
-		
-		/*
-		String[] articleGroupIdArray = this.getIntent().getStringArrayExtra(Constants.keyArticleGroupNameArray);
-		
-		List<ArticleGroup> articleGroups = new LinkedList<ArticleGroup>();
-		for(String articleGroupName : articleGroupIdArray){
-			try {
-				articleGroups.add(DatabaseManager.getHelper().getArticleGroupDao().queryForId(articleGroupName));
-			} catch (java.sql.SQLException e) {
-				e.printStackTrace();
-
-				// Print an Error message
-				AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
-				dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
-				dlgAlert.setTitle("Ökokiste");
-				dlgAlert.setPositiveButton("Zurück", 
-					new DialogInterface.OnClickListener() {
-			        	public void onClick(DialogInterface dialog, int which) {
-			        		finish();
-			        	}
-					}
-				);
-				dlgAlert.setCancelable(true);
-				dlgAlert.create().show();
-			}
 		}
-		
-		recipeMap = new HashMap<Recipe, Integer>();
-		
-		for(ArticleGroup ag : articleGroups){
-			// Create a Query Example
-			CookingArticle example = new CookingArticle();
-			example.setArticleGroup(ag);
-			List<CookingArticle> caList;
-			// excecute Query with example
-			try {
-				caList = DatabaseManager.getHelper().getCookingArticleDao().queryForMatching(example);
-			} catch (java.sql.SQLException e) {
-				caList = new LinkedList<CookingArticle>();
-			}
-			
-			if(caList == null) continue;
-			
-			for(CookingArticle ca : caList){
-				Recipe r = ca.getRecipe();
-				if(recipeMap.containsKey(r))
-					recipeMap.put(r, recipeMap.get(r)+1);
-				else
-					recipeMap.put(r, 1);
-			}
-		}
-		
-		*/
 		
 		updateUi();
 		
@@ -136,19 +84,6 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 	 */
 	public void updateUi() {
 		final ListView recipeListView = (ListView) findViewById(R.id.recipeListView);
-		
-		/*while(!recipeMap.isEmpty()){
-			
-			Recipe bestRecipe = null;
-			
-			for (Recipe key : recipeMap.keySet()) {
-				if(bestRecipe == null) bestRecipe = key;
-				if(recipeMap.get(bestRecipe) < recipeMap.get(key)) bestRecipe = key;
-			}
-			
-			recipeList.add(new RecipeWithHits(bestRecipe, recipeMap.get(bestRecipe)));
-			recipeMap.remove(bestRecipe);
-		}*/
 	
 		ListAdapter adapter = new ArrayAdapter<RecipeWithHits>(this, R.layout.listview_item_recipe, recipeWithHitsList){
 			

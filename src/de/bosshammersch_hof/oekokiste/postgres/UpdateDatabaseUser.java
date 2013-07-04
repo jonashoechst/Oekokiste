@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import com.j256.ormlite.dao.Dao;
+import java.util.Locale;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import de.bosshammersch_hof.oekokiste.Constants;
 import de.bosshammersch_hof.oekokiste.model.*;
@@ -14,34 +14,38 @@ import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class UpdateDatabaseUser extends AsyncTask<User, Integer, boolean[]> {
+public class UpdateDatabaseUser extends AsyncTask<User, Integer, Void[]> {
 	
-	private Connection connection = null;
-	
-	Dao<Article, Integer> articleDao = DatabaseManager.getHelper().getArticleDao();
-	
-	private boolean[] output;
+	private static Connection connection;
 
 	/**
 	 * Alle Daten werden synchronisiert.
 	 */
 	@Override
-	public boolean[] doInBackground(User... params) {
+	public Void[] doInBackground(User... params) {
 		
-		DatabaseConnection con = new DatabaseConnection();
-		connection = con.getConnection();
-		Log.i("UpdataDatabaseUser", "User Data sync initiated");
 		try {
-			updateUserDataForId(params[0].getId());
-			Log.i("UpdataDatabase", "User data was synced.");
+			connection = DatabaseConnection.getAConnection();
+			
+			Log.i("UpdataDatabaseUser", "User Data sync initiated");
+			try {
+				updateUserDataForId(params[0].getId());
+				Log.i("Ökokiste: Update Database (User)", "User data was synced.");
+			} catch (SQLException e) {
+				Log.e("Ökokiste: Update Database (User)", "Could not sync user data.");
+				e.printStackTrace();
+			}
+			
+			connection.close();
+			
 		} catch (SQLException e) {
-			Log.e("UpdateDatabase", "Could not sync user data.");
+			Log.e("Ökokiste: Update Database (User)", "Datenbank Verbindung konnte nicht augebaut werden.");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			Log.e("Ökokiste: Update Database (User)", "Postgresql Treiber wurde nicht gefunden.");
 			e.printStackTrace();
 		}
-
-		con.disconnect();
-		
-		return output;
+		return null;
 	}
 	
 	/**
@@ -65,23 +69,36 @@ public class UpdateDatabaseUser extends AsyncTask<User, Integer, boolean[]> {
 	 */
 	private User updateUserForId(int id) throws SQLException{
 		
-		User user = new User();
+		User user = getUserForId(id, connection);
+		
+		this.publishProgress(0);
+		
+		return user;
+	}
 
-		PreparedStatement ps = connection.prepareStatement("select * from users where user_id = ?");
+	
+	/**
+	 *  Nutzer wird aktualisiert.
+	 * @throws SQLException
+	 * @throws ClassNotFoundException 
+	 */
+	private static User getUserForId(int id, Connection con) throws SQLException{
+			
+		User user = new User();
+		
+		PreparedStatement ps = con.prepareStatement("select * from users where user_id = ?");
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
-		
+			
 		rs.next();
-		
+			
 		user.setFirstName(rs.getString("firstname"));
 		user.setLastName(rs.getString("lastname"));
 		user.setLoginName(rs.getString("loginname"));
 		user.setId(rs.getInt("user_id"));
-		
+			
 		user.createOrUpdate();
-
-		this.publishProgress(0);
-		
+			
 		return user;
 	}
 	
@@ -192,33 +209,39 @@ public class UpdateDatabaseUser extends AsyncTask<User, Integer, boolean[]> {
 	 * @param user
 	 * @return user
 	 * @throws SQLException
+	 * @throws ClassNotFoundException 
 	 */
-	public User validateUser(User user) throws SQLException{
-		DatabaseConnection con = new DatabaseConnection();
-		connection = con.getConnection();
-
-		PreparedStatement pst;
+	public static User validateUser(User user) throws SQLException{
 		
-		if(user.getLoginName() == null){
-			pst = connection.prepareStatement("select * from users where user_id = ?");
-			pst.setInt(1, user.getId()); 
-		} else {
-			pst = connection.prepareStatement("select * from users where loginname = ?");
-			pst.setString(1, user.getLoginName()); 
+		try {
+			Connection localCon = DatabaseConnection.getAConnection();
+			
+			PreparedStatement pst;
+			
+			if(user.getLoginName() == null){
+				pst = localCon.prepareStatement("select * from users where user_id = ?");
+				pst.setInt(1, user.getId()); 
+			} else {
+				pst = localCon.prepareStatement("select * from users where loginname = ?");
+				pst.setString(1, user.getLoginName()); 
+			}
+			
+			ResultSet rs = pst.executeQuery();
+			rs.next();
+			
+			String passwordFromServer = rs.getString("password_sha256").toLowerCase(Locale.US);
+			
+			if(user.getPasswordSha().toLowerCase(Locale.US).equals(passwordFromServer)) {
+				user = getUserForId(rs.getInt("user_id"), localCon);
+			}
+			rs.close();
+			pst.close();
+			return user;
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return null;
 		}
-		
-		ResultSet rs = pst.executeQuery();
-		rs.next();
-		
-		String passwordFromServer = rs.getString("password_sha256");
-		
-		if(user.getPasswordSha().equals(passwordFromServer)) {
-			user = updateUserForId(rs.getInt("user_id"));
-		}
-		rs.close();
-		pst.close();
-		
-		return user;
 	}
 	
 	/**
