@@ -19,7 +19,9 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +44,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 		
 		// Init the Databasemanager
 		DatabaseManager.init(this);
@@ -219,12 +220,12 @@ public class MainActivity extends Activity {
             	
             	// Print an Error message
     			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
-    			dlgAlert.setMessage("Barcode wurde nicht gefunden!");
+    			dlgAlert.setMessage("Barcode ist nicht von der Oekokiste!");
     			dlgAlert.setTitle("Ökokiste");
     			dlgAlert.setPositiveButton("Zurück", 
     				new DialogInterface.OnClickListener() {
     		        	public void onClick(DialogInterface dialog, int which) {
-    		        		finish();
+    		        		return;
     		        	}
     				}
     			);
@@ -244,12 +245,23 @@ public class MainActivity extends Activity {
 	                intent.putExtra(Constants.keyOrderId, orderId);
 	        		startActivity(intent);
 				} catch (SQLException e) {
+					
+					AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+	    			dlgAlert.setMessage("Es liegen uns keine Bestellungen zu diesem Barcode vor!");
+	    			dlgAlert.setTitle("Ökokiste");
+	    			dlgAlert.setPositiveButton("Zurück", 
+	    				new DialogInterface.OnClickListener() {
+	    		        	public void onClick(DialogInterface dialog, int which) {
+	    		        		return;
+	    		        	}
+	    				}
+	    			);
+	    			dlgAlert.setCancelable(true);
+	    			dlgAlert.create().show();
+	            	
 					Log.e("Main Activity", "Could not find Order for Barcode");
 					e.printStackTrace();
 				}
-            	
-            	
-                
             }
         }
     }
