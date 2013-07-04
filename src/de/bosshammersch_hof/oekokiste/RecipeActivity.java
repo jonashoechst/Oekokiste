@@ -167,7 +167,7 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 		        	recipeNameTextView.setText(recipeWithHitsList.get(position).recipe.getName());
 		        
 		        	TextView recipeDifficultyTextView = (TextView) row.findViewById(R.id.recipeDifficulty);
-		        	recipeDifficultyTextView.setText(recipeWithHitsList.get(position).recipe.getDifficulty());
+		        	recipeDifficultyTextView.setText(recipeWithHitsList.get(position).recipe.getDifficulty()+"");
 		        
 		        	TextView hitRateTextView = (TextView) row.findViewById(R.id.hitRate);
 		        	if(recipeWithHitsList.get(position).hits != 0)

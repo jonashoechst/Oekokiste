@@ -51,6 +51,11 @@ public class CookingArticle extends BaseDaoEnabled<CookingArticle, Integer> impl
 		return df.format(getAmount());
 	}
 
+	public String getAmountStringMul(double mul) {
+		DecimalFormat df = new DecimalFormat("#0.##");
+		return df.format(getAmount()*mul);
+	}
+
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}

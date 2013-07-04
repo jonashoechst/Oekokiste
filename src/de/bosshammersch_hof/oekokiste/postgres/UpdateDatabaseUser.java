@@ -30,7 +30,7 @@ public class UpdateDatabaseUser extends AsyncTask<User, Integer, boolean[]> {
 		
 		DatabaseConnection con = new DatabaseConnection();
 		connection = con.getConnection();
-		
+		Log.i("UpdataDatabaseUser", "User Data sync initiated");
 		try {
 			updateUserDataForId(params[0].getId());
 			Log.i("UpdataDatabase", "User data was synced.");

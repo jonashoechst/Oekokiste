@@ -12,7 +12,7 @@
     <!-- Konvention: fooBarActivity_name -->
 
     <string name="mainActivity_welcome">Willkommen bei der Ökokiste, </string>
-    <string name="mainActivity_logged_in">Sie sind angemeldet. Ihre Kisten sehen sie in der Übersicht:</string>
+    <string name="mainActivity_info">Sie können eine der folgenden Aktionen wählen: </string>
     <string name="recipeDetailActivity_ingredients_header">Zutaten</string>
     <string name="recipeDetailActivity_cookingutensils_header">Kochgeschirr</string>
     <string name="recipeDetailActivity_cookinginstructions_header">Zubereitung</string>

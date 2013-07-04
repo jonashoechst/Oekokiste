@@ -3,15 +3,12 @@ package de.bosshammersch_hof.oekokiste;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
 import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -27,6 +24,8 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	private OrderedArticle orderedArticle;
 	
 	private Article article;
+	
+	private ImageFromURL imageUpdater;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +116,7 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		}
 		
 
-		ImageFromURL imageUpdater = new ImageFromURL();
+		imageUpdater = new ImageFromURL();
 		imageUpdater.execute(article.getImageUrl());
 		imageUpdater.updateClass = this;
 	}
@@ -200,5 +199,11 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 			*/
 			Log.i("Article Detail", "image set");
 		}
+	}
+
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		imageUpdater.cancel(true);
 	}
 }

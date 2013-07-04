@@ -9,6 +9,7 @@ import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import de.bosshammersch_hof.oekokiste.postgres.*;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -27,8 +28,6 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 	
 	private String txtScanResult;
-	
-	Order order;
 	
 	User user;
 
@@ -50,17 +49,13 @@ public class MainActivity extends Activity {
 		DatabaseManager.init(this);
 		
 		Constants.refreshableActivity = null;
+		
+		Constants.refreshableActivity = null;
 
 		updaterGeneral = new UpdateDatabaseGeneral();
 		updaterUser = new UpdateDatabaseUser();
-		updaterGeneral.execute();
-		
-		try {
-			int orderId = new UpdateDatabaseOrder().updateBarcodeForBarcodeStringGetOrderId("A-033");
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		if (!updaterGeneral.getStatus().equals(AsyncTask.Status.RUNNING))
+			updaterGeneral.execute();
 		
 		// 1. Versuch: letzten Status öffnen
 		OpenState lastOpenState = null;
@@ -70,13 +65,14 @@ public class MainActivity extends Activity {
 			
 			if(lastOpenState != null) {
 				user = lastOpenState.getUser();
-				//updater.execute(user);
+				if (updaterUser.getStatus().equals(AsyncTask.Status.FINISHED))
+					updaterUser.execute(user);
 				updateUiWithUser();
 				return;
 			}
 		} catch (SQLException e) {
 			Log.e("Ökokiste: Main Actitvity","SQL Exception finding the last OpenState");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 
@@ -106,7 +102,7 @@ public class MainActivity extends Activity {
 				updateUiNoUser();
 				return;
 			} else {
-				// Login erfolgreich!
+				// Login success!
 				user = loginUser;
 				updaterUser.execute(loginUser);
 				updateUiWithUser();
@@ -116,7 +112,7 @@ public class MainActivity extends Activity {
 					os.create();
 				} catch (SQLException e) {
 					Log.e("MainActivity", "Open State could not be saved.");
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 				return;
 			}
@@ -131,20 +127,13 @@ public class MainActivity extends Activity {
 	 * @param  view The clicked View.
 	 */
 	public void orderButtonClicked(View view){
-		Intent intent = null;
-		if(user != null){
-			intent = new Intent(this, OrderActivity.class);
-			intent.putExtra(Constants.keyUserId, user.getId());
-		}
-		else{
-			intent = new Intent(this, LoginActivity.class);
-		}
+		Intent intent = new Intent(this, OrderActivity.class);
+		intent.putExtra(Constants.keyUserId, user.getId());
 		startActivity(intent);
 	}
 	
 	public void findRecipesClicked(View view){
 		Intent intent = new Intent(this, FindRecipesByArticleActivity.class);
-		
 		startActivity(intent);
 	}
 	
@@ -157,11 +146,14 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, LoginActivity.class);
 		try {
 			DatabaseManager.getHelper().getOpenStateDao().deleteById(1);
+			updaterUser.cancel(true);
 			user = null;
 			DatabaseManager.clearUserData();
 		} catch (SQLException e) {
+			Log.e("Ökokiste: MainActivity", "User data could not be deleted.");
 			e.printStackTrace();
 		}
+		updateUiNoUser();
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
@@ -181,7 +173,7 @@ public class MainActivity extends Activity {
 		logoutButton.setText("Abmelden...");
 		
 		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
-		welcomeTextView.setText(welcomeTextView.getText()+" "+user.getFirstName()+" "+user.getLastName()+"!");
+		welcomeTextView.setText(getResources().getString(R.string.mainActivity_welcome)+" "+user.getFirstName()+" "+user.getLastName()+"!");
 	}
 	
 	/**
@@ -198,7 +190,7 @@ public class MainActivity extends Activity {
 		logoutButton.setText("Anmelden...");
 		
 		TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
-		welcomeTextView.setText(welcomeTextView.getText()+" sie sind nicht eingeloggt.");
+		welcomeTextView.setText(getResources().getString(R.string.mainActivity_welcome)+" sie sind nicht eingeloggt.");
 	}
 	
 	private void setScanButton(){
@@ -284,6 +276,13 @@ public class MainActivity extends Activity {
 	    char ascii = (char) Integer.parseInt(str.substring(7, 9));
 	    result = ascii+"-"+str.substring(9, 12);
 	    return result;
+	}
+	
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		updaterGeneral.cancel(true);
+		updaterUser.cancel(true);
 	}
 	
 }

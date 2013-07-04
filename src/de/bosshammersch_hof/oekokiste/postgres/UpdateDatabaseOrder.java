@@ -25,7 +25,8 @@ public class UpdateDatabaseOrder extends AsyncTask<String, Integer, boolean[]> {
 		
 		DatabaseConnection con = new DatabaseConnection();
 		connection = con.getConnection();
-		
+
+		Log.i("UpdataDatabaseOrder", "Order Data sync initiated");
 		try {
 			updateBarcodeForBarcodeStringGetOrderId(params[0]);
 			Log.i("UpdataDatabaseOrder", "Order data was synced.");
