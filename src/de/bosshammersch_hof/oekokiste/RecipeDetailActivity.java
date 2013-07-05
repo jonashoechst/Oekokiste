@@ -56,6 +56,9 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		imageUpdater.updateClass = this;
 	}
 	
+	/**
+	 *  call the super constructor and call refreshData();
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -250,7 +253,9 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		}
 	}
 	
-
+	/**
+	 *  destroys the imageUpdater if the app is closed
+	 */
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();

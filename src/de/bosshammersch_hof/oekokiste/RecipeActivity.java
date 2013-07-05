@@ -49,6 +49,9 @@ public class RecipeActivity extends Activity implements RefreshableActivity{
 		getActionBar().setHomeButtonEnabled(true);
 	}
 	
+	/**
+	 *  call the super constructor and call refreshData();
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();

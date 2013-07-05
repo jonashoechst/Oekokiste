@@ -35,6 +35,9 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 		getActionBar().setHomeButtonEnabled(true);
 	}
 	
+	/**
+	 *  call the super constructor and call refreshData();
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -42,6 +45,9 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 		refreshData();
 	}
 
+	/**
+	 * get a User for a given userId and show a message if the user does not exists.
+	 */
 	@Override
 	public void refreshData() {
 
@@ -73,7 +79,7 @@ public class OrderActivity extends Activity implements RefreshableActivity{
 	}
 
 	/**
-	 * Aktualisert die UI.
+	 * update the UI.
 	 */
 	private void updateUi() {
 		ListView orderListView = (ListView) findViewById(R.id.orderListView);
