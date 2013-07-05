@@ -137,9 +137,8 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		if(		image == null && 
 				imageUpdater.getStatus() != AsyncTask.Status.RUNNING && 
 				recipe.getImagerUrl() != null && 
-				recipe.getImagerUrl().equals("") ){
+				!recipe.getImagerUrl().equals("") ){
 			imageUpdater.execute(recipe.getImagerUrl());
-			imageUpdater.updateClass = this;
 		} else if (image != null)
 			updateImage(image);
 		
