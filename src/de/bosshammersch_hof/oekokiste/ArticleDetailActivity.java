@@ -6,6 +6,7 @@ import java.util.List;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.*;
 import de.bosshammersch_hof.oekokiste.webiste.ImageFromURL;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,10 +23,10 @@ import android.widget.TextView;
 public class ArticleDetailActivity extends Activity implements RefreshableActivity, ImageUpdatable{
 	
 	private OrderedArticle orderedArticle;
-	
 	private Article article;
 	
 	private ImageFromURL imageUpdater;
+	private Drawable image;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,8 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	protected void onResume() {
 		super.onResume();
 		Constants.refreshableActivity = this;
+		imageUpdater = new ImageFromURL();
+		imageUpdater.updateClass = this;
 		refreshData();
 	}
 
@@ -47,9 +50,6 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	@Override
 	public void refreshData() {
 		
-		article = null;
-		orderedArticle = null;
-		
 		int articleId = getIntent().getIntExtra(Constants.keyArticleId, 0);
 		int orderId = getIntent().getIntExtra(Constants.keyOrderId, 0);
 		
@@ -57,7 +57,8 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 			article = DatabaseManager.getHelper().getArticleDao().queryForId(articleId);
 		} catch (SQLException e) {
 			article = null;
-			
+		}
+		if( article == null) {
 			// Print an Error message
 			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
 			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
@@ -73,24 +74,26 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 			dlgAlert.create().show();
 		}
 		
-		Order order = new Order();
-		order.setId(orderId);
-		
-		OrderedArticle orderedArticle = new OrderedArticle();
-		orderedArticle.setOrder(order);
-		orderedArticle.setArticle(article);
-		
-		List<OrderedArticle> matchingOrderedArticles;
-		
+
 		try {
-			matchingOrderedArticles = DatabaseManager.getHelper().getOrderedArticleDao().queryForMatching(orderedArticle);
-		} catch (SQLException e) {
-			matchingOrderedArticles = null;
-			e.printStackTrace();
+			OrderedArticle searchOrderedArticle = new OrderedArticle();
+			
+			Order order = new Order();
+			order.setId(orderId);
+			
+			searchOrderedArticle.setOrder(order);
+			searchOrderedArticle.setArticle(article);
+			
+			List<OrderedArticle> matchingOrderedArticles;
+			
+			matchingOrderedArticles = DatabaseManager.getHelper().getOrderedArticleDao().queryForMatching(searchOrderedArticle);
+			
+			if(matchingOrderedArticles != null && matchingOrderedArticles.size() > 0)
+				orderedArticle = matchingOrderedArticles.get(0);
+						
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
-		
-		if(matchingOrderedArticles != null && matchingOrderedArticles.size() > 0)
-			orderedArticle = matchingOrderedArticles.get(0);
 		
 		updateUi();
 		
@@ -108,15 +111,27 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 		
 		TextView oldPriceTextView = (TextView) findViewById(R.id.oldPriceTextView);
 		if (orderedArticle!=null){
-			oldPriceTextView.setText(orderedArticle.getPrice()+"€");
+			oldPriceTextView.setText(orderedArticle.getPriceString());
 		} else {
-			oldPriceTextView.setText("");
+			oldPriceTextView.setText("n/a");
 		}
 		
+		TextView newPriceTextView = (TextView) findViewById(R.id.newPriceTextView);
+		newPriceTextView.setText("n/a");
+		
+		// Download Image if:
+		// 1. there is no image yet
+		// 2. there is no imageUpdater running.
+		// 3. there is a valid link
+		if(		image == null && 
+				imageUpdater.getStatus() != AsyncTask.Status.RUNNING && 
+				article.getImageUrl() != null && 
+				!article.getImageUrl().equals("")){
 
-		imageUpdater = new ImageFromURL();
-		imageUpdater.execute(article.getImageUrl());
-		imageUpdater.updateClass = this;
+				imageUpdater.execute(article.getImageUrl());
+		} else if (image != null)
+				updateImage(image);
+
 	}
 	
 	/**  ask the user about mainingredient and subingredients.
@@ -185,16 +200,9 @@ public class ArticleDetailActivity extends Activity implements RefreshableActivi
 	@Override
 	public void updateImage(Drawable d) {
 		ImageView imageView = (ImageView) findViewById(R.id.articleImageView);
-		Log.i("Article Detail", "updateImage called");
 		if( d != null) {
+			image = d;
 			imageView.setImageDrawable(d);
-			/*
-			int imageWidth = imageView.getWidth();
-			LinearLayout.LayoutParams layout = (LinearLayout.LayoutParams) imageView.getLayoutParams();
-			layout.height = (layout.width / imageWidth) * layout.height;
-			imageView.setLayoutParams(layout);
-			*/
-			Log.i("Article Detail", "image set");
 		}
 	}
 

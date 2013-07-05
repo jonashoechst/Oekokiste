@@ -65,8 +65,8 @@ public class OrderedArticle extends BaseDaoEnabled<OrderedArticle, Integer> impl
 	public double getPrice() {
 		return (double) price / 100;
 	}
-	
-	public String getTotalPriceString(){
+
+	public String getPriceString(){
 		DecimalFormat df = new DecimalFormat("#0.00");
 		return df.format(getPrice())+"€";
 	}

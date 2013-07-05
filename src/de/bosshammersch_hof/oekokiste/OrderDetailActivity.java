@@ -125,7 +125,7 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		    		DecimalFormat df = new DecimalFormat("##0.##");
 		    		df.setDecimalSeparatorAlwaysShown(false);
 		        	amountTextView.setText(df.format(orderedArticleList.get(position).getAmount())+" "+orderedArticleList.get(position).getAmountType());
-		        	priceTextView.setText(orderedArticleList.get(position).getTotalPriceString());
+		        	priceTextView.setText(orderedArticleList.get(position).getPriceString());
 		        
 		        	return row;
 			}
