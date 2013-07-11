@@ -49,6 +49,14 @@ public class UpdateDatabaseOrder extends AsyncTask<String, Integer, Void[]> {
 	 */
 	public int updateBarcodeForBarcodeStringGetOrderId(String barcodeString) throws SQLException {
 
+		if(connection == null)
+			try {
+				connection = DatabaseConnection.getAConnection();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 		Log.i("Order Update", "string"+barcodeString);
 		
 		PreparedStatement pst = connection.prepareStatement("select * from barcodes where barcode_string = ?");
