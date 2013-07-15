@@ -198,12 +198,19 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 		}
 		
 		for(ArticleGroup a : articleGroups){
+			if(a == null) continue;
 			for(RecipeWithHits r : recipesWithHits){
+				if (r == null) continue;
 				for(CookingArticle ca : DatabaseManager.getHelper().getRecipeDao().queryForId(r.recipeId).getIngredients()){
-					if(a.getName().equals(ca.getArticleGroup().getName())){
-						if(!onlyMainIngrediants || ca.isPrimaryIngredient()){
-							r.hits++;
+					if (ca == null) continue;
+					try {
+						if(a.getName().equals(ca.getArticleGroup().getName())){
+							if(!onlyMainIngrediants || ca.isPrimaryIngredient()){
+								r.hits++;
+							}
 						}
+					} catch (NullPointerException e){
+						continue;
 					}
 				}
 			}

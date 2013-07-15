@@ -5,39 +5,40 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import com.j256.ormlite.dao.Dao;
 import de.bosshammersch_hof.oekokiste.Constants;
 import de.bosshammersch_hof.oekokiste.model.*;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class UpdateDatabaseOrder extends AsyncTask<String, Integer, boolean[]> {
+public class UpdateDatabaseOrder extends AsyncTask<String, Integer, Void[]> {
 	
-	private Connection connection = new DatabaseConnection().getConnection();
-	
-	Dao<Article, Integer> articleDao = DatabaseManager.getHelper().getArticleDao();
-	
-	private boolean[] output;
+	private static Connection connection;
 
 	@Override
-	public boolean[] doInBackground(String... params) {
-		
-		DatabaseConnection con = new DatabaseConnection();
-		connection = con.getConnection();
+	public Void[] doInBackground(String... params) {
 
-		Log.i("UpdataDatabaseOrder", "Order Data sync initiated");
 		try {
-			updateBarcodeForBarcodeStringGetOrderId(params[0]);
-			Log.i("UpdataDatabaseOrder", "Order data was synced.");
+			connection = DatabaseConnection.getAConnection();
+			
+			Log.i("Ökokiste: Update Database (Order)", "Order Data sync initiated");
+			try {
+				updateBarcodeForBarcodeStringGetOrderId(params[0]);
+				Log.i("Ökokiste: Update Database (Order)", "Order data was synced.");
+			} catch (SQLException e) {
+				Log.e("Ökokiste: Update Database (Order)", "Could not sync order data.");
+				e.printStackTrace();
+			}
+			connection.close();
+			
 		} catch (SQLException e) {
-			Log.e("UpdataDatabaseOrder", "Could not sync order data.");
+			Log.e("Ökokiste: Update Database (Order)", "Datenbank Verbindung konnte nicht augebaut werden.");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			Log.e("Ökokiste: Update Database (Order)", "Postgresql Treiber wurde nicht gefunden.");
 			e.printStackTrace();
 		}
-
-		con.disconnect();
-		
-		return output;
+		return null;
 	}
 	
 	

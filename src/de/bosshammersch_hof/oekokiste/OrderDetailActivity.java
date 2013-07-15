@@ -1,6 +1,5 @@
 package de.bosshammersch_hof.oekokiste;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -10,13 +9,11 @@ import java.util.Locale;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +50,9 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 		
 	}
 	
+	/**
+	 *  call the super constructor and call refreshData();
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -66,13 +66,11 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 	@Override
 	public void refreshData() {
 		int orderId = getIntent().getIntExtra(Constants.keyOrderId, 0);
+		
 		try {
 			order = DatabaseManager.getHelper().getOrderDao().queryForId(orderId);
 		} catch (SQLException e) {
-			// SQL Error
 			order = null;
-			e.printStackTrace();
-
 		}
 		
 		if(order == null){
@@ -161,11 +159,12 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 				try {
 					recipesWithHits = Recipe.findRecipesByArticleGroups(articleGroups, false);
 				} catch (SQLException e) {
-					recipesWithHits = new LinkedList<Recipe.RecipeWithHits>();
-					Log.w("OrderDetailActivity", "No Matching Recipes found.");
-					e.printStackTrace();
+					recipesWithHits = null;
 				}
-    			
+				
+				if(recipesWithHits == null)
+					recipesWithHits = new LinkedList<Recipe.RecipeWithHits>();
+				
     			intent.putExtra(Constants.keyRecipeIdArray, Recipe.RecipeWithHits.getRecipeIdArray(recipesWithHits));
     			intent.putExtra(Constants.keyRecipeHitsArray, Recipe.RecipeWithHits.getHitsArray(recipesWithHits));
     			
@@ -184,7 +183,6 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 				}
 
 				Intent intent = new Intent(OrderDetailActivity.this,ArticleDetailActivity.class);
-				//intent.putExtra(Constants.keyOrderedArticle, orderedArticleList.get(arg2).getId());
 				intent.putExtra(Constants.keyOrderId, order.getId());
 				intent.putExtra(Constants.keyArticleId, orderedArticleList.get(arg2).getArticle().getId());
 				startActivity(intent);
@@ -220,30 +218,28 @@ public class OrderDetailActivity extends Activity implements RefreshableActivity
 	
 	/**
 	 * Sends an intent to read .pdf-files. 
-	 *
 	 * @param	view	The clicked view.
 	 */
 	public void viewBillClicked(View view){
 
 		//String link = "http://vcp-kurhessen.info/wordpress/wp-content/uploads/2011/08/2011-08-09_regionsordnung.pdf";
 		
-		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/lieferscheine/1.pdf");
-		Uri path = Uri.fromFile(file);
+		/*File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/lieferscheine/1.pdf");
+		Uri path = Uri.fromFile(file);*/
+		Uri path = Uri.parse(Constants.pathToBill+order.getId()+".pdf");
 		
-        	Intent intent = new Intent(Intent.ACTION_VIEW);
-        	intent.setDataAndType(path, "application/pdf");
-        	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+    	intent.setDataAndType(path, "application/pdf");
+    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        	try {
-            		startActivity(intent);
-        	} catch (ActivityNotFoundException e) {
-        		//Intent webIntent = new Intent(this, WebPDFViewActivity.class);
-    			//webIntent.setDataAndType(path, "application/pdf");
-    			//startActivity(webIntent);
-        		Toast.makeText(OrderDetailActivity.this, 
-        			"Auf diesem Gerät ist keine App zum anzeigen von PDF Dokumenten installiert.", 
-        			Toast.LENGTH_SHORT).show();
-        	}
+    	try {
+        		startActivity(intent);
+    	} catch (ActivityNotFoundException e) {
+    		e.printStackTrace();
+    		Toast.makeText(OrderDetailActivity.this, 
+    			"Auf diesem Gerät ist keine App zum anzeigen von PDF Dokumenten installiert.", 
+    			Toast.LENGTH_SHORT).show();
+    	}
 	}
 
 }

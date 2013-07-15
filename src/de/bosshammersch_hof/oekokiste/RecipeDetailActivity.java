@@ -1,7 +1,6 @@
  package de.bosshammersch_hof.oekokiste;
 
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
@@ -10,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +40,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	int servings;
 	
 	ImageFromURL imageUpdater;
+	Drawable image = null;
 	
 	/** 
 	 *   Creates the detail-view of recipe
@@ -50,8 +51,14 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_detail);
 		getActionBar().setHomeButtonEnabled(true);	
+
+		imageUpdater = new ImageFromURL();
+		imageUpdater.updateClass = this;
 	}
 	
+	/**
+	 *  call the super constructor and call refreshData();
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -66,18 +73,14 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	 */
 	@Override
 	public void refreshData() {
-		// TODO Auto-generated method stub
 		int recipeId = getIntent().getIntExtra(Constants.keyRecipeId, 0);
 		try {
 			recipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
-			imageUpdater = new ImageFromURL();
-			//imageUpdater.execute(recipe.getName());
-			imageUpdater.updateClass = this;
-			servings = recipe.getServings();
 		} catch (SQLException e) {
-			Log.e("RecipeDetail","Recipe was not found: ID not in ORMLite");
-			e.printStackTrace();
-
+			recipe = null;
+		}
+		
+		if(recipe == null){
 			// Print an Error message
 			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
 			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
@@ -92,9 +95,56 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 			dlgAlert.setCancelable(true);
 			dlgAlert.create().show();
 		}
-
+		
+		servings = recipe.getServings();
 		updateUi();
 		
+	}
+
+	/**
+	 * Aktualisiert die UI.
+	 */
+	public void updateUi() {
+		
+		// Fill the Recipe Activity
+		setTitle(recipe.getName());
+		
+		TextView recipeNameTextView             = (TextView) findViewById(R.id.recipeNameTextView);
+		recipeNameTextView.setText(recipe.getName());
+		
+		TextView recipeTimeTextView    			= (TextView) findViewById(R.id.recipeTimeTextView);
+		recipeTimeTextView.setText((recipe.getCookingTimeInMin())+" Min.");
+		
+		// not yet used.
+		
+		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
+		recipeLongDescriptionTextView.setText(recipe.getDescription());
+
+		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
+		String cookwareString = "";
+		for(Cookware item : recipe.getCookware()){
+			cookwareString += item.getName()+"\n";
+		}
+		recipeCookingUtensilsTextView.setText(cookwareString);
+		
+		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
+		recipeInstructionsTextView.setText(recipe.getInstructions());
+
+		// Download Image if:
+			// 1. there is no image yet
+			// 2. there is no imageUpdater running.
+			// 3. there is a valid link
+		if(		image == null && 
+				imageUpdater.getStatus() != AsyncTask.Status.RUNNING && 
+				recipe.getImagerUrl() != null && 
+				recipe.getImagerUrl().equals("") ){
+			imageUpdater.execute(recipe.getImagerUrl());
+			imageUpdater.updateClass = this;
+		} else if (image != null)
+			updateImage(image);
+		
+		fillIngeridents(servings);
+		setServingSpinner();
 	}
 	
 	/**
@@ -126,7 +176,7 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
         	row.setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
                 	Intent intent = new Intent(RecipeDetailActivity.this, FindArticleActivity.class);
-                	intent.putExtra(Constants.keyArticleGroupId, cookingArticleList.get(position).getArticleGroup().getName());
+                	intent.putExtra(Constants.keyArticleGroupName, cookingArticleList.get(position).getArticleGroup().getName());
     				startActivity(intent);
                 }
             });
@@ -142,45 +192,6 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
         	
         	ingredientTableLayout.addView(row);
 		}
-	}
-
-	/**
-	 * Aktualisiert die UI.
-	 */
-	public void updateUi() {
-		Log.i("RecipeDetail", "updateUi()");
-		
-		// Fill the Recipe Activity
-		setTitle(recipe.getName());
-		
-		TextView recipeNameTextView             = (TextView) findViewById(R.id.recipeNameTextView);
-		recipeNameTextView.setText(recipe.getName());
-		
-		TextView recipeTimeTextView    			= (TextView) findViewById(R.id.recipeTimeTextView);
-		recipeTimeTextView.setText((recipe.getCookingTimeInMin())+" Min.");
-		
-		setServingSpinner();
-		
-		// not yet used.
-		
-		TextView recipeLongDescriptionTextView     	= (TextView) findViewById(R.id.recipeLongDescriptionTextView);
-		recipeLongDescriptionTextView.setText(recipe.getDescription());
-		
-		fillIngeridents(servings);
-
-		TextView recipeCookingUtensilsTextView 		= (TextView) findViewById(R.id.recipeCookingUtensilsTextView);
-		String cookwareString = "";
-		for(Cookware item : recipe.getCookware()){
-			cookwareString += item.getName()+"\n";
-		}
-		recipeCookingUtensilsTextView.setText(cookwareString);
-		
-		TextView recipeInstructionsTextView     	= (TextView) findViewById(R.id.recipeInstructionsTextView);
-		recipeInstructionsTextView.setText(recipe.getInstructions());
-
-		ImageFromURL imageUpdater = new ImageFromURL();
-		imageUpdater.execute(recipe.getImagerUrl());
-		imageUpdater.updateClass = this;
 	}
 	
 	/**
@@ -237,10 +248,15 @@ public class RecipeDetailActivity extends Activity implements RefreshableActivit
 	@Override
 	public void updateImage(Drawable d) {
 		ImageView imageView = (ImageView) findViewById(R.id.recipeImageView);
-		if( d != null) imageView.setImageDrawable(d);
+		if( d != null) {
+			imageView.setImageDrawable(d);
+			image = d;
+		}
 	}
 	
-
+	/**
+	 *  destroys the imageUpdater if the app is closed
+	 */
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();

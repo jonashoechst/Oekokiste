@@ -28,41 +28,65 @@ import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
 public class FindRecipesByArticleActivity extends Activity implements RefreshableActivity {
 
-	List<ArticleGroup> articleGroup;
+	List<ArticleGroup> articleGroups;
 	
-	List<ArticleGroup> selectedGroup;
+	List<ArticleGroup> selectedArticleGroups;
 	
+	/**  set the right view for the content.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_recipe_article);
+	}
+	
+	/**  if the app resume to this activity the methode refeshes the data for this activity.
+	 *   calls the refreshData()
+	 */
+	@Override
+	public void onResume(){
+		super.onResume();
 		Constants.refreshableActivity = this;
 		refreshData();
 	}
 
-	/**
-	 * Aktualisiert die UI.
+	/**  gets all articleGroup and update the Ui by calling uodateUi().
+	 */
+	@Override
+	public void refreshData() {
+		try {
+			articleGroups = DatabaseManager.getHelper().getArticleGroupDao().queryForAll();
+		} catch (SQLException e) {
+			articleGroups = null;
+		}
+		
+		if(articleGroups == null)
+			articleGroups = new LinkedList<ArticleGroup>();
+		
+		selectedArticleGroups = new LinkedList<ArticleGroup>();
+		
+		updateUi();
+	}
+
+	/**  update the UI.
 	 */
 	public void updateUi() {
-		
-		selectedGroup = new LinkedList<ArticleGroup>();
-		
 		final ListView findArticleGroupListView = (ListView) findViewById(R.id.findArticleRecipeListView);
 		
-		final ListAdapter adapter = new ArrayAdapter<ArticleGroup>(this, R.layout.listview_item_find_recipe_article, articleGroup){
+		final ListAdapter adapter = new ArrayAdapter<ArticleGroup>(this, R.layout.listview_item_find_recipe_article, articleGroups){
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 		       	 	View row = convertView;
 		        
 		        	if(row == null){
-		            	    LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
+		            	LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
 		        	    row = inflater.inflate(R.layout.listview_item_find_recipe_article, parent, false);
 		        	}
  
 		        	CheckedTextView nameTextView = (CheckedTextView) row.findViewById(R.id.itemTextView2);
 		        
-		        	nameTextView.setText(articleGroup.get(position).getName());
+		        	nameTextView.setText(articleGroups.get(position).getName());
 		        
 		        	return row;
 			}
@@ -75,10 +99,10 @@ public class FindRecipesByArticleActivity extends Activity implements Refreshabl
 		findArticleGroupListView.setOnItemClickListener(new OnItemClickListener() {
 			   public void onItemClick(AdapterView<?> parent, View view,
 			     int position, long id) {
-				   if(!selectedGroup.contains(articleGroup.get(position))){
-					   selectedGroup.add(articleGroup.get(position));
+				   if(!selectedArticleGroups.contains(articleGroups.get(position))){
+					   selectedArticleGroups.add(articleGroups.get(position));
 				   } else {
-					   selectedGroup.remove(articleGroup.get(position));
+					   selectedArticleGroups.remove(articleGroups.get(position));
 				   }
 			   }
 		});
@@ -100,7 +124,7 @@ public class FindRecipesByArticleActivity extends Activity implements Refreshabl
     					
     					List<Recipe.RecipeWithHits> recipesWithHits;
     					try {
-    						recipesWithHits = Recipe.findRecipesByArticleGroups(selectedGroup, onlyMainIngrediants);
+    						recipesWithHits = Recipe.findRecipesByArticleGroups(selectedArticleGroups, onlyMainIngrediants);
     					} catch (SQLException e) {
     						recipesWithHits = new LinkedList<Recipe.RecipeWithHits>();
     						Log.w("OrderDetailActivity", "No Matching Recipes found.");
@@ -141,20 +165,6 @@ public class FindRecipesByArticleActivity extends Activity implements Refreshabl
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
-	}
-
-	@Override
-	public void refreshData() {
-		// TODO Auto-generated method stub
-
-		try {
-			articleGroup = DatabaseManager.getHelper().getArticleGroupDao().queryForAll();
-		} catch (SQLException e) {
-			articleGroup = null;
-			e.printStackTrace();
-		}
-		
-		updateUi();
 	}
 
 }

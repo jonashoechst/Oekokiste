@@ -22,31 +22,62 @@ import de.bosshammersch_hof.oekokiste.model.Article;
 import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 
-public class FindArticleActivity extends Activity{
+public class FindArticleActivity extends Activity implements RefreshableActivity{
 	
 	ArticleGroup articleGroup;
 	
+	/**  set the right view for the content.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_article);
-		
-		String articleGroupId = getIntent().getStringExtra(Constants.keyArticleGroupId);
+	}
+	
+	/**  if the app resume to this activity the methode refeshes the data for this activity.
+	 *   calls the refreshData()
+	 */
+	@Override
+	public void onResume(){
+		super.onResume();
+		Constants.refreshableActivity = this;
+		refreshData();
+	}
+
+	/**  get extradata from the intent and query the database for the data the article.
+	 * 	 if there is no article a message is shown
+	 */
+	@Override
+	public void refreshData() {
+
+		String articleGroupName = getIntent().getStringExtra(Constants.keyArticleGroupName);
 		try {
-			articleGroup = DatabaseManager.getHelper().getArticleGroupDao().queryForId(articleGroupId);
+			articleGroup = DatabaseManager.getHelper().getArticleGroupDao().queryForId(articleGroupName);
 		} catch (SQLException e) {
 			articleGroup = null;
-			e.printStackTrace();
+		}
+		
+		if(articleGroup == null){
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+			dlgAlert.setMessage("Die Ansicht konnte nicht geladen werden.");
+			dlgAlert.setTitle("Ökokiste");
+			dlgAlert.setPositiveButton("Zurück", 
+				new DialogInterface.OnClickListener() {
+		        	public void onClick(DialogInterface dialog, int which) {
+		        		finish();
+		        	}
+				});
+			dlgAlert.setCancelable(false);
+			dlgAlert.create().show();
 		}
 		
 		updateUi();
 	}
 
-	/**
-	 * Aktualisiert die UI.
+	/**  refreshed the UI.
+	 * 	 the methode shows a message if the article is not in the online-shop.
 	 */
 	public void updateUi() {
-		// update UI
 		ListView findArticleListView = (ListView) findViewById(R.id.findArticleListView);
 		
 		final List<Article> findArticleList = articleGroup.getArticleList();
@@ -73,13 +104,13 @@ public class FindArticleActivity extends Activity{
 		       	 	View row = convertView;
 		        
 		        	if(row == null){
-		            	    LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
+		        		LayoutInflater inflater = ((Activity) this.getContext()).getLayoutInflater();
 		        	    row = inflater.inflate(R.layout.listview_item_find_article, parent, false);
 		        	}
  
 		        	TextView nameTextView = (TextView) row.findViewById(R.id.itemTextView);
 		        
-		        	nameTextView.setText(findArticleList.get(position).getName());
+		        	nameTextView.setText(findArticleList.get(position).getName()+" ("+findArticleList.get(position).getOrigin()+")");
 		        
 		        	return row;
 			}
@@ -99,8 +130,7 @@ public class FindArticleActivity extends Activity{
 		getActionBar().setHomeButtonEnabled(true);
 	}
 	
-	/**
-	 *   if the app icon in action bar is clicked => go home
+	/**  if the app icon in action bar is clicked => go home
 	 *   else the super constructor of the function is called
 	 *   @param MenuItem which was selected
 	 *   @return boolean 

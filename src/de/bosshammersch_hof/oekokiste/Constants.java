@@ -6,7 +6,7 @@ package de.bosshammersch_hof.oekokiste;
  */
 public class Constants {
 	public static final String keyArticleId = "keyArticleId";
-	public static final String keyArticleGroupId = "keyArticleGroupId";
+	public static final String keyArticleGroupName = "keyArticleGroupId";
 	public static final String keyBarcode = "keyBarcode";
 	public static final String keyCategory = "keyCategory";
 	public static final String keyCookingArticle = "keyCookingArticle";
@@ -25,5 +25,6 @@ public class Constants {
 	public static final String keyRecipeHitsArray = "keyRecipeHitsArray";
 	
 	public static final String pathToArticleDescription = "http://oekobox-online.de/v3/shop/bosshamerschhof/s2/C5.0.108C/item.jsp?id=";
+	public static final String pathToBill = "http://www.vcp-lumdatal.de/oekokiste/rechnungen/";
 	public static RefreshableActivity refreshableActivity = null;
 }

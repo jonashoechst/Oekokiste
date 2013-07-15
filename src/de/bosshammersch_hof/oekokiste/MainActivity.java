@@ -30,13 +30,12 @@ public class MainActivity extends Activity {
 	private String txtScanResult;
 	
 	User user;
-
+	
 	UpdateDatabaseGeneral updaterGeneral;
 	UpdateDatabaseUser updaterUser;
+	UpdateDatabaseArticleImages updaterImages;
 	
-	/**
-	 *   calls the super Constructor
-	 *   and set the Contentview 
+	/**  call the super Constructor and set the Contentview 
 	 *   and checks the login state so the user can work without login again
 	 *   @param  Bundle saved Instance State
 	 */
@@ -44,16 +43,17 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		setContentView(R.layout.activity_main);
+
 		// Init the Databasemanager
 		DatabaseManager.init(this);
-		
-		Constants.refreshableActivity = null;
 		
 		Constants.refreshableActivity = null;
 
 		updaterGeneral = new UpdateDatabaseGeneral();
 		updaterUser = new UpdateDatabaseUser();
+		updaterImages = new UpdateDatabaseArticleImages();
+		
 		if (!updaterGeneral.getStatus().equals(AsyncTask.Status.RUNNING))
 			updaterGeneral.execute();
 		
@@ -63,19 +63,19 @@ public class MainActivity extends Activity {
 		try {
 			lastOpenState = DatabaseManager.getHelper().getOpenStateDao().queryForId(1);
 			
-			if(lastOpenState != null) {
+			if (lastOpenState != null) {
 				user = lastOpenState.getUser();
-				if (updaterUser.getStatus().equals(AsyncTask.Status.FINISHED))
+				if (!updaterUser.getStatus().equals(AsyncTask.Status.RUNNING))
 					updaterUser.execute(user);
 				updateUiWithUser();
+				if (!updaterImages.getStatus().equals(AsyncTask.Status.RUNNING))
+					updaterImages.execute();
 				return;
 			}
 		} catch (SQLException e) {
 			Log.e("Ökokiste: Main Actitvity","SQL Exception finding the last OpenState");
-			//e.printStackTrace();
 		}
 		
-
 		// 2. Versuch: Kommen wir von der LoginActivity?
 		String loginName = getIntent().getStringExtra(Constants.keyLoginName);
 		String password = getIntent().getStringExtra(Constants.keyLoginPassword);
@@ -88,19 +88,15 @@ public class MainActivity extends Activity {
 			
 			// validate the user
 			try {
-				loginUser = updaterUser.validateUser(loginUser);
+				loginUser = UpdateDatabaseUser.validateUser(loginUser);
 			} catch (SQLException e) {
 				loginUser = null;
-				Toast.makeText(this, "Login fehlgeschlagen. Die Datenbankverbindung konnte nicht aufgebaut werden.", 30).show();
-				updateUiNoUser();
-				return;
 			}
 			
 			if(loginUser == null){
 				// User could not be validated
 				Toast.makeText(this, "Login fehlgeschlagen. Ist das eingegebene Passwort korrekt?", 30).show();
 				updateUiNoUser();
-				return;
 			} else {
 				// Login success!
 				user = loginUser;
@@ -112,13 +108,14 @@ public class MainActivity extends Activity {
 					os.create();
 				} catch (SQLException e) {
 					Log.e("MainActivity", "Open State could not be saved.");
-					//e.printStackTrace();
 				}
-				return;
 			}
 		} else {
 			updateUiNoUser();
 		}
+		if (!updaterImages.getStatus().equals(AsyncTask.Status.RUNNING))
+			updaterImages.execute();
+		
 	}
 
 	/**
@@ -132,6 +129,10 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 	
+	/**
+	 * creat a new intent and start the FindRecipesByArticleActivity
+	 * @param view
+	 */
 	public void findRecipesClicked(View view){
 		Intent intent = new Intent(this, FindRecipesByArticleActivity.class);
 		startActivity(intent);
