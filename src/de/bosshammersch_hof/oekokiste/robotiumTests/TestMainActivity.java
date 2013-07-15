@@ -1,18 +1,23 @@
 package de.bosshammersch_hof.oekokiste.robotiumTests;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import de.bosshammersch_hof.oekokiste.FindRecipesByArticleActivity;
 import de.bosshammersch_hof.oekokiste.LoginActivity;
 import de.bosshammersch_hof.oekokiste.MainActivity;
 import de.bosshammersch_hof.oekokiste.R;
 import de.bosshammersch_hof.oekokiste.RecipeActivity;
-import android.app.Instrumentation;
+import de.bosshammersch_hof.oekokiste.model.Recipe;
+import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
+import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jayway.android.robotium.solo.*;
 
@@ -35,42 +40,6 @@ public class TestMainActivity extends ActivityInstrumentationTestCase2<MainActiv
 		solo.finishOpenedActivities();
 	}
 	
-	/**
-	 * Gives you the view from an list view index
-	 * @param listElement
-	 * @param indexInList
-	 * @param instrumentation
-	 * @return
-	 */
-	public View getViewAtIndex(final ListView listElement, final int indexInList, Instrumentation instrumentation) {
-	    ListView parent = listElement;
-	    if (parent != null) {
-	        if (indexInList <= parent.getAdapter().getCount()) {
-	            scrollListTo(parent, indexInList, instrumentation);
-	            int indexToUse = indexInList - parent.getFirstVisiblePosition();
-	            return parent.getChildAt(indexToUse);
-	        }
-	    }
-	    return null;
-	}
-
-	/**
-	 * Allows you to scroll in a list view
-	 * @param listView
-	 * @param index
-	 * @param instrumentation
-	 */
-	public <T extends AbsListView> void scrollListTo(final T listView,
-	        final int index, Instrumentation instrumentation) {
-	    instrumentation.runOnMainSync(new Runnable() {
-	        @Override
-	        public void run() {
-	            listView.setSelection(index);
-	        }
-	    });
-	    instrumentation.waitForIdleSync();
-	}
-	
 	
    /**
     *   TEST01_Click the 'Login'-Button and goto the 'Login'-Menu
@@ -89,21 +58,68 @@ public class TestMainActivity extends ActivityInstrumentationTestCase2<MainActiv
 	 *  TEST02_Testing the article-result from 'FindRecipesByArticleActivity' 
 	 * @throws InterruptedException 
 	 */
+	@SuppressWarnings("static-access")
 	public void testFindRecipesByArticleActivity_WITHITEMS() throws InterruptedException{
 		solo.assertCurrentActivity("Wrong activity!", MainActivity.class);
 		
-		//First Step: Get recipes for article-examples
+		//First Step: Get recipes for article - tested in UI
 		solo.clickOnButton("Rezepte Finden");
 		solo.assertCurrentActivity("This is not the FindRecipesByArticleActivity", FindRecipesByArticleActivity.class);
 				
-		for(int artpos=1; artpos<=4; artpos++){
-			solo.clickInList(artpos);
-			Log.i("testFindRecipesByArticleActivity_WITHITEMS","ArticleItem Nr. "+artpos+" was clicked!");
+		ListView articleListView = (ListView) solo.getView(R.id.findArticleRecipeListView);
+		
+		Log.w("Test", "Elements in List View: "+articleListView.getCount() );
+		int artpos = 1;
+		while(artpos < articleListView.getCount()){
+			solo.scrollListToLine(0, artpos-1);
+			for(int i = 1; i <= 11; i++){
+				if((artpos + i) >= articleListView.getCount()){
+					break;
+				}
+				solo.clickInList(i);
+			}
+			artpos += 10;
 		}
 		
 		solo.clickOnButton("Rezepte finden");
 		solo.clickInList(0);
+		
 		solo.assertCurrentActivity("This is not the RecipeActivity", RecipeActivity.class);
+		ListView recipeListView = (ListView) solo.getView(R.id.recipeListView);
+		
+		ArrayList<String> recipeStrings = new ArrayList<String>();
+		View recipeListItem = null;
+		
+		for(int recipeIndex = 1; recipeIndex<=recipeListView.getChildCount(); recipeIndex++){
+			recipeListItem = recipeListView.getChildAt(recipeIndex);
+			TextView recipeName = (TextView) recipeListItem.findViewById(R.id.recipeName);
+			String recipeNameString = (String) (recipeName).getText();
+            recipeStrings.add(recipeNameString);
+		}
+		
+		//Second Step: Compare the UI-recipes with the database
+		
+		List <Recipe> dbRecipeList = new ArrayList<Recipe>();
+		try {
+			dbRecipeList = DatabaseManager.getHelper().getRecipeDao().queryForAll();
+			for(Recipe rec : dbRecipeList){
+				boolean contains = false;
+				String recipeName = rec.getName();
+				for(String recipeString : recipeStrings){
+					if(recipeName.equals(recipeString)){
+						contains=true;
+						break;
+					}
+				}
+				if(!contains){
+					this.fail("Recipe "+recipeName+" not found!");
+				}
+			}
+		} catch (SQLException e) {
+			this.fail("SQL-Error: Could not get recipes from internal database.");
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
