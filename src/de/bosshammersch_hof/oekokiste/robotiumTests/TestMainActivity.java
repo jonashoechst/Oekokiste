@@ -5,12 +5,20 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import de.bosshammersch_hof.oekokiste.ArticleDetailActivity;
 import de.bosshammersch_hof.oekokiste.FindRecipesByArticleActivity;
 import de.bosshammersch_hof.oekokiste.LoginActivity;
 import de.bosshammersch_hof.oekokiste.MainActivity;
+import de.bosshammersch_hof.oekokiste.OrderActivity;
+import de.bosshammersch_hof.oekokiste.OrderDetailActivity;
 import de.bosshammersch_hof.oekokiste.R;
 import de.bosshammersch_hof.oekokiste.RecipeActivity;
+import de.bosshammersch_hof.oekokiste.model.ArticleGroup;
 import de.bosshammersch_hof.oekokiste.model.Recipe;
+import de.bosshammersch_hof.oekokiste.model.Recipe.RecipeWithHits;
 import de.bosshammersch_hof.oekokiste.ormlite.DatabaseManager;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
@@ -41,15 +49,28 @@ public class TestMainActivity extends ActivityInstrumentationTestCase2<MainActiv
 	}
 	
 	
+	public static final Test suite()
+	{ 
+	                TestSuite testSuite = new TestSuite(); 
+	                return testSuite; 
+	} 
+	
+	
+	
    /**
-    *   TEST01_Click the 'Login'-Button and goto the 'Login'-Menu
+    *   TEST01_Click the 'Login'-Button and Log in
     */
-	public void testGo2LoginActivity(){
+	public void testLoginActivity(){
 		//check that we are on the start-activity
 		solo.assertCurrentActivity("Wrong activity!", MainActivity.class);
+
+		solo.clickOnButton(3);
+		solo.enterText(0, "a-dur1990");
+		solo.enterText(1, "artur");
+		solo.clickOnButton(0);
 		
-		solo.clickOnButton("Anmelden");
-		solo.assertCurrentActivity("This is not the LoginActivity", LoginActivity.class);
+		solo.sleep(5000);
+		
 	}
 	
 	
@@ -68,17 +89,23 @@ public class TestMainActivity extends ActivityInstrumentationTestCase2<MainActiv
 				
 		ListView articleListView = (ListView) solo.getView(R.id.findArticleRecipeListView);
 		
+
+		ArrayList<ArticleGroup> articleGroupList = new ArrayList<ArticleGroup>();
+		
 		Log.w("Test", "Elements in List View: "+articleListView.getCount() );
-		int artpos = 1;
-		while(artpos < articleListView.getCount()){
-			solo.scrollListToLine(0, artpos-1);
-			for(int i = 1; i <= 11; i++){
-				if((artpos + i) >= articleListView.getCount()){
-					break;
-				}
-				solo.clickInList(i);
+		int artpos = 5;
+		while(artpos < 10){
+			solo.clickInList(artpos);
+			
+			TextView tv = solo.getText(artpos);
+			String articleGroup = (String) tv.getText();
+			
+			try {
+				articleGroupList.add(DatabaseManager.getHelper().getArticleGroupDao().queryForId(articleGroup));
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			artpos += 10;
+			artpos += 1;
 		}
 		
 		solo.clickOnButton("Rezepte finden");
@@ -92,22 +119,29 @@ public class TestMainActivity extends ActivityInstrumentationTestCase2<MainActiv
 		
 		for(int recipeIndex = 1; recipeIndex<=recipeListView.getChildCount(); recipeIndex++){
 			recipeListItem = recipeListView.getChildAt(recipeIndex);
-			TextView recipeName = (TextView) recipeListItem.findViewById(R.id.recipeName);
-			String recipeNameString = (String) (recipeName).getText();
+			TextView recipeTextListItem = (TextView)recipeListItem;
+			String recipeNameString = (String) recipeTextListItem.getText();
+			Log.i("TestMainActivity: ","TextView with pos "+recipeIndex+" was selected.");
             recipeStrings.add(recipeNameString);
 		}
 		
 		//Second Step: Compare the UI-recipes with the database
 		
-		List <Recipe> dbRecipeList = new ArrayList<Recipe>();
+		List <RecipeWithHits> dbRecipeList = new ArrayList<RecipeWithHits>();
+	
 		try {
-			dbRecipeList = DatabaseManager.getHelper().getRecipeDao().queryForAll();
-			for(Recipe rec : dbRecipeList){
+			dbRecipeList = Recipe.findRecipesByArticleGroups(articleGroupList, true);
+			for(RecipeWithHits rec : dbRecipeList){
 				boolean contains = false;
-				String recipeName = rec.getName();
+				
+				int recipeId = rec.getRecipeId();
+				Recipe eRecipe = DatabaseManager.getHelper().getRecipeDao().queryForId(recipeId);
+				
+				String recipeName = eRecipe.getName();
 				for(String recipeString : recipeStrings){
 					if(recipeName.equals(recipeString)){
 						contains=true;
+						Log.i("TestMainActivity: ","Recipe "+recipeName+" found in database!");
 						break;
 					}
 				}
@@ -119,7 +153,6 @@ public class TestMainActivity extends ActivityInstrumentationTestCase2<MainActiv
 			this.fail("SQL-Error: Could not get recipes from internal database.");
 			e.printStackTrace();
 		}
-		
 	}
 	
 	
@@ -146,37 +179,28 @@ public class TestMainActivity extends ActivityInstrumentationTestCase2<MainActiv
 	public void testScaleRecipeDetailActivity() throws InterruptedException{
 		solo.assertCurrentActivity("Wrong activity!", MainActivity.class);
 		
-		solo.clickOnButton("Anmelden");
-		
+		solo.clickOnButton(3);
 		solo.enterText(0, "a-dur1990");
 		solo.enterText(1, "artur");
-		solo.clickOnButton("Anmelden");
+		solo.clickOnButton(0);
 		
-		solo.wait(30000);
 		
-		//click on the first order
+		//click button 'orders'
+		solo.clickOnButton(0);
+		solo.sleep(50000);
+		
+		//click first order
 		solo.clickInList(0);
+		solo.assertCurrentActivity("Wrong activity! This is not the OrderActivity!", OrderActivity.class);
 		
-		//click on findrecipebutton
-		//TODO solo.clickOnButton("Rezepte");
+		//press findrecipes-button
+		solo.clickOnButton(0);
+		solo.assertCurrentActivity("Wrong activity! This is not the OrderDetailActivity!", OrderDetailActivity.class);
+        solo.sleep(1000);
 		
-		//select each recipe
-		ArrayList<View> recipeList = solo.getCurrentViews();
-		
-		if(recipeList != null){
-			for(int i=0; i < recipeList.size(); i++){
-				solo.clickInList(i);
-				
-				//reaching recipedetail
-				//checking scale of different values (in this case 2,4)
-				solo.pressSpinnerItem(0, 2);
-				
-				View view = solo.getView(R.id.ingredientAmount);
-				//TODO get values of all amounts
-			}
-		}
+		//now we reached the recipedetailactivity
+		solo.clickInList(0);
+		solo.assertCurrentActivity("Wrong activity! This is not the ArticleDetailActivity!", ArticleDetailActivity.class);
+	    solo.sleep(3000);
 	}
-	
-	
-	
 }
