@@ -58,15 +58,15 @@ public class TestLoginActivity extends ActivityInstrumentationTestCase2<LoginAct
 		solo.scrollDown();
 		solo.scrollUp();
 		
-		solo.enterText(0, "testuser");
-		solo.enterText(1, "testpassword");
+		solo.enterText(0, "a-dur1990");
+		solo.enterText(1, "artur");
+		solo.clickOnButton(0);
 		
-		//did we loose information?
 		solo.scrollDown();
 		solo.scrollUp();
 		
-		solo.clickOnButton("Anmelden");
-		solo.clickOnButton("Bestellungen");
+		solo.clickOnButton(0);
+		solo.sleep(40000);
 		solo.assertCurrentActivity("This is not the OrderActivity", OrderActivity.class);	
 	}
 	

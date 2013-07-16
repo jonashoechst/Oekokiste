@@ -26,6 +26,10 @@ public class Recipe extends BaseDaoEnabled<Recipe, Integer> implements CreateOrU
 			return r2.hits-this.hits;
 		}
 		
+		public int getRecipeId(){
+			return recipeId;
+		}
+		
 		public static int[] getRecipeIdArray(List<RecipeWithHits> list){
 			int[] recipeIds = new int[list.size()];
 			for(int i = 0; i < list.size(); i++){
